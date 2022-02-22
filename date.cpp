@@ -4,24 +4,24 @@ Date::Date(int s, int mi, int h, int d, int mo, int y):
     sec(s), min(mi), hour(h), day(d), mon(mo), year(y)
 {}
 
-bool operator <(const Date& a, const Date& b)
+bool Date::operator < (const Date& b)
 {
-    if(a.year < b.year)
+    if(this->year < b.year)
         return true;
-    else if(a.year == b.year){
-        if(a.mon < b.mon)
+    else if(this->year == b.year){
+        if(this->mon < b.mon)
             return true;
-        else if(a.mon == b.mon){
-            if(a.day < b.day)
+        else if(this->mon == b.mon){
+            if(this->day < b.day)
                 return true;
-            else if(a.day == b.day){
-                if(a.hour < b.hour)
+            else if(this->day == b.day){
+                if(this->hour < b.hour)
                     return true;
-                else if(a.hour == b.hour){
-                    if(a.min < b.min)
+                else if(this->hour == b.hour){
+                    if(this->min < b.min)
                         return true;
-                    else if(a.min == b.min){
-                        if(a.sec < b.sec)
+                    else if(this->min == b.min){
+                        if(this->sec < b.sec)
                             return true;
                     }
                 }
