@@ -8,19 +8,19 @@ bool Date::operator < (const Date& b)   // 没想到更好的方法，打扰了
 {
     if(this->m_year < b.m_year)
         return true;
-    else if(this->m_year == b.m_year){
+    else if(this->m_year == b.m_year) {
         if(this->m_mon < b.m_mon)
             return true;
-        else if(this->m_mon == b.m_mon){
+        else if(this->m_mon == b.m_mon) {
             if(this->m_day < b.m_day)
                 return true;
-            else if(this->m_day == b.m_day){
+            else if(this->m_day == b.m_day) {
                 if(this->m_hour < b.m_hour)
                     return true;
-                else if(this->m_hour == b.m_hour){
+                else if(this->m_hour == b.m_hour) {
                     if(this->m_min < b.m_min)
                         return true;
-                    else if(this->m_min == b.m_min){
+                    else if(this->m_min == b.m_min) {
                         if(this->m_sec < b.m_sec)
                             return true;
                     }
