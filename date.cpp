@@ -4,7 +4,7 @@ Date::Date(int s, int mi, int h, int d, int mo, int y):
     sec(s), min(mi), hour(h), day(d), mon(mo), year(y)
 {}
 
-bool Date::operator < (const Date& b)
+bool Date::operator < (const Date& b)   // 没想到更好的方法，打扰了
 {
     if(this->year < b.year)
         return true;

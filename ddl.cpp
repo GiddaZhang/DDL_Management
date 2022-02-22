@@ -1,7 +1,7 @@
 #include "ddl.h"
 
-DDL::DDL(Date a, QString b):
-    Date(a), descrip(b)
+DDL::DDL(Date a, QString b, QString c = "None"):
+    Date(a), descrip(b), type(c)
 {}
 
 bool DDL::operator < (const DDL& b)
