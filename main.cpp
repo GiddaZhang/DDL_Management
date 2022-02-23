@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
 
 //void test()
 //{
-//    Date d_1(0,0,0,1,1,2002), d_2(0,0,0,1,1,2003);
-//    DDL D_1(d_1, "Do homework"), D_2(d_2, "Exercise");
+//    QString d_1 = "2019-03-31 12:24:36", d_2 = "2020-03-31 12:24:36";
+//    DDL D_1(d_1, "写Qt", "Teamwork"), D_2(d_2, "电动力学第一章", "homework");
 //    qDebug() << (D_1 < D_2);
 //}

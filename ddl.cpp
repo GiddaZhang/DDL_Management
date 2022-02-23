@@ -1,10 +1,10 @@
 #include "ddl.h"
 
-DDL::DDL(Date a, QString b, QString c = "None"):
-    Date(a), m_descrip(b), m_type(c)
+DDL::DDL(QString a, QString b, QString c = "None"):
+    QDateTime(QDateTime::fromString(a, "yyyy-MM-dd hh:mm:ss")), m_descrip(b), m_type(c)
 {}
 
 bool DDL::operator < (const DDL& b)
 {
-    return Date::operator <(b);
+    return QDateTime::operator <(b);
 }
