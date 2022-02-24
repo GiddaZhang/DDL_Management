@@ -6,18 +6,18 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
+//    MainWindow w;
+//    w.show();
 
-//    void test();
-//    test();
+    void test();
+    test();
     return a.exec();
 }
 
-//void test()
-//{
-//    DDL D_1, D_2;
-//    D_2.SetDuration("18:00:00");
-//    D_1.SetNext(&D_2);
-//    qDebug() << D_1.GetNext()->GetUrgency();
-//}
+void test()
+{
+    DDL D_1, D_2;
+    D_2.SetDuration("18:00:00");
+    D_1.SetNext(&D_2);
+    qDebug() << D_1.Duration;
+}
