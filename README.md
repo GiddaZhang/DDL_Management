@@ -1,5 +1,11 @@
 # DDL_Management
 
+## 功能与界面
+
+![image](https://github.com/GiddaZhang/Image/blob/main/main.jpg)
+
+![image](https://github.com/GiddaZhang/Image/blob/main/sub.jpg)
+
 ## 建议
 
 - 写注释
@@ -8,7 +14,9 @@
 
 ## 进展
 
-2-25：
+2-27：
+
+- 确定功能
 
 2-24：
 
