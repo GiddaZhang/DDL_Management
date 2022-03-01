@@ -49,7 +49,7 @@ Result WorkingFile::OpenFile(const QString& path)
 Result WorkingFile::SaveToFolder(const QString& path)
 {
     QString FolderPath = GetCurrentPath();
-    FolderPath += "/data/";
+    FolderPath += "/backup/";
     QDate date = QDate::currentDate();
     QString YMD = date.toString("yyyy.MM.dd");
     FolderPath += YMD;
