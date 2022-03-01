@@ -28,13 +28,15 @@ SOURCES += \
         mainwindow.cpp \
     ddl.cpp \
     date.cpp \
-    workingfile.cpp
+    workingfile.cpp \
+    description.cpp
 
 HEADERS += \
         mainwindow.h \
     ddl.h \
     date.h \
-    workingfile.h
+    workingfile.h \
+    description.h
 
 FORMS += \
         mainwindow.ui
