@@ -46,6 +46,7 @@ Result DDL::SetCompleteDegree(const CompleteDegree& degree)
 
 Result DDL::SetDuration(const QString& dur)
 {
+    QTime Upper = ()
     m_duration = QTime::fromString(dur);
 }
 

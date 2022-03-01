@@ -1,3 +1,11 @@
+/****************************************************************************************************************************
+【类名】             DDL
+【功能】             底层类，程序处理的最基本模块
+【接口说明】          CompleteDegree：用于为用户提供可以描述当前进展的选项
+                    Result：Set函数返回值，判断修改是否合理
+                    公有Set接口：修改名称、完成度、发布日期时间、截止日期时间、前驱任务、后继任务、
+                                预估花费时长、
+****************************************************************************************************************************/
 #ifndef DDL_H
 #define DDL_H
 
@@ -26,14 +34,14 @@ public:
         QString due = "2022-03-24 12:24:36", QString des,
         QString dur = "12:00:00", DDL* prev = NULL, DDL* next = NULL);
     Result SetDDL(QString, CompleteDegree, QString, QString, QString, QString, DDL*, DDL*); // 设置DDL
-    Result SetName(const QString&);                         //设置任务名称
+    Result SetName(const QString&);                         // 设置任务名称
     Result SetCompleteDegree(const CompleteDegree&);        // 设置任务完成度
     Result SetDuration(const QString&);                     // 设置任务持续时间
     Result SetCommence(const QString&);                     // 设置任务开始时间
     Result SetDue(const QString&);                          // 设置任务截止时间
     Result AddDescription(const QString&);                  // 添加DDL描述
-    Result DeleteDescription(const int&);                   //删除某描述
-    Result ModifyDescription(const int&, const QString&);   //修改某描述
+    Result DeleteDescription(const int&);                   // 删除某描述
+    Result ModifyDescription(const int&, const QString&);   // 修改某描述
     Result SetPrev(const DDL*);                             // 设置前驱任务
     Result SetNext(DDL*);                                   // 设置后继任务
 
@@ -52,12 +60,11 @@ public:
     const QDateTime& Due;
 
 private:
-    QString m_name;                     //任务名称
+    QString m_name;                     // 任务名称
     CompleteDegree m_completeDegree;    // 任务完成度
     QTime m_duration;                   // 任务持续时间
-    QDateTime m_commence;               //任务开始时间
+    QDateTime m_commence;               // 任务开始时间
     QDateTime m_due;                    // 任务截止时间
-    Description m_description;          //任务描述
     DDL* m_prev;                        // 前驱任务
     DDL* m_next;                        // 后继任务
     vector<Description> m_AllDescription;
