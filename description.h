@@ -7,11 +7,14 @@
 #include <vector>
 using namespace  std;
 
-class Description
-{
+class Description{
 public:
     Description(QString);//默认构造函数
-    void Change(QString);//修改
+    void Change(const QString&);//修改
+    Description& operator=(const Description& description){
+        return *this;
+    }
+
     //常引用只读
     const QDateTime& TimeStamp;
     const QString& Note;
