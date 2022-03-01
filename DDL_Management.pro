@@ -27,12 +27,14 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     ddl.cpp \
-    date.cpp
+    date.cpp \
+    message.cpp
 
 HEADERS += \
         mainwindow.h \
     ddl.h \
-    date.h
+    date.h \
+    message.h
 
 FORMS += \
         mainwindow.ui
