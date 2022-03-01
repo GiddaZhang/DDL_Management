@@ -1,60 +1,80 @@
 #include "ddl.h"
 
-DDL::DDL(int degree, bool state, bool turn,
-         QString time, QString des, QString dur,
-         DDL* prev, DDL* next):
-    CompletDegree(m_completDegree), CompletState(m_completState),
-    TurnInState(m_turnInState), Descrip(m_descrip),
+DDL::DDL(QString name, QString time, QString des, QString dur, DDL* prev, DDL* next):
+    Name(m_name),CompleteState(m_completeDegree), AllDescription(m_AllDescription),
     Duration(m_duration), Due(m_due)
 {
-    SetDDL(degree, state, turn, time, des, dur, prev, next);
+    SetDDL(name, TO_BE_STARTED, time, des, dur, prev, next);
 }
 
-void DDL::SetDDL(int degree, bool state, bool turn,
-                 QString time, QString des, QString dur,
+Result DDL::SetDDL(QString name, int degree, QString time, QString des, QString dur,
                  DDL* prev, DDL* next)
 {
-    m_completDegree = degree;
-    m_completState = state;
-    m_turnInState = turn;
-    m_due = QDateTime::fromString(time, "yyyy-MM-dd hh:mm:ss");
-    m_descrip = des;
-    m_duration = QTime::fromString(dur);
+   if(SetName(name)==INVALID||SetCompleteDegree(degree)==INVALID
+           ||SetDuration(dur)==INVALID||SetDue(time)==INVALID){
+       return INVALID;
+   }
+    AddDescription(des);
     m_prev = prev;
     m_next = next;
 }
 
-void DDL::SetCompletDeg(int degree)
+Result DDL::SetName(const QString& name)
 {
-    m_completDegree = degree;
+    auto Finder = [&name](shared_ptr<DDL> ptr)->bool{return (ptr->Name == name);};
+    auto it = find_if(m_AllDDL.begin(), m_AllDDL.end(), Finder);
+    if (it == m_AllDDL.end()) {
+        m_name = name;
+        return VALID;
+    }else{
+        return INVALID;
+    }
 }
 
-void DDL::SetCompletState(bool state)
+Result DDL::SetCompleteDegree(const CompleteDegree& degree)
 {
-    m_completState = state;
+    if(degree == STARTED || degree == QUARTER || degree == HALF_WAY
+       || degree == THREE_QUARTERS || degree == TO_BE_REFINED
+       || degree == COMPLETED || degree == HANDED_IN){
+        m_completDegree = degree;
+        return VALID;
+    }else{
+        return INVALID;
+    }
+
 }
 
-void DDL::SetTurnInState(bool turn)
-{
-    m_turnInState = turn;
-}
-
-void DDL::SetDescirp(const QString& des)
-{
-    m_descrip = des;
-}
-
-void DDL::SetDuration(const QString& dur)
+Result DDL::SetDuration(const QString& dur)
 {
     m_duration = QTime::fromString(dur);
 }
 
-void DDL::SetPrev(DDL* prev)
+Result DDL::SetDue(const QString& due)
+{
+    m_due = QDateTime::fromString(time, "yyyy-MM-dd hh:mm:ss");
+}
+
+Result DDL::AddDescription(const QString& des)
+{
+
+}
+
+Result DDL::DeleteDescription(const int& num)
+{
+
+}
+
+Result DDL::ModifyDescription(const int& num, const QString& new_des)
+{
+
+}
+
+Result DDL::SetPrev(DDL* prev)
 {
     m_prev = prev;
 }
 
-void DDL::SetNext(DDL* next)
+Result DDL::SetNext(DDL* next)
 {
     m_next = next;
 }
@@ -81,4 +101,9 @@ DDL* DDL::GetNext()
 bool DDL::operator < (const DDL& b)
 {
     return this->m_due < b.Due;
+}
+
+bool DDL::operator > (const DDL& b)
+{
+    return this->m_due > b.Due;
 }
