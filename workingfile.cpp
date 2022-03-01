@@ -1,12 +1,8 @@
 #include "workingfile.h"
 
-vector<shared_ptr<WorkingFile>> WorkingFile::m_AllFile{};//静态存储的文件列表
-
 WorkingFile::WorkingFile(const QString& path):FilePath(path)
 {
-    //加入到文件列表末尾
     m_filePath = path;
-    m_AllFile.push_back(shared_ptr<WorkingFile>(this));
 }
 
 void WorkingFile::AddFile(const QString& path)
@@ -14,36 +10,15 @@ void WorkingFile::AddFile(const QString& path)
     new WorkingFile(path);
 }
 
-Result WorkingFile::DeleteFile(const QString& path)
-{
-    auto Finder = [&path](shared_ptr<WorkingFile> ptr)->bool{return (ptr->m_filePath == path);};
-    auto it = find_if(m_AllFile.begin(), m_AllFile.end(), Finder);
-
-    // 判断文件路径是否存在
-    if (it == m_AllFile.end()) {
-        return Result::NFOUND;
-    }
-    //存在则直接erase
-    else {
-        it = m_AllFile.erase(it);
-        return Result::SUCCESS;
-    }
-}
-
 Result WorkingFile::OpenFile(const QString& path)
 {
-    auto Finder = [&path](shared_ptr<WorkingFile> ptr)->bool{return (ptr->m_filePath == path);};
-    auto it = find_if(m_AllFile.begin(), m_AllFile.end(), Finder);
-
     // 判断文件路径是否存在
-    if (it == m_AllFile.end()) {
+    if (!isDirExist(path)) {
         return Result::NFOUND;
     }
     // 存在则直接打开
-    else {
-        QDesktopServices::openUrl(QUrl::fromLocalFile(path));
-        return Result::SUCCESS;
-    }
+    QDesktopServices::openUrl(QUrl::fromLocalFile(path));
+    return Result::SUCCESS;
 }
 
 Result WorkingFile::SaveToFolder(const QString& path)
