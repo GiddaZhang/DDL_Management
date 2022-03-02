@@ -23,8 +23,8 @@
 #include <QTime>
 #include <memory>
 #include <vector>
-#include <description.h>
-#include <workingfile.h>
+#include "description.h"
+#include "workingfile.h"
 using namespace  std;
 
 //完成情况，为用户提供几个可选选项
@@ -36,6 +36,11 @@ enum CompleteDegree{
 enum Set_Result{
     VALID,INVALID, INVALID_NAME, INVALID_COMMENCE, INVALID_DUE,
     INVALID_ESTIMATE, INVALID_PREV, INVALID_NEXT
+};
+
+//从文件读写操作是否合理
+enum Read_Write_Result{
+    FAIL_TO_OPEN, EMPTY, INVALID_DATETIME, SUCCESS
 };
 
 class DDL{
@@ -56,7 +61,8 @@ public:
     Set_Result SetNext(QString);                         // 设置后继任务
 
     //描述语&文档路径的增删改操作
-    Set_Result AddDescription(const QString&);                  // 添加DDL描述
+    Set_Result AddDescription(const QString&);                  // 添加DDL描述，时间为当前时间
+    Set_Result AddDescription(const QString&, const QDateTime&);// 添加DDL描述，时间由第二个参数给定
     Set_Result DeleteDescription(const int&);                   // 删除描述
     Set_Result ModifyDescription(const int&, const QString&);   // 修改描述
     Set_Result AddPath(const QString&);                         // 添加文档路径
@@ -74,8 +80,8 @@ public:
     Set_Result Verify(QString, QString, QString, int, float, QString, QString);//构造对象前验证数据合理性
 
     //静态公有接口
-    static void LoadFromFile(const QString&);                                            //加载信息
-    static void SaveToFile(const QString&);                                              //存储信息
+    static Read_Write_Result LoadFromFile(const QString&);                    //加载信息
+    static Read_Write_Result SaveToFile(const QString&);                      //存储信息
 
     // 公有常引用作为私有变量的只读版本
     const QString& Name;
@@ -88,7 +94,7 @@ public:
     const QString& Prev;
     const QString& Next;
     const vector<Description>& AllDescription;
-    const WorkingFile& FilePath;
+    const vector<WorkingFile>& AllFilePath;
 
 protected:
     Set_Result SetDuration();                                   // 设置任务持续时间
@@ -108,10 +114,12 @@ private:
     QString m_prev;                         // 前驱任务
     QString m_next;                         // 后继任务
     vector<Description> m_allDescription;   // DDL描述语序列
-    WorkingFile m_filePath;                 // 存储文档路径的对象
+    vector<WorkingFile> m_allFilePath;      // 文档路径序列
 
     static vector<shared_ptr<DDL>> m_allDDL;// 静态存储DDL对象
 // 说明：任务结束时间在基类QDateTime中，任务紧迫度通过接口GetUrgency()间接计算，不用属性进行维护
 };
+
+CompleteDegree fromStr(const string&);    // 从string转换到CompleteDegree
 
 #endif // DDL_H

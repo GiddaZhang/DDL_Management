@@ -13,7 +13,7 @@
 using namespace std;
 
 // 判断文件操作是否合理
-enum class Result
+enum class FileResult
 {
     SUCCESS,
     NFOUND,
@@ -26,18 +26,24 @@ class WorkingFile
 public:
     WorkingFile(const QString&);          // 构造函数
     void AddFile(const QString&);         // 新建文件链接
-    Result OpenFile(const QString&);      // 使用默认打开方式打开文件链接
-    Result SaveToFolder(const QString&);  // 备份文件链接
+    FileResult Change(const QString&);          // 修改链接
+    FileResult OpenFile(const QString&);      // 使用默认打开方式打开文件链接
+    FileResult SaveToFolder(const QString&);  // 备份文件链接
+
+    WorkingFile& operator=(const WorkingFile& workingFile){
+        return *this;
+    }
 
     // 常引用作为私有变量的公有只读版本
     const QString& FilePath;
 private:
-    // 这里需要管理员注意：windows默认的路径以\作分隔符，而qt则需要/分隔，可能需要做一步转换。
+    // 这里需要管理员注意：windows默认的路径以\作分隔符，而qt则需要/分隔，需要确认是否做过转换。
     QString m_filePath;
 };
 
-bool isDirExist(const QString&);// 检测路径是否存在
-QString GetCurrentPath();       // 获取当前文件夹路径
+bool isDirExist(const QString&);    // 检测路径是否存在
+QString GetCurrentPath();           // 获取当前文件夹路径
+//QString PathConver(const QString&); // 将路径的\转换为/，并不知道怎么实现
 
 
 #endif // WORKINGFILE_H

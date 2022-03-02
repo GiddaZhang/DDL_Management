@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ddl.h"
 #include <QApplication>
+#include <fstream>
 #include <QDebug>
 
 int main(int argc, char *argv[])
@@ -16,8 +17,17 @@ int main(int argc, char *argv[])
 
 void test()
 {
-//    DDL D_1, D_2;
-//    D_2.SetDuration("18:00:00");
-//    D_1.SetNext(&D_2);
-//    qDebug() << D_1.Duration;
+//    QString l = "\\", path_1 = R"(D:\Desktop)", path_2 = "D:\\Desktop";
+//    if(!path_2.contains(l, Qt::CaseInsensitive)) {
+//        qDebug() << 1;
+//    }
+//    else
+//        qDebug() << 2;
+//    ifstream File("D:\\Desktop\\2.txt");    // 定义一个输入流对象
+//    int a, b, c;
+//    File >> a >> b >> c;
+//    File.close();
+//    qDebug() << a;
+//    qDebug() << b;
+//    qDebug() << c;
 }

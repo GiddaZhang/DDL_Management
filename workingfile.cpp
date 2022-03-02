@@ -2,6 +2,7 @@
 
 WorkingFile::WorkingFile(const QString& path):FilePath(path)
 {
+    //因为无法在调用构造函数的情况下验证数据合理性，所以这里先假设业务流程类已经先调用了路径验证函数
     m_filePath = path;
 }
 
@@ -10,18 +11,28 @@ void WorkingFile::AddFile(const QString& path)
     new WorkingFile(path);
 }
 
-Result WorkingFile::OpenFile(const QString& path)
+FileResult WorkingFile::Change(const QString& path)
 {
     // 判断文件路径是否存在
     if (!isDirExist(path)) {
-        return Result::NFOUND;
+        return FileResult::NFOUND;
+    }
+    m_filePath = path;
+    return FileResult::SUCCESS;
+}
+
+FileResult WorkingFile::OpenFile(const QString& path)
+{
+    // 判断文件路径是否存在
+    if (!isDirExist(path)) {
+        return FileResult::NFOUND;
     }
     // 存在则直接打开
     QDesktopServices::openUrl(QUrl::fromLocalFile(path));
-    return Result::SUCCESS;
+    return FileResult::SUCCESS;
 }
 
-Result WorkingFile::SaveToFolder(const QString& path)
+FileResult WorkingFile::SaveToFolder(const QString& path)
 {
     QString FolderPath = GetCurrentPath();
     FolderPath += "/backup/";
@@ -35,7 +46,7 @@ Result WorkingFile::SaveToFolder(const QString& path)
         bool ismkdir = dir.mkdir(FolderPath);
         if(!ismkdir) {
             // 如果新建文件夹失败
-            return Result::FAILURE;
+            return FileResult::FAILURE;
         }
         // 新建文件夹成功
     }
@@ -56,11 +67,11 @@ Result WorkingFile::SaveToFolder(const QString& path)
 
     if(QFile::exists(FolderPath)) {
         // 如果路径存在，表面已经有备份文件，报错
-        return Result::AlreadyExist;
+        return FileResult::AlreadyExist;
     }
     // 复制文件
     QFile::copy(path, FolderPath);
-    return Result::SUCCESS;
+    return FileResult::SUCCESS;
 }
 
 bool isDirExist(const QString& fullPath)
@@ -83,3 +94,11 @@ QString GetCurrentPath()
     QString data_file_path = current_path.mid(0, last_index + 1) + "DDL_Management";
     return data_file_path;
 }
+
+//QString PathConver(const QString &path)
+//{
+//    if(!path.contains(l, Qt::CaseInsensitive)) {
+//        return path;
+//    }
+//    return QDir::fromNativeSeparators(path);
+//}

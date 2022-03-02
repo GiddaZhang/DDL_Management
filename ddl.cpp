@@ -1,5 +1,6 @@
 #include "ddl.h"
-#include <description.h>
+#include "description.h"
+#include <fstream>
 
 vector<shared_ptr<DDL>> DDL::m_allDDL{};// 静态存储DDL对象
 
@@ -8,7 +9,7 @@ DDL::DDL(QString name, QString commence, QString due, QString description,
     Name(m_name),CompleteState(m_completeState), Duration(m_duration_sec),
     Estimation(m_estimation_sec), Commence(m_commence), Due(m_due),
     TimeToStart(m_timeToStart), Prev(m_prev), Next(m_next),
-    AllDescription(m_allDescription), FilePath(m_filePath), m_filePath(filePath){
+    AllDescription(m_allDescription), AllFilePath(m_allFilePath){
     //因为无法在调用构造函数的情况下验证数据合理性，所以这里先假设业务流程类已经先调用了静态验证函数
     SetName(name);
     SetCompleteDegree(TO_BE_STARTED);
@@ -18,8 +19,11 @@ DDL::DDL(QString name, QString commence, QString due, QString description,
     SetPrev(prev);
     SetNext(next);
     AddDescription(description);
+    AddPath(filePath);
     SetDuration();
     SetTimeToStart();
+
+    m_allDDL.push_back(shared_ptr<DDL>(this));
 }
 
 Set_Result DDL::SetName(const QString& name){
@@ -157,7 +161,13 @@ Set_Result DDL::SetEstimation_Con(const int& est_Day, const float& est_Hour){
 }
 
 Set_Result DDL::AddDescription(const QString& description){
-    Description Temp = (description);
+    Description Temp(description);
+    m_allDescription.push_back(Temp);
+    return VALID;
+}
+
+Set_Result DDL::AddDescription(const QString& description, const QDateTime& time){
+    Description Temp(description, time);
     m_allDescription.push_back(Temp);
     return VALID;
 }
@@ -169,6 +179,7 @@ Set_Result DDL::DeleteDescription(const int& num){
     }else{
         auto it = m_allDescription.begin() + num;
         m_allDescription.erase(it);
+        return VALID;
     }
 }
 
@@ -179,19 +190,42 @@ Set_Result DDL::ModifyDescription(const int& num, const QString& new_Description
     }else{
         auto it = m_allDescription.begin() + num;
         it->Change(new_Description);
-
+        return VALID;
     }
 }
-Set_Result AddPath(const QString& filePath){
-    //待完成
+Set_Result DDL::AddPath(const QString& filePath){
+    // 先判断路径是否存在
+    QDir dir(filePath);
+    if(!dir.exists()) {
+        return INVALID;
+    }
+    WorkingFile Temp = (filePath);
+    m_allFilePath.push_back(Temp);
+    return VALID;
 }
 
-Set_Result DeletePath(const int& num){
-    //待完成
+Set_Result DDL::DeletePath(const int& num){
+    //若超出范围，不合理
+    if(num < 0 || num >= (int)m_allFilePath.size()){
+        return INVALID;
+    }else{
+        auto it = m_allFilePath.begin() + num;
+        m_allFilePath.erase(it);
+        return VALID;
+    }
 }
 
-Set_Result ModifyPath(const int& num, const QString& filePath){
-    //待完成
+Set_Result DDL::ModifyPath(const int& num, const QString& new_FilePath){
+    //若超出范围，不合理
+    if(num < 0 || num >= (int)m_allFilePath.size()){
+        return INVALID;
+    }else{
+        auto it = m_allFilePath.begin() + num;
+        if(it->Change(new_FilePath) == FileResult::SUCCESS) {
+            return VALID;
+        }
+        return INVALID;
+    }
 }
 
 double DDL::GetUrgency(){
@@ -209,11 +243,115 @@ bool DDL::operator > (const DDL& b)
     return this->m_due > b.Due;
 }
 
-void DDL::LoadFromFile(const QString& fileName){
-    //待完成
+Read_Write_Result DDL::LoadFromFile(const QString& fileName)
+{
+    ifstream File(fileName.toStdString());    // 定义一个输入流对象
+    //如果打开失败，抛“失败+文件名”
+    if (!File.is_open()) {
+        return Read_Write_Result::FAIL_TO_OPEN;
+    }
+    unsigned long DDLCount;        // DDL数量
+    File >> DDLCount;              // 从第一行读取数量
+    File.get();                    // 读取第一行剩下的空格
+
+    if (DDLCount == 0) {
+        return Read_Write_Result::EMPTY;// 如果没有DDL，直接返回空文件错误
+    }
+
+    // 否则逐个读取
+    string f_name;
+    string f_complete_degree_str;
+    string f_commence_str;
+    string f_due_str;
+    string f_prev;
+    string f_next;
+    string f_timestamp;
+    string f_note;
+    string f_path;
+    string HOLDER;
+    int f_est_day;
+    float f_est_Hour;
+
+    vector<Description> f_allDescrip;
+    vector<WorkingFile> f_allFilePath;
+
+    for(unsigned long i = 0; i < DDLCount; i++) {
+
+        // 先读前八行
+        File >> f_name >> f_complete_degree_str >>
+                f_commence_str >> f_due_str >>
+                f_prev >> f_next >> f_est_day >> f_est_Hour;
+
+        // 然后读description的2n行
+        while(HOLDER != "<DEND>") {
+            getline(File, HOLDER);      // 还没读完，先试读一行
+
+            if(HOLDER != "<DEND>") {
+                f_note = HOLDER;        // 不是结尾，还给f_note
+                File >> f_timestamp;
+
+                // 类型转换
+                QString f_note_qstr = QString::fromStdString(f_note);
+                QString f_timestamp_qstr = QString::fromStdString(f_timestamp);
+                QDateTime f_timestamp_datetime = QDateTime::fromString(f_timestamp_qstr, "yyyy-MM-dd hh:mm:ss");
+                // 整进向量
+                Description Temp_1(f_note_qstr, f_timestamp_datetime);
+                f_allDescrip.push_back(Temp_1);
+            }
+        }
+
+        // 然后读filepath的m行
+        while(HOLDER != "<WEND>") {
+            getline(File, HOLDER);      // 还没读完，先试读一行
+
+            if(HOLDER != "<WEND>") {
+                f_path = HOLDER;        // 不是结尾，还给f_path
+
+                // 类型转换
+                QString f_path_qstr = QString::fromStdString(f_path);
+                // 整进向量里
+                WorkingFile Temp_2(f_path_qstr);
+                f_allFilePath.push_back(Temp_2);
+            }
+        }
+
+        // 集中类型转换
+//        QString f_name_qstr = QString::fromStdString(f_name);
+//        CompleteDegree f_complete_degree = fromStr(f_complete_degree_str);
+//        QString f_commence_qstr = QString::fromStdString(f_commence_str);
+//        QDateTime f_commence = QDateTime::fromString(f_commence_qstr, "yyyy-MM-dd hh:mm:ss");
+//        QString f_due_qstr = QString::fromStdString(f_due_str);
+//        QDateTime f_due = QDateTime::fromString(f_due_qstr, "yyyy-MM-dd hh:mm:ss");
+//        QString f_prev_qstr = QString::fromStdString(f_prev);
+//        QString f_next_qstr = QString::fromStdString(f_next);
+
+        DDL* ddl = new DDL();       // 调用默认构造函数
+        ddl->SetName(QString::fromStdString(f_name));
+        ddl->SetCompleteDegree(fromStr(f_complete_degree_str));
+        ddl->SetCommence(QString::fromStdString(f_commence_str));
+        ddl->SetDue(QString::fromStdString(f_due_str));
+        ddl->SetEstimation(f_est_day, f_est_Hour);
+        ddl->SetPrev(QString::fromStdString(f_prev));
+        ddl->SetNext(QString::fromStdString(f_next));
+
+        ddl->DeleteDescription(0);      // 删除PLAIN
+        ddl->DeletePath(0);             // 删除NULL
+
+        // 添加描述信息
+        for(auto it = f_allDescrip.begin(); it != f_allDescrip.end(); it ++) {
+            ddl->AddDescription(it->Note, it->TimeStamp);
+        }
+        // 添加文件路径信息
+        for(auto it = f_allFilePath.begin(); it != f_allFilePath.end(); it ++) {
+            ddl->AddPath(it->FilePath);
+        }
+
+    }
+    File.close();//关闭文件
+    return Read_Write_Result::SUCCESS;
 }
 
-void DDL::SaveToFile(const QString& fileName){
+Read_Write_Result DDL::SaveToFile(const QString& fileName){
     //待完成
 }
 
@@ -257,4 +395,25 @@ Set_Result DDL::Verify(QString name, QString commence, QString due,
         return INVALID_NEXT;
     }
     return VALID;
+}
+
+CompleteDegree fromStr(const string& in)
+{
+    // 佛了
+    if(in == "TO_BE_STARTED")
+        return CompleteDegree::TO_BE_STARTED;
+    if(in == "STARTED")
+        return CompleteDegree::STARTED;
+    if(in == "QUARTER")
+        return CompleteDegree::QUARTER;
+    if(in == "HALF_WAY")
+        return CompleteDegree::HALF_WAY;
+    if(in == "THREE_QUARTERS")
+        return CompleteDegree::THREE_QUARTERS;
+    if(in == "TO_BE_REFINED")
+        return CompleteDegree::TO_BE_REFINED;
+    if(in == "COMPLETED")
+        return CompleteDegree::COMPLETED;
+    if(in == "HANDED_IN")
+        return CompleteDegree::HANDED_IN;
 }
