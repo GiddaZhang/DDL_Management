@@ -30,12 +30,17 @@ public:
     FileResult OpenFile(const QString&);      // 使用默认打开方式打开文件链接
     FileResult SaveToFolder(const QString&);  // 备份文件链接
 
-    WorkingFile& operator=(const WorkingFile& workingFile){
+    WorkingFile& operator=(const WorkingFile& workingFile)
+    {
+        this->m_filePath = workingFile.FilePath;
         return *this;
     }
 
     // 常引用作为私有变量的公有只读版本
     const QString& FilePath;
+    // 常引用只读有时候不好使
+    QString GetFilePath();
+
 private:
     // 这里需要管理员注意：windows默认的路径以\作分隔符，而qt则需要/分隔，需要确认是否做过转换。
     QString m_filePath;
@@ -44,6 +49,5 @@ private:
 bool isDirExist(const QString&);    // 检测路径是否存在
 QString GetCurrentPath();           // 获取当前文件夹路径
 //QString PathConver(const QString&); // 将路径的\转换为/，并不知道怎么实现
-
 
 #endif // WORKINGFILE_H

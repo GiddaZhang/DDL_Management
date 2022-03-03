@@ -74,6 +74,11 @@ FileResult WorkingFile::SaveToFolder(const QString& path)
     return FileResult::SUCCESS;
 }
 
+QString WorkingFile::GetFilePath()
+{
+    return this->m_filePath;
+}
+
 bool isDirExist(const QString& fullPath)
 {
     QDir dir(fullPath);
