@@ -23,9 +23,12 @@
 #include <QTime>
 #include <memory>
 #include <vector>
+#include <QDebug>
+#include <iostream>
+#include <QFileInfo>
 #include "description.h"
 #include "workingfile.h"
-using namespace  std;
+using namespace std;
 
 //完成情况，为用户提供几个可选选项
 enum CompleteDegree{
@@ -47,7 +50,7 @@ class DDL{
 
 public:
     //构造函数
-    DDL(QString name = "UNKNOWN", QString commence = QDateTime::currentDateTime().toString(),
+    DDL(QString name = "UNKNOWN", QString commence = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"),
         QString due = "2050-01-01 00:00:00", QString description = "PLAIN", QString filePath = "NULL",
         int est_Day = 0, float est_Hour = 0.0, QString prev = "PREV", QString next = "Next");
 
@@ -80,8 +83,9 @@ public:
     Set_Result Verify(QString, QString, QString, int, float, QString, QString);//构造对象前验证数据合理性
 
     //静态公有接口
-    static Read_Write_Result LoadFromFile(const QString&);                    //加载信息
-    static Read_Write_Result SaveToFile(const QString&);                      //存储信息
+    static Read_Write_Result LoadFromFile();                    // 加载信息，路径由函数自动确定
+    static Read_Write_Result SaveToFile();                      // 存储信息，路径由函数自动确定
+    void OutputToStream(ostream&) const;                   // 输出流
 
     // 公有常引用作为私有变量的只读版本
     const QString& Name;
@@ -121,5 +125,6 @@ private:
 };
 
 CompleteDegree fromStr(const string&);    // 从string转换到CompleteDegree
+string toStr(const CompleteDegree&);    // 从string转换到CompleteDegree
 
 #endif // DDL_H
