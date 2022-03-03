@@ -23,11 +23,8 @@ void test()
 //    }
 //    else
 //        qDebug() << 2;
-//    ifstream File("D:\\Desktop\\2.txt");    // 定义一个输入流对象
-//    int a, b, c;
-//    File >> a >> b >> c;
-//    File.close();
-//    qDebug() << a;
-//    qDebug() << b;
-//    qDebug() << c;
+
+    DDL::LoadFromFile();
+    DDL::SaveToFile();
 }
+
