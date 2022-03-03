@@ -25,3 +25,11 @@ void ddl_block::mousePressEvent(QMouseEvent *ev)
     }
 }
 
+void ddl_block::setddl(int degree, bool state, bool turn,
+                       QString time, QString des,
+                       QString dur,
+                       DDL* prev, DDL* next)
+{
+    this->m_ddl.SetDDL(degree, state, turn, time, des, dur, prev, next);
+}
+

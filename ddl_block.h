@@ -19,6 +19,10 @@ public:
     explicit ddl_block(QMainWindow *parent = nullptr);
     void keyPressEvent(QKeyEvent *event) override;
     void mousePressEvent(QMouseEvent *ev) override;
+    void setddl(int degree, bool state, bool turn,
+                QString time, QString des,
+                QString dur,
+                DDL* prev, DDL* next);
 
 private:
     DDL m_ddl;
