@@ -231,6 +231,15 @@ Set_Result DDL::ModifyPath(const int& num, const QString& new_FilePath){
     }
 }
 
+FileResult DDL::OpenAllFile()
+{
+    for(auto it = m_allFilePath.begin();it != m_allFilePath.end();it++) {
+        if(it->OpenFile() != FileResult::SUCCESS) {
+            return FileResult::FAILURE;
+        }
+    }
+}
+
 double DDL::GetUrgency(){
     qint64 cur_sec = QDateTime::currentDateTime().secsTo(this->Due);    // 目前剩余时间，单位秒
     return ((double) m_duration_sec / (double)cur_sec) * 100;
