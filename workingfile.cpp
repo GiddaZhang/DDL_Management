@@ -24,11 +24,22 @@ FileResult WorkingFile::Change(const QString& path)
 FileResult WorkingFile::OpenFile(const QString& path)
 {
     // 判断文件路径是否存在
-    if (!isDirExist(path)) {
+    if (!QFile::exists(path)) {
         return FileResult::NFOUND;
     }
     // 存在则直接打开
     QDesktopServices::openUrl(QUrl::fromLocalFile(path));
+    return FileResult::SUCCESS;
+}
+
+FileResult WorkingFile::OpenFile()
+{
+    // 判断文件路径是否存在
+    if (!QFile::exists(this->m_filePath)) {
+        return FileResult::NFOUND;
+    }
+    // 存在则直接打开
+    QDesktopServices::openUrl(QUrl::fromLocalFile(this->m_filePath));
     return FileResult::SUCCESS;
 }
 

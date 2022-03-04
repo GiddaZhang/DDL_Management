@@ -10,6 +10,7 @@
 #include <QDate>
 #include <QTime>
 #include <QFile>
+
 using namespace std;
 
 // 判断文件操作是否合理
@@ -24,10 +25,11 @@ enum class FileResult
 class WorkingFile
 {
 public:
-    WorkingFile(const QString&);          // 构造函数
-    void AddFile(const QString&);         // 新建文件链接
-    FileResult Change(const QString&);          // 修改链接
+    WorkingFile(const QString&);              // 构造函数
+    void AddFile(const QString&);             // 新建文件链接
+    FileResult Change(const QString&);        // 修改链接
     FileResult OpenFile(const QString&);      // 使用默认打开方式打开文件链接
+    FileResult OpenFile();                    // 重载，打开私有成员存储的链接
     FileResult SaveToFolder(const QString&);  // 备份文件链接
 
     WorkingFile& operator=(const WorkingFile& workingFile)

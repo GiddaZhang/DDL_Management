@@ -49,12 +49,12 @@ enum Read_Write_Result{
 class DDL{
 
 public:
-    //构造函数
+    // 构造函数
     DDL(QString name = "UNKNOWN", QString commence = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"),
         QString due = "2050-01-01 00:00:00", QString description = "PLAIN", QString filePath = "NULL",
         int est_Day = 0, float est_Hour = 0.0, QString prev = "PREV", QString next = "Next");
 
-    //公有Setter
+    // 公有Setter
     Set_Result SetName(const QString&);                         // 设置任务名称
     Set_Result SetCompleteDegree(const CompleteDegree&);        // 设置任务完成度
     Set_Result SetCommence(const QString&);                     // 设置任务开始时间
@@ -63,7 +63,7 @@ public:
     Set_Result SetPrev(QString);                         // 设置前驱任务
     Set_Result SetNext(QString);                         // 设置后继任务
 
-    //描述语&文档路径的增删改操作
+    // 描述语&文档路径的增删改操作
     Set_Result AddDescription(const QString&);                  // 添加DDL描述，时间为当前时间
     Set_Result AddDescription(const QString&, const QDateTime&);// 添加DDL描述，时间由第二个参数给定
     Set_Result DeleteDescription(const int&);                   // 删除描述
@@ -72,10 +72,13 @@ public:
     Set_Result DeletePath(const int&);                          // 删除文档路径
     Set_Result ModifyPath(const int&, const QString&);          // 修改文档路径
 
-    //公有Getter
+    // 打开所有文件
+    FileResult OpenAllFile();                            // 一口气打开所有文件
+
+    // 公有Getter
     double GetUrgency();                  // 返回DDL紧迫程度，预期耗时/(DDL时间-当前时间)*100%
 
-    //重载运算符
+    // 重载运算符
     bool operator < (const DDL&);         // 比较时间的先后用于排序："<"——先发生
     bool operator > (const DDL&);         // 比较时间的先后用于排序：">"——后发生
 
@@ -85,7 +88,7 @@ public:
     //静态公有接口
     static Read_Write_Result LoadFromFile();                    // 加载信息，路径由函数自动确定
     static Read_Write_Result SaveToFile();                      // 存储信息，路径由函数自动确定
-    void OutputToStream(ostream&) const;                   // 输出流
+    void OutputToStream(ostream&) const;                        // 输出流
 
     // 公有常引用作为私有变量的只读版本
     const QString& Name;

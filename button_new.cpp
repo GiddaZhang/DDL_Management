@@ -1,4 +1,5 @@
 #include "button_new.h"
+#include <QDebug>
 
 button_new::button_new(QMainWindow *parent) : button(parent)
 {

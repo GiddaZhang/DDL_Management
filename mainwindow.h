@@ -21,10 +21,9 @@ public:
     button_new *m_button;
     ddl_block *m_block;
     void keyPressEvent(QKeyEvent *event) override;
-    void create_ddl();
 
 public slots:
-    void new_ddl();
+    void create_ddl();
 
 private:
     Ui::MainWindow *ui;

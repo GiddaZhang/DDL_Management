@@ -20,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_button->setStyleSheet("QLabel{border:2px solid rgb(0, 255, 0);}");
     m_button->setText("clickhere\nfor new ddl");
     m_button->show();
+    connect(this->m_button, SIGNAL(newddl()), this, SLOT(create_ddl()));
 
 
 }
@@ -40,8 +41,10 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 
 void MainWindow::create_ddl()
 {
+    qDebug() << "shit";
     ddl_block *tmp_Label = new ddl_block(this);
     tmp_Label->setGeometry(400, 200 + this->DDL_number*200, 600, 200);
+    tmp_Label->setParameters(400, 200 + this->DDL_number*200, 600, 200);
     tmp_Label->setStyleSheet("QLabel{border:2px solid rgb(0, 255, 255);}");
     this->DDL_number++;
     time_t t = time(0);
@@ -51,9 +54,11 @@ void MainWindow::create_ddl()
     qDebug() << now_time;
     tmp_Label->setText(now_time);
     tmp_Label->show();
+
+    //下面提供删除交互方式
+    tmp_Label->Button_delete = new button_delete(tmp_Label);
+    tmp_Label->setParameters(tmp_Label->m_x, tmp_Label->m_y, 200, 100);
+    tmp_Label->Button_delete->setText("delete");
+    tmp_Label->Button_delete->show();
 }
 
-void MainWindow::new_ddl()
-{
-    create_ddl();
-}

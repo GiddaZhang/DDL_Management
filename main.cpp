@@ -7,11 +7,11 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-//    MainWindow w;
-//    w.show();
+    MainWindow w;
+    w.show();
 
-    void test();
-    test();
+//    void test();
+//    test();
     return a.exec();
 }
 
@@ -24,7 +24,10 @@ void test()
 //    else
 //        qDebug() << 2;
 
-    DDL::LoadFromFile();
-    DDL::SaveToFile();
+//    DDL::LoadFromFile();
+//    DDL::SaveToFile();
+
+//    auto it = DDL::m_allDDL.begin() + 1;
+//    (*it)->OpenAllFile();
 }
 

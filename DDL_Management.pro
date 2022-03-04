@@ -24,6 +24,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
+    button_delete.cpp \
     workingfile.cpp \
     description.cpp \
     button.cpp \
@@ -35,6 +36,7 @@ SOURCES += \
     date.cpp
 
 HEADERS += \
+    button_delete.h \
     workingfile.h \
     description.h \
     button.h \

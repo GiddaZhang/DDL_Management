@@ -30,6 +30,19 @@ void ddl_block::setddl(int degree, bool state, bool turn,
                        QString dur,
                        DDL* prev, DDL* next)
 {
-    this->m_ddl.SetDDL(degree, state, turn, time, des, dur, prev, next);
+    //this->m_ddl.SetDDL(degree, state, turn, time, des, dur, prev, next);
+}
+
+void ddl_block::setParameters(int x, int y, int Length, int width)
+{
+    this->m_x = x;
+    this->m_y = y;
+    this->m_length = Length;
+    this->m_width = width;
+}
+
+ddl_block::~ddl_block()
+{
+    delete this;
 }
 
