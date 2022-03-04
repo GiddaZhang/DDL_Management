@@ -24,7 +24,10 @@ void test()
 //    else
 //        qDebug() << 2;
 
-    DDL::LoadFromFile();
-    DDL::SaveToFile();
+//    DDL::LoadFromFile();
+//    DDL::SaveToFile();
+
+//    auto it = DDL::m_allDDL.begin() + 1;
+//    (*it)->OpenAllFile();
 }
 
