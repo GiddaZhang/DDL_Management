@@ -24,6 +24,7 @@ public:
                 QString time, QString des,
                 QString dur,
                 DDL* prev, DDL* next);
+    int rank;//记录其在数组中的序号
     int m_x;
     int m_y;
     int m_length;
@@ -39,7 +40,10 @@ private:
 
 
 signals:
-    void newddl();
+    void deleteddl();
+public slots:
+    void slot_delete();
+
 };
 
 #endif // DDL_BLOCK_H

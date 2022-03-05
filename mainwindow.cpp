@@ -22,7 +22,6 @@ MainWindow::MainWindow(QWidget *parent) :
     m_button->show();
     connect(this->m_button, SIGNAL(newddl()), this, SLOT(create_ddl()));
 
-
 }
 
 MainWindow::~MainWindow()
@@ -46,7 +45,8 @@ void MainWindow::create_ddl()
     tmp_Label->setGeometry(400, 200 + this->DDL_number*200, 600, 200);
     tmp_Label->setParameters(400, 200 + this->DDL_number*200, 600, 200);
     tmp_Label->setStyleSheet("QLabel{border:2px solid rgb(0, 255, 255);}");
-    this->DDL_number++;
+    isOccupied[this->DDL_number] = true;
+    this->m_block[this->DDL_number++] = tmp_Label;
     time_t t = time(0);
     char tmp[64];
     strftime( tmp, sizeof(tmp), "%Y/%m/%d %X %A",localtime(&t) );
@@ -60,5 +60,20 @@ void MainWindow::create_ddl()
     tmp_Label->setParameters(tmp_Label->m_x, tmp_Label->m_y, 200, 100);
     tmp_Label->Button_delete->setText("delete");
     tmp_Label->Button_delete->show();
+    tmp_Label->Button_delete->rank = DDL_number - 1;//记录这个ddl的序号，用于删除时恢复格式
+    connect(tmp_Label->Button_delete, SIGNAL(delete_ddl(int)), this, SLOT(slot_delete(int)));
 }
+
+void MainWindow::slot_delete(int rank)//用于维持正确格式并删除对应ddl
+{
+    //qDebug() << rank;
+    isOccupied[rank] = false;//clear out the position
+    for(int i = rank + 1; i < DDL_number; i++)
+    {
+        this->m_block[i]->setGeometry(this->x(), this->y() - 200, this->width(), this->height());
+    }
+}
+
+
+
 
