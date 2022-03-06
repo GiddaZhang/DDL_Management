@@ -5,6 +5,7 @@
 #include <ctime>
 #include <string>
 #include <QString>
+#include <QScrollArea>
 #include <iostream>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -12,11 +13,19 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    this->setGeometry(0, 0, 1600, 1600);
+
+    // 主窗口设置
+    this->setGeometry(20, 40, 1100, 760);
     this->show();
-    this->setWindowTitle("DDL_management");
+    this->setWindowTitle("DDL_Management");
+
+    // 滚动区域设置
+    QScrollArea *scrollArea = new QScrollArea(this);
+    scrollArea->setGeometry(20, 200, 1050, 760);
+    scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);   // 让滚动条可见
+
     m_button = new button_new(this);
-    m_button->setGeometry(0, 0, 400, 400);
+    m_button->setGeometry(20, 40, 200, 200);
     m_button->setStyleSheet("QLabel{border:2px solid rgb(0, 255, 0);}");
     m_button->setText("clickhere\nfor new ddl");
     m_button->show();
