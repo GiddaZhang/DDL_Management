@@ -77,6 +77,8 @@ public:
 
     // 公有Getter
     double GetUrgency();                                        // 返回DDL紧迫程度，预期耗时/(DDL时间-当前时间)*100%
+    QString GetName() const;                                    // 返回DDL名称
+    QDateTime GetDue() const;                                   // 返回DDL截止时间
 
     // 重载运算符
     bool operator < (const DDL&);                               // 比较时间的先后用于排序："<"——先发生
@@ -88,20 +90,22 @@ public:
     //静态公有接口
     static Read_Write_Result LoadFromFile();                    // 加载信息，路径由函数自动确定
     static Read_Write_Result SaveToFile();                      // 存储信息，路径由函数自动确定
+    static shared_ptr<DDL> GetDDLPtr(const QString&);
+
     void OutputToStream(ostream&) const;                        // 输出流
 
     // 公有常引用作为私有变量的只读版本
-    const QString& Name;
-    const CompleteDegree& CompleteState;
-    const qint64& Duration;
-    const qint64& Estimation;
-    const QDateTime& Commence;
-    const QDateTime& Due;
-    const QDateTime& TimeToStart;
-    const QString& Prev;
-    const QString& Next;
-    const vector<Description>& AllDescription;
-    const vector<WorkingFile>& AllFilePath;
+//    const QString& Name;
+//    const CompleteDegree& CompleteState;
+//    const qint64& Duration;
+//    const qint64& Estimation;
+//    const QDateTime& Commence;
+//    const QDateTime& Due;
+//    const QDateTime& TimeToStart;
+//    const QString& Prev;
+//    const QString& Next;
+//    const vector<Description>& AllDescription;
+//    const vector<WorkingFile>& AllFilePath;
 
 protected:
     Set_Result SetDuration();                                   // 设置任务持续时间
