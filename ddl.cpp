@@ -238,6 +238,7 @@ FileResult DDL::OpenAllFile()
             return FileResult::FAILURE;
         }
     }
+    return FileResult::SUCCESS;
 }
 
 double DDL::GetUrgency(){
@@ -379,6 +380,7 @@ Read_Write_Result DDL::SaveToFile()
     File << m_allDDL.size() << endl;                        // 首先输入DDL数量
     for_each(m_allDDL.begin(), m_allDDL.end(), Saver);      // 再一个接一个把DDL列表里的信息输入文件中
     File.close();//关闭文件
+    return Read_Write_Result::SUCCESS;
 }
 
 void DDL::OutputToStream(ostream& Stream) const
