@@ -32,8 +32,7 @@ SOURCES += \
     ddl_block.cpp \
         main.cpp \
         mainwindow.cpp \
-    ddl.cpp \
-    date.cpp
+    ddl.cpp
 
 HEADERS += \
     button_delete.h \
@@ -43,11 +42,7 @@ HEADERS += \
     button_new.h \
     ddl_block.h \
         mainwindow.h \
-    ddl.h \
-    date.h
-
-
-
+    ddl.h
 
 FORMS += \
         mainwindow.ui
