@@ -24,17 +24,25 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
+    button_delete.cpp \
+    workingfile.cpp \
+    description.cpp \
+    button.cpp \
+    button_new.cpp \
+    ddl_block.cpp \
         main.cpp \
         mainwindow.cpp \
-    ddl.cpp \
-    workingfile.cpp \
-    description.cpp
+    ddl.cpp
 
 HEADERS += \
-        mainwindow.h \
-    ddl.h \
+    button_delete.h \
     workingfile.h \
-    description.h
+    description.h \
+    button.h \
+    button_new.h \
+    ddl_block.h \
+        mainwindow.h \
+    ddl.h
 
 FORMS += \
         mainwindow.ui
