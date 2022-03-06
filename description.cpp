@@ -15,6 +15,13 @@ Description::Description(QString description, const QDateTime& dateTime):
     m_timeStamp = dateTime;
 }
 
+Description::Description(const Description& other):
+    TimeStamp(m_timeStamp), Note(m_note)
+{
+    m_note = other.m_note;
+    m_timeStamp = other.m_timeStamp;
+}
+
 void Description::Change(const QString& description){
     m_note = description;
 }

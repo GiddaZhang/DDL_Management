@@ -34,6 +34,9 @@ public:
 
     WorkingFile& operator=(const WorkingFile& workingFile)
     {
+        if(&workingFile == this) {
+            return *this;
+        }
         this->m_filePath = workingFile.FilePath;
         return *this;
     }

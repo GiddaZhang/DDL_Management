@@ -9,11 +9,15 @@ using namespace  std;
 
 class Description{
 public:
-    Description(QString);                   //默认构造函数，用当前时间
-    Description(QString, const QDateTime&); //其它构造函数，不用当前时间
-    void Change(const QString&);            //修改
+    Description(QString);                   // 默认构造函数，用当前时间
+    Description(QString, const QDateTime&); // 其它构造函数，不用当前时间
+    Description(const Description&);        // 拷贝构造函数
+    void Change(const QString&);            // 修改
     Description& operator=(const Description& description)
     {
+        if(&description == this) {
+            return *this;
+        }
         this->m_note = description.Note;
         this->m_timeStamp = description.TimeStamp;
         return *this;
