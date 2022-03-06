@@ -40,7 +40,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 
 void MainWindow::create_ddl()
 {
-    qDebug() << "shit";
+    //qDebug() << "shit";
     ddl_block *tmp_Label = new ddl_block(this);
     tmp_Label->setGeometry(400, 200 + this->DDL_number*200, 600, 200);
     tmp_Label->setParameters(400, 200 + this->DDL_number*200, 600, 200);
@@ -51,27 +51,48 @@ void MainWindow::create_ddl()
     char tmp[64];
     strftime( tmp, sizeof(tmp), "%Y/%m/%d %X %A",localtime(&t) );
     QString now_time(tmp);
-    qDebug() << now_time;
+    //qDebug() << now_time;
     tmp_Label->setText(now_time);
     tmp_Label->show();
 
     //下面提供删除交互方式
     tmp_Label->Button_delete = new button_delete(tmp_Label);
-    tmp_Label->setParameters(tmp_Label->m_x, tmp_Label->m_y, 200, 100);
+    tmp_Label->Button_delete->setParameters(tmp_Label->m_x, tmp_Label->m_y, 200, 100);
     tmp_Label->Button_delete->setText("delete");
     tmp_Label->Button_delete->show();
     tmp_Label->Button_delete->rank = DDL_number - 1;//记录这个ddl的序号，用于删除时恢复格式
+    //tmp_Label->Button_delete->setText(QString::number(tmp_Label->Button_delete->rank, 10));
     connect(tmp_Label->Button_delete, SIGNAL(delete_ddl(int)), this, SLOT(slot_delete(int)));
 }
 
 void MainWindow::slot_delete(int rank)//用于维持正确格式并删除对应ddl
 {
+    if(DDL_number == 0)return;
     //qDebug() << rank;
-    isOccupied[rank] = false;//clear out the position
+    isOccupied[DDL_number - 1] = false;//clear out the position
+    this->m_block[rank]->hide();//clear out the GUI of that ddl
+    this->m_block[rank]->Button_delete->hide();
     for(int i = rank + 1; i < DDL_number; i++)
     {
-        this->m_block[i]->setGeometry(this->x(), this->y() - 200, this->width(), this->height());
+        //qDebug() << i;
+        this->m_block[i - 1] = this->m_block[i];//依次前移
+        this->m_block[i]->Button_delete->rank--;
+
+        //this->m_block[i]->Button_delete->setText(QString::number(this->m_block[i]->Button_delete->rank, 10));
+        this->m_block[i]->setGeometry(this->m_block[i]->x(), this->m_block[i]->y() - 200,
+                                          this->m_block[i]->width(), this->m_block[i]->height());
+        this->m_block[i]->Button_delete->setParameters(this->m_block[i]->x(), this->m_block[i]->y(),
+                                                     200, 100);
+        //qDebug() << this->m_block[i]->y() << this->m_block[i]->Button_delete->y();
     }
+//    for(int i = 0; i < DDL_number; i++)
+//    {
+//        qDebug() << DDL_number;
+//        qDebug() << isOccupied[i];
+//    }
+    //qDebug() << this->m_block[rank]->text();
+    //this->m_block[DDL_number - 1] = nullptr;
+    DDL_number--;
 }
 
 

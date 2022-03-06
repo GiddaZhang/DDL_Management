@@ -15,12 +15,16 @@ class button_delete : public button
 public:
     explicit button_delete(QLabel *parent = nullptr);
     void mousePressEvent(QMouseEvent *ev) override;
+    void setParameters(int x, int y, int Length, int width);
     int rank;
+    int m_x;
+    int m_y;
+    int m_length;
+    int m_width;
 
 
 signals:
     void delete_ddl(int rank);
-    void deleteddl();
 
 };
 
