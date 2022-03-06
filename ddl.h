@@ -100,8 +100,8 @@ public:
     const QDateTime& TimeToStart;
     const QString& Prev;
     const QString& Next;
-    const vector<shared_ptr<Description>>& AllDescription;
-    const vector<shared_ptr<WorkingFile>>& AllFilePath;
+    const vector<Description>& AllDescription;
+    const vector<WorkingFile>& AllFilePath;
 
 protected:
     Set_Result SetDuration();                                   // 设置任务持续时间
@@ -120,8 +120,8 @@ private:
     QDateTime m_timeToStart;                                    // 最晚开始时间
     QString m_prev;                                             // 前驱任务
     QString m_next;                                             // 后继任务
-    vector<shared_ptr<Description>> m_allDescription;           // DDL描述语序列
-    vector<shared_ptr<WorkingFile>> m_allFilePath;              // 文档路径序列
+    vector<Description> m_allDescription;           // DDL描述语序列
+    vector<WorkingFile> m_allFilePath;              // 文档路径序列
 
     static vector<shared_ptr<DDL>> m_allDDL;                    // 静态存储DDL对象
 // 说明：任务结束时间在基类QDateTime中，任务紧迫度通过接口GetUrgency()间接计算，不用属性进行维护
