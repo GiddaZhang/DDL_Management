@@ -5,11 +5,13 @@
 vector<shared_ptr<DDL>> DDL::m_allDDL{};// 静态存储DDL对象
 
 DDL::DDL(QString name, QString commence, QString due, QString description,
-          QString filePath,int est_Day, float est_Hour, QString prev, QString next):
-    Name(m_name),CompleteState(m_completeState), Duration(m_duration_sec),
-    Estimation(m_estimation_sec), Commence(m_commence), Due(m_due),
-    TimeToStart(m_timeToStart), Prev(m_prev), Next(m_next),
-    AllDescription(m_allDescription), AllFilePath(m_allFilePath){
+          QString filePath,int est_Day, float est_Hour, QString prev, QString next)
+//    :
+//    Name(m_name),CompleteState(m_completeState), Duration(m_duration_sec),
+//    Estimation(m_estimation_sec), Commence(m_commence), Due(m_due),
+//    TimeToStart(m_timeToStart), Prev(m_prev), Next(m_next),
+//    AllDescription(m_allDescription), AllFilePath(m_allFilePath)
+{
     //因为无法在调用构造函数的情况下验证数据合理性，所以这里先假设业务流程类已经先调用了静态验证函数
     SetName(name);
     SetCompleteDegree(TO_BE_STARTED);
@@ -28,7 +30,7 @@ DDL::DDL(QString name, QString commence, QString due, QString description,
 
 Set_Result DDL::SetName(const QString& name){
     //在m_allDDL中寻找重名者
-    auto Finder = [&name](shared_ptr<DDL> ptr)->bool{return (ptr->Name == name);};
+    auto Finder = [&name](shared_ptr<DDL> ptr)->bool{return (ptr->GetName() == name);};
     auto it = find_if(m_allDDL.begin(), m_allDDL.end(), Finder);
     if (it == m_allDDL.end()) {//若未找到则为合理名字
         m_name = name;
@@ -87,7 +89,7 @@ Set_Result DDL::SetPrev(QString prev){
         return VALID;
     }
     //在m_allDDL中搜索prev
-    auto Finder = [&prev](shared_ptr<DDL> ptr)->bool{return (ptr->Name == prev);};
+    auto Finder = [&prev](shared_ptr<DDL> ptr)->bool{return (ptr->GetName() == prev);};
     auto it = find_if(m_allDDL.begin(), m_allDDL.end(), Finder);
     if (it == m_allDDL.end()) {//若未找到则前驱不存在
         return INVALID;
@@ -105,7 +107,7 @@ Set_Result DDL::SetNext(QString next){
         return INVALID;
     }
     //在m_allDDL中搜索next
-    auto Finder = [&next](shared_ptr<DDL> ptr)->bool{return (ptr->Name == next);};
+    auto Finder = [&next](shared_ptr<DDL> ptr)->bool{return (ptr->GetName() == next);};
     auto it = find_if(m_allDDL.begin(), m_allDDL.end(), Finder);
     if (it == m_allDDL.end()) {//若未找到则后继不存在
         return INVALID;
@@ -238,21 +240,43 @@ FileResult DDL::OpenAllFile()
             return FileResult::FAILURE;
         }
     }
+    return FileResult::SUCCESS;
 }
 
-double DDL::GetUrgency(){
-    qint64 cur_sec = QDateTime::currentDateTime().secsTo(this->Due);    // 目前剩余时间，单位秒
+double DDL::GetUrgency()
+{
+    qint64 cur_sec = QDateTime::currentDateTime().secsTo(this->m_due);    // 目前剩余时间，单位秒
     return ((double) m_duration_sec / (double)cur_sec) * 100;
+}
+
+QString DDL::GetName() const
+{
+    return this->m_name;
+}
+
+QDateTime DDL::GetDue() const
+{
+    return this->m_due;
+}
+
+shared_ptr<DDL> DDL::GetDDLPtr(const QString& name)
+{
+    for(auto it = m_allDDL.begin();it != m_allDDL.end();it++){
+        if((*it)->GetName() == name){
+            return *it;
+        }
+    }
+    return nullptr;
 }
 
 bool DDL::operator < (const DDL& b)
 {
-    return this->m_due < b.Due;
+    return this->m_due < b.GetDue();
 }
 
 bool DDL::operator > (const DDL& b)
 {
-    return this->m_due > b.Due;
+    return this->m_due > b.GetDue();
 }
 
 Read_Write_Result DDL::LoadFromFile()
@@ -379,6 +403,7 @@ Read_Write_Result DDL::SaveToFile()
     File << m_allDDL.size() << endl;                        // 首先输入DDL数量
     for_each(m_allDDL.begin(), m_allDDL.end(), Saver);      // 再一个接一个把DDL列表里的信息输入文件中
     File.close();//关闭文件
+    return Read_Write_Result::SUCCESS;
 }
 
 void DDL::OutputToStream(ostream& Stream) const
@@ -416,7 +441,7 @@ void DDL::OutputToStream(ostream& Stream) const
 
 Set_Result DDL::Verify(QString name, QString commence, QString due,
               int est_Day, float est_Hour, QString prev, QString next){
-    auto Finder1 = [&name](shared_ptr<DDL> ptr)->bool{return (ptr->Name == name);};
+    auto Finder1 = [&name](shared_ptr<DDL> ptr)->bool{return (ptr->GetName() == name);};
     auto it1 = find_if(m_allDDL.begin(), m_allDDL.end(), Finder1);
     if (it1 != m_allDDL.end()) {//若未找到则为合理名字
         return INVALID_NAME;
@@ -429,26 +454,26 @@ Set_Result DDL::Verify(QString name, QString commence, QString due,
     }
 
     QDateTime Temp2 = QDateTime::fromString(due, "yyyy-MM-dd hh:mm:ss");
-    if(Temp2 <= Commence || Temp2 > QDateTime::fromString("2050-01-01 00:00:00")){
+    if(Temp2 <= m_commence || Temp2 > QDateTime::fromString("2050-01-01 00:00:00")){
         return INVALID_DUE;
     }
 
     qint64 Temp_Sec = (qint64)(est_Day * 24 + est_Hour) * 3600;
-    QDateTime Temp3 = Due.addSecs(- Temp_Sec);
-    if(Temp3 <= Commence){
+    QDateTime Temp3 = m_due.addSecs(- Temp_Sec);
+    if(Temp3 <= m_commence){
         return INVALID_ESTIMATE;
     }
 
-    auto Finder2 = [&prev](shared_ptr<DDL> ptr)->bool{return (ptr->Name == prev);};
+    auto Finder2 = [&prev](shared_ptr<DDL> ptr)->bool{return (ptr->GetName() == prev);};
     auto it2 = find_if(m_allDDL.begin(), m_allDDL.end(), Finder2);
     if (it2 == m_allDDL.end()) {//若未找到则前驱不存在
         return INVALID_PREV;
     }
 
-    if(next.localeAwareCompare(Prev) == 0){//Error：前驱后继相同
+    if(next.localeAwareCompare(m_prev) == 0){//Error：前驱后继相同
         return INVALID_NEXT;
     }
-    auto Finder3 = [&next](shared_ptr<DDL> ptr)->bool{return (ptr->Name == next);};
+    auto Finder3 = [&next](shared_ptr<DDL> ptr)->bool{return (ptr->GetName() == next);};
     auto it3 = find_if(m_allDDL.begin(), m_allDDL.end(), Finder3);
     if (it3 == m_allDDL.end()) {//若未找到则后继不存在
         return INVALID_NEXT;

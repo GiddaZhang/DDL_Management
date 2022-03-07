@@ -15,19 +15,11 @@ int main(int argc, char *argv[])
     return a.exec();
 }
 
-void test()
-{
-//    QString l = "\\", path_1 = R"(D:\Desktop)", path_2 = "D:\\Desktop";
-//    if(!path_2.contains(l, Qt::CaseInsensitive)) {
-//        qDebug() << 1;
-//    }
-//    else
-//        qDebug() << 2;
-
+//void test()
+//{
 //    DDL::LoadFromFile();
 //    DDL::SaveToFile();
-
-//    auto it = DDL::m_allDDL.begin() + 1;
-//    (*it)->OpenAllFile();
-}
+//    shared_ptr<DDL> a = DDL::GetDDLPtr("Homework");
+//    a->OpenAllFile();
+//}
 

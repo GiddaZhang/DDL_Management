@@ -1,6 +1,7 @@
 #include "workingfile.h"
 
-WorkingFile::WorkingFile(const QString& path):FilePath(path)
+WorkingFile::WorkingFile(const QString& path)
+//    :FilePath(path)
 {
     //因为无法在调用构造函数的情况下验证数据合理性，所以这里先假设业务流程类已经先调用了路径验证函数
     m_filePath = path;
