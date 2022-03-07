@@ -32,14 +32,17 @@ public:
     FileResult OpenFile();                    // 重载，打开私有成员存储的链接
     FileResult SaveToFolder(const QString&);  // 备份文件链接
 
-    WorkingFile& operator=(const WorkingFile& workingFile)
+    WorkingFile& operator=(const WorkingFile& other)
     {
-        this->m_filePath = workingFile.FilePath;
+        if(&other == this) {
+            return *this;
+        }
+        this->m_filePath = other.m_filePath;
         return *this;
     }
 
     // 常引用作为私有变量的公有只读版本
-    const QString& FilePath;
+//    const QString& FilePath;
     // 常引用只读有时候不好使
     QString GetFilePath();
 
