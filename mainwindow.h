@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QPushButton>
+#include "axispainter.h"
 #include "ddl_block.h"
 #include "button.h"
 #include "button_new.h"
@@ -28,12 +29,12 @@ public slots:
     void slot_delete(int rank);
     void slot_succ(int rank);
 
+protected:
+    void paintEvent(QPaintEvent *event);
 
 private:
     Ui::MainWindow *ui;
-    int DDL_number;//记录当前有效的ddl的个数
-
-
+    int DDL_number;         // 记录当前有效的ddl的个数
 };
 
 #endif // MAINWINDOW_H

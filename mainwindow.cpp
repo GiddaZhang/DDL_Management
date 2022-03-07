@@ -5,7 +5,6 @@
 #include <ctime>
 #include <string>
 #include <QString>
-#include <QScrollArea>
 #include <iostream>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -13,27 +12,19 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
-    // 主窗口设置
-    this->setGeometry(20, 40, 1100, 760);
+    this->setGeometry(20, 40, 1600, 1080);
     this->show();
-    this->setWindowTitle("DDL_Management");
+    this->setWindowTitle("DDL_management");
 
-    // 滚动区域设置
-    QScrollArea *scrollArea = new QScrollArea(this);
-    scrollArea->setGeometry(20, 200, 1050, 760);
-    scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);   // 让滚动条可见
+    AxisPainter *axis = new AxisPainter(this);
+    axis->show();
 
     m_button = new button_new(this);
-    m_button->setGeometry(20, 40, 200, 200);
+    m_button->setGeometry(30, 30, 80, 80);
     m_button->setStyleSheet("QLabel{border:2px solid rgb(0, 255, 0);}");
     m_button->setText("clickhere\nfor new ddl");
     m_button->show();
     connect(this->m_button, SIGNAL(newddl()), this, SLOT(create_ddl()));
-//    for(int i = 0; i < 30; i++)
-//    {
-//        connect(this->m_block[i], SIGNAL(show_tasks()), this->m_block[i], SLOT(slot_tasks));
-//    }
 
 }
 
@@ -119,11 +110,33 @@ void MainWindow::slot_succ(int rank)
     qDebug() << this->m_block[DDL_number - 1]->m_ddl->Next;
 }
 
+void MainWindow::paintEvent(QPaintEvent *event)
+{
+    QPainter *painter = new QPainter(this);
+    QPen pen;
+    pen.setColor(Qt::black);
+    painter->setPen(pen);
+    QPoint axisStartPoint;
+    QPoint axisXEndPoint; // x 轴终点
+    QPoint axisYEndPoint; // y 轴终点
+
+    axisStartPoint.setX(30);
+    axisStartPoint.setY(1030);
+
+    axisXEndPoint.setX(1600);
+    axisXEndPoint.setY(1030);
+
+    axisYEndPoint.setX(30);
+    axisYEndPoint.setY(30);
+
+    painter->drawLine(axisStartPoint, axisXEndPoint);
+    painter->drawLine(axisStartPoint, axisYEndPoint);
+}
+
 //void MainWindow::slot_tasks()
 //{
 //    qDebug() << "sdfhjkdhk";
 //}
-
 
 
 
