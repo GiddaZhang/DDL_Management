@@ -1,5 +1,5 @@
-#ifndef BUTTON_DELETE_H
-#define BUTTON_DELETE_H
+#ifndef BUTTON_NEXT_H
+#define BUTTON_NEXT_H
 
 #include <QObject>
 #include <QWidget>
@@ -9,18 +9,16 @@
 #include <QLabel>
 #include "button.h"
 
-class button_delete : public button
+class button_next : public button
 {
     Q_OBJECT
 public:
-    explicit button_delete(QLabel *parent = nullptr);
+    explicit button_next(QLabel *parent = nullptr);
     void mousePressEvent(QMouseEvent *ev) override;
 
-
-
 signals:
-    void delete_ddl(int rank);
+    void next_ddl(int rank);
 
 };
 
-#endif // BUTTON_DELETE_H
+#endif // BUTTON_NEXT_H

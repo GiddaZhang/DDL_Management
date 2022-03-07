@@ -13,13 +13,7 @@ void button_delete::mousePressEvent(QMouseEvent *ev)
     }
 }
 
-void button_delete::setParameters(int x, int y, int Length, int width)
-{
-    this->m_x = x;
-    this->m_y = y;
-    this->m_length = Length;
-    this->m_width = width;
-}
+
 
 
 

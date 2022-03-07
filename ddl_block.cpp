@@ -15,9 +15,9 @@ void ddl_block::keyPressEvent(QKeyEvent *event)
 
 void ddl_block::mousePressEvent(QMouseEvent *ev)
 {
-    if(ev->button() == Qt::LeftButton)
+    if(ev->button() == Qt::RightButton)
     {
-
+        emit show_tasks();
     }
 }
 
@@ -46,6 +46,13 @@ void ddl_block::slot_delete()
 {
 
 }
+
+void ddl_block::slot_tasks()
+{
+    qDebug() << "Cyka";
+}
+
+
 
 
 
