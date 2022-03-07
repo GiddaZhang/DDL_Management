@@ -44,8 +44,10 @@ private:
 
 signals:
     void deleteddl();
+    void show_tasks();
 public slots:
     void slot_delete();
+    void slot_tasks();
 
 };
 

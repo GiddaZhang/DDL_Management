@@ -21,6 +21,10 @@ MainWindow::MainWindow(QWidget *parent) :
     m_button->setText("clickhere\nfor new ddl");
     m_button->show();
     connect(this->m_button, SIGNAL(newddl()), this, SLOT(create_ddl()));
+//    for(int i = 0; i < 30; i++)
+//    {
+//        connect(this->m_block[i], SIGNAL(show_tasks()), this->m_block[i], SLOT(slot_tasks));
+//    }
 
 }
 
@@ -40,6 +44,8 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 
 void MainWindow::create_ddl()
 {
+
+
     ddl_block *tmp_Label = new ddl_block(this);
     tmp_Label->setGeometry(400, 200 + this->DDL_number*200, 600, 200);
     tmp_Label->setParameters(400, 200 + this->DDL_number*200, 600, 200);
@@ -53,6 +59,8 @@ void MainWindow::create_ddl()
     //qDebug() << now_time;
     tmp_Label->setText(now_time);
     tmp_Label->show();
+
+    connect(tmp_Label, SIGNAL(show_tasks()), tmp_Label, SLOT(slot_tasks()));
 
     //下面提供删除交互方式
     tmp_Label->Button_delete = new button_delete(tmp_Label);
@@ -101,6 +109,11 @@ void MainWindow::slot_succ(int rank)
     this->m_block[DDL_number - 1]->m_ddl->SetNext(QString::number(rank, 10));
     qDebug() << this->m_block[DDL_number - 1]->m_ddl->Next;
 }
+
+//void MainWindow::slot_tasks()
+//{
+//    qDebug() << "sdfhjkdhk";
+//}
 
 
 
