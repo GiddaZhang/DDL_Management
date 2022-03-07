@@ -31,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_button->show();
     connect(this->m_button, SIGNAL(newddl()), this, SLOT(create_ddl()));
 
-    QWidget *w = new QWidget(s);
+//    QWidget *w = new QWidget(s);
     //设置滚动区域的窗体
     scrollArea->setWidget(w);
     w->setGeometry(0, 0, 3000, 3000);
