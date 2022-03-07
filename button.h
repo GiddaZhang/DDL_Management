@@ -13,6 +13,12 @@ class button : public QPushButton
 public:
     explicit button(QMainWindow *parent = nullptr);
     button(QLabel *parent = nullptr);
+    void setParameters(int x, int y, int Length, int width);
+    int rank;
+    int m_x;
+    int m_y;
+    int m_length;
+    int m_width;
 
 signals:
 

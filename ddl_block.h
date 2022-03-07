@@ -11,6 +11,8 @@
 #include <QMouseEvent>
 #include "ddl.h"
 #include "button_delete.h"
+#include "button_new.h"
+#include "button_next.h"
 
 
 class ddl_block : public QLabel
@@ -32,10 +34,11 @@ public:
     void setParameters(int x, int y, int Length, int width);
     virtual ~ddl_block();
     button_delete *Button_delete;
+    button_next *Button_next;
+    DDL *m_ddl;
 
 
 private:
-    DDL m_ddl;
 
 
 
