@@ -26,10 +26,6 @@ MainWindow::MainWindow(QWidget *parent) :
     m_button->show();
     connect(this->m_button, SIGNAL(newddl()), this, SLOT(create_ddl()));
 
-//    QWidget *w = new QWidget(s);
-    //设置滚动区域的窗体
-    scrollArea->setWidget(w);
-    w->setGeometry(0, 0, 3000, 3000);
 }
 
 MainWindow::~MainWindow()
@@ -111,7 +107,7 @@ void MainWindow::slot_succ(int rank)
 {
     create_ddl();
     this->m_block[DDL_number - 1]->m_ddl->SetNext(QString::number(rank, 10));
-    qDebug() << this->m_block[DDL_number - 1]->m_ddl->Next;
+    qDebug() << this->m_block[DDL_number - 1]->m_ddl->GetNext();
 }
 
 void MainWindow::paintEvent(QPaintEvent *event)
