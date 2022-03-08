@@ -3,12 +3,13 @@
 
 #include <QMenu>
 #include <QAction>
-
+#include <QMainWindow>
 class PrimaryMenu : public QMenu
 {
 public:
-    PrimaryMenu();
-    QAction* Action[4];
+//    PrimaryMenu();
+    PrimaryMenu(QMainWindow* Window);
+//    QAction* Action[4];
 };
 
 #endif // PRIMARYMENU_H

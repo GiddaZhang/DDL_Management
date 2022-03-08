@@ -6,6 +6,9 @@
 #include <string>
 #include <QString>
 #include <iostream>
+#include <QMessageBox>
+#include <QAction>
+#include <QMenu>
 
 // 构造函数
 MainWindow::MainWindow(QWidget *parent):
@@ -32,9 +35,74 @@ MainWindow::MainWindow(QWidget *parent):
     connect(this->m_button, SIGNAL(newddl()), this, SLOT(create_ddl()));
 
     //修改属性，设置为自定义菜单模式
-        setContextMenuPolicy(Qt::CustomContextMenu);
-        //关联信号和槽
-        connect(this, &MainWindow::customContextMenuRequested, this, &MainWindow::showContextMenu );
+    setContextMenuPolicy(Qt::CustomContextMenu);
+    //关联信号和槽
+    connect(this, &MainWindow::customContextMenuRequested, this, &MainWindow::showContextMenu );
+
+
+}
+
+void MainWindow::showContextMenu(const QPoint &pos){
+    PrimaryMenu* pMenu = new PrimaryMenu(this);
+
+    //设置快捷键为T
+    QAction *pTest1 = new QAction("工作", this);
+    QAction *pTest2 = new QAction("删除", this);
+    QAction *pTest3 = new QAction("留言", this);
+    QAction *pTest4 = new QAction("添加后继", this);
+
+    //把QAction对象添加到菜单上
+    pMenu->addAction(pTest1);
+    pMenu->addAction(pTest2);
+    pMenu->addAction(pTest3);
+    pMenu->addAction(pTest4);
+
+    //设置点击后发送的数据
+    pTest1->setData(1);
+    pTest2->setData(2);
+    pTest3->setData(3);
+    pTest4->setData(4);
+
+    //连接鼠标右键点击信号
+    connect(pTest1, &QAction::triggered, this, &MainWindow::OnClickedPopMenu);
+    connect(pTest2, &QAction::triggered, this, &MainWindow::OnClickedPopMenu);
+    connect(pTest3, &QAction::triggered, this, &MainWindow::OnClickedPopMenu);
+    connect(pTest4, &QAction::triggered, this, &MainWindow::OnClickedPopMenu);
+
+    //在鼠标右键点击的地方显示菜单
+    pMenu->exec(cursor().pos());
+
+    //释放内存,若此处不手动释放，则必须等到程序结束时才都能释放
+    QList<QAction*> list = pMenu->actions();
+    foreach (QAction* pAction, list)
+    delete pAction;
+    delete pMenu;
+}
+
+// 注意，这里的点击菜单项出来text只是一个任意添加的演示功能，其他功能另写
+// 另外，PrimaryMenu类现在我不知道要加什么东西，只是继承了一下Menu，这也要再加
+void MainWindow::OnClickedPopMenu(){
+    QAction *pEven = qobject_cast<QAction *>(this->sender());
+
+    //获取发送信息
+    int iType = pEven->data().toInt();
+    switch (iType)
+    {
+    case 1:
+        QMessageBox::about(this, "工作", pEven->text());
+        break;
+    case 2:
+        QMessageBox::about(this, "删除", pEven->text());
+        break;
+    case 3:
+        QMessageBox::about(this, "留言", pEven->text());
+        break;
+    case 4:
+        QMessageBox::about(this, "添加后继", pEven->text());
+        break;
+    default:
+        break;
+    }
 }
 
 // 析构函数
@@ -158,6 +226,6 @@ void MainWindow::paintEvent(QPaintEvent *event){
 // 问题：slot_delete没有处理delete
 // 问题：slot_delete没有处理next_button的hide，但是实际上能够hide
 // 问题：是否能够将ddl_block与相应几个按钮组合
-// 问题：paintEvent函数中重复写入QPainter中的代码
+// 问题：paintEvent函数中重复写入QPainter中的代码，是否考虑加入一个AxisPainter成员
 // 问题：slot_delete需要删除底层all_ddl中的相应指针。需要手动调用all_ddl的erase函数以避免移位操作
 // ... 另slot_delete需要析构ddl_block，这会重复析构其中的m_ddl，可能需要智能指针

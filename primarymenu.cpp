@@ -1,6 +1,5 @@
 #include "primarymenu.h"
 
-PrimaryMenu::PrimaryMenu()
-{
+PrimaryMenu::PrimaryMenu(QMainWindow* Window):QMenu(Window){
 
 }
