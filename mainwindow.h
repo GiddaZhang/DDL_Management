@@ -37,7 +37,7 @@ protected:
 private:
     Ui::MainWindow *ui;
     int DDL_number;         // 记录当前有效的ddl的个数
-    int DDL_lines;//一组前驱后继算一条线
+    int DDL_lines_number;//一组前驱后继算一条线
 };
 
 #endif // MAINWINDOW_H

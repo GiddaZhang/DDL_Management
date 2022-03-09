@@ -17,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent):
     QMainWindow(parent), ui(new Ui::MainWindow){
     //初始化DDL_number
     this->DDL_number = 0;
+    this->DDL_lines_number = 0;
 
     // 设置并显示主窗口UI
     ui->setupUi(this);
@@ -127,10 +128,11 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
 void MainWindow::create_ddl(){
      //新建DDL指针并设置参数，维护DDL序列,并且初始化ddl
     ddl_block *tmp_Label = new ddl_block(this);
-    qDebug() << DDL_number;
     tmp_Label->setStyleSheet("QLabel{border:2px solid rgb(0, 255, 255);}");
-    //isOccupied[this->DDL_number] = true;
-    this->m_block[this->DDL_number++] = tmp_Label;
+    isOccupied[this->DDL_number] = true;
+    this->m_block[this->DDL_number] = tmp_Label;
+    this->m_block[this->DDL_number++]->line_rank = DDL_lines_number;
+    DDL_lines_number++;
 
 //    //输入当前时间，格式为yyyy-MM-dd hh:mm:ss，存储在QString变量里
 //    QInputDialog type_in_commence(tmp_Label);
@@ -153,7 +155,7 @@ void MainWindow::create_ddl(){
     QDateTime curr_time = QDateTime::currentDateTime();
 
     //qDebug() << begin_time.daysTo(end_time);//获取ddl的长度（日）
-    tmp_Label->setGeometry(200 + this->DDL_number * 200, 1600 - 200 * curr_time.daysTo(end_time), 200, begin_time.daysTo(end_time) * 200);
+    tmp_Label->setGeometry(200 + tmp_Label->line_rank * 200, 1600 - 200 * curr_time.daysTo(end_time), 200, begin_time.daysTo(end_time) * 200);
     //tmp_Label->setGeometry(400, 400, 400, 400);
 
     // 将当前ddl模块的show_tasks信号与其slot_tasks槽连接
@@ -190,6 +192,15 @@ void MainWindow::slot_delete(int rank){
     if(DDL_number == 0)return;
     isOccupied[DDL_number - 1] = false;//clear out the position
     this->m_block[rank]->hide();//clear out the GUI of that ddl
+    //给前驱后继擦屁股
+    if(m_block[rank]->m_ddl->GetPrev() != "PREV")
+    {
+        m_block[rank]->m_ddl->SetPrev("PREV");
+    }
+    if(m_block[rank]->m_ddl->GetNext() != "NEXT")
+    {
+        m_block[rank]->m_ddl->SetNext("NEXT");
+    }
     this->m_block[rank]->Button_delete->hide();
     for(int i = rank + 1; i < DDL_number; i++){
         this->m_block[i - 1] = this->m_block[i];//依次前移
