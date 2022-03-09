@@ -21,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent):
 
     // 设置并显示主窗口UI
     ui->setupUi(this);
-    this->setGeometry(0, 0, 1600, 1600);
+    this->setGeometry(50, 50, 1920, 1080);
     this->show();
     this->setWindowTitle("DDL_management");
 
