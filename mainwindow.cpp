@@ -9,10 +9,15 @@
 #include <QMessageBox>
 #include <QAction>
 #include <QMenu>
+#include <QDialog>
+#include <QInputDialog>
 
 // 构造函数
 MainWindow::MainWindow(QWidget *parent):
     QMainWindow(parent), ui(new Ui::MainWindow){
+    //初始化DDL_number
+    this->DDL_number = 0;
+    this->DDL_lines_number = 0;
 
     // 设置并显示主窗口UI
     ui->setupUi(this);
@@ -26,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent):
 
     // 设置并显示左上角的新建DDL模块按键
     m_button = new button_new(this);
-    m_button->setGeometry(30, 30, 80, 80);
+    m_button->setGeometry(0, 0, 100, 100);
     m_button->setStyleSheet("QLabel{border:2px solid rgb(0, 255, 0);}");
     m_button->setText("clickhere\nfor new ddl");
     m_button->show();
@@ -64,10 +69,10 @@ void MainWindow::showContextMenu(const QPoint &pos){
     pTest4->setData(4);
 
     //连接鼠标右键点击信号
-    connect(pTest1, &QAction::triggered, this, &MainWindow::OnClickedPopMenu);
-    connect(pTest2, &QAction::triggered, this, &MainWindow::OnClickedPopMenu);
-    connect(pTest3, &QAction::triggered, this, &MainWindow::OnClickedPopMenu);
-    connect(pTest4, &QAction::triggered, this, &MainWindow::OnClickedPopMenu);
+    connect(pTest1, SIGNAL(&QAction::triggered), this, SLOT(&MainWindow::OnClickedPopMenu));
+    connect(pTest2, SIGNAL(&QAction::triggered), this, SLOT(&MainWindow::OnClickedPopMenu));
+    connect(pTest3, SIGNAL(&QAction::triggered), this, SLOT(&MainWindow::OnClickedPopMenu));
+    connect(pTest4, SIGNAL(&QAction::triggered), this, SLOT(&MainWindow::OnClickedPopMenu));
 
     //在鼠标右键点击的地方显示菜单
     pMenu->exec(cursor().pos());
@@ -121,23 +126,37 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
 
 // 槽：新建ddl模块
 void MainWindow::create_ddl(){
-
-    // 新建DDL指针并设置参数，维护DDL序列
+     //新建DDL指针并设置参数，维护DDL序列,并且初始化ddl
     ddl_block *tmp_Label = new ddl_block(this);
-    tmp_Label->setGeometry(400, 200 + this->DDL_number*200, 600, 200);
-    tmp_Label->setParameters(400, 200 + this->DDL_number*200, 600, 200);
     tmp_Label->setStyleSheet("QLabel{border:2px solid rgb(0, 255, 255);}");
     isOccupied[this->DDL_number] = true;
-    this->m_block[this->DDL_number++] = tmp_Label;
+    this->m_block[this->DDL_number] = tmp_Label;
+    this->m_block[this->DDL_number++]->line_rank = DDL_lines_number;
+    DDL_lines_number++;
 
-    // 在ddl模块上显示当前（新建时）时间
-    time_t t = time(0);
-    char tmp[64];
-    strftime(tmp, sizeof(tmp), "%Y/%m/%d %X %A", localtime(&t));
-    QString now_time(tmp);
-    //qDebug() << now_time;
-    tmp_Label->setText(now_time);
-    tmp_Label->show();
+//    //输入当前时间，格式为yyyy-MM-dd hh:mm:ss，存储在QString变量里
+//    QInputDialog type_in_commence(tmp_Label);
+//    QString comm_time = type_in_commence.getText(tmp_Label, "comm_time", "please type in commence time", QLineEdit::Normal);
+//    QInputDialog type_in_due(tmp_Label);
+//    QString due_time = type_in_due.getText(tmp_Label, "due_time", "please type in due time", QLineEdit::Normal);
+
+    //测试版
+    QString comm_time = "2022-03-10 00:00:00";
+    QString due_time = "2022-03-12 00:00:00";
+
+
+    //初始化ddl
+    tmp_Label->m_ddl = new DDL("UNKNOWN", comm_time,
+                               due_time, "PLAIN", "NULL",
+                               0, 0.0, "PREV","NEXT");
+    //获得ddl持续时间，决定其在界面上的长度和位置
+    QDateTime begin_time = QDateTime::fromString(comm_time, "yyyy-MM-dd hh:mm:ss");
+    QDateTime end_time = QDateTime::fromString(due_time, "yyyy-MM-dd hh:mm:ss");
+    QDateTime curr_time = QDateTime::currentDateTime();
+
+    //qDebug() << begin_time.daysTo(end_time);//获取ddl的长度（日）
+    tmp_Label->setGeometry(200 + tmp_Label->line_rank * 200, 1600 - 200 * curr_time.daysTo(end_time), 200, begin_time.daysTo(end_time) * 200);
+    //tmp_Label->setGeometry(400, 400, 400, 400);
 
     // 将当前ddl模块的show_tasks信号与其slot_tasks槽连接
     connect(tmp_Label, SIGNAL(show_tasks()), tmp_Label, SLOT(slot_tasks()));
@@ -148,8 +167,6 @@ void MainWindow::create_ddl(){
     tmp_Label->Button_delete->setParameters(0, 0, 150, 75);
     tmp_Label->Button_delete->setText("delete");
     tmp_Label->Button_delete->show();
-    // 记录此ddl模块的秩，在删除时维护ddl序列
-    tmp_Label->Button_delete->rank = DDL_number - 1;
     // 将“删除”按钮的delete_ddl信号与主窗口的slot_delete槽连接
     connect(tmp_Label->Button_delete, SIGNAL(delete_ddl(int)), this, SLOT(slot_delete(int)));
 
@@ -158,8 +175,14 @@ void MainWindow::create_ddl(){
     tmp_Label->Button_next->setGeometry(150, 0, 150, 75);
     tmp_Label->Button_next->setText("create succ");
     tmp_Label->Button_next->show();
-    tmp_Label->Button_next->rank = tmp_Label->Button_delete->rank;
-    connect(tmp_Label->Button_next, SIGNAL(next_ddl(int)), this, SLOT(slot_delete(int)));
+
+    // 记录此ddl模块的秩，在删除时维护ddl序列
+    tmp_Label->Button_delete->rank = DDL_number - 1;
+    tmp_Label->Button_next->rank = DDL_number - 1;
+    tmp_Label->rank = DDL_number - 1;
+
+    connect(tmp_Label->Button_next, SIGNAL(next_ddl(int)), this, SLOT(slot_succ(int)));
+    tmp_Label->show();
 }
 
 //按秩删除ddl并维护ddl序列
@@ -169,6 +192,15 @@ void MainWindow::slot_delete(int rank){
     if(DDL_number == 0)return;
     isOccupied[DDL_number - 1] = false;//clear out the position
     this->m_block[rank]->hide();//clear out the GUI of that ddl
+    //给前驱后继擦屁股
+    if(m_block[rank]->m_ddl->GetPrev() != "PREV")
+    {
+        m_block[rank]->m_ddl->SetPrev("PREV");
+    }
+    if(m_block[rank]->m_ddl->GetNext() != "NEXT")
+    {
+        m_block[rank]->m_ddl->SetNext("NEXT");
+    }
     this->m_block[rank]->Button_delete->hide();
     for(int i = rank + 1; i < DDL_number; i++){
         this->m_block[i - 1] = this->m_block[i];//依次前移
@@ -186,32 +218,82 @@ void MainWindow::slot_delete(int rank){
 
 // 为当前DDl设置后继
 void MainWindow::slot_succ(int rank){
-    create_ddl();
-    this->m_block[DDL_number - 1]->m_ddl->SetNext(QString::number(rank, 10));
-    qDebug() << this->m_block[DDL_number - 1]->m_ddl->GetNext();
+    //qDebug() << rank;
+    ddl_block *tmp_Label = new ddl_block(this);
+    tmp_Label->setStyleSheet("QLabel{border:2px solid rgb(0, 255, 255);}");
+    isOccupied[this->DDL_number] = true;
+    this->m_block[this->DDL_number++] = tmp_Label;
+    //输入当前时间，格式为yyyy-MM-dd hh:mm:ss，存储在QString变量里
+//    QInputDialog type_in_commence(tmp_Label);
+//    QString comm_time = type_in_commence.getText(tmp_Label, "comm_time", "please type in commence time", QLineEdit::Normal);
+//    QInputDialog type_in_due(tmp_Label);
+//    QString due_time = type_in_due.getText(tmp_Label, "due_time", "please type in due time", QLineEdit::Normal);
+
+    //测试版
+    QString comm_time = "2022-03-12 00:00:00";
+    QString due_time = "2022-03-15 00:00:00";
+    QDateTime begin_time = QDateTime::fromString(comm_time, "yyyy-MM-dd hh:mm:ss");
+    QDateTime end_time = QDateTime::fromString(due_time, "yyyy-MM-dd hh:mm:ss");
+    QDateTime curr_time = QDateTime::currentDateTime();
+
+    //初始化ddl
+    tmp_Label->m_ddl = new DDL("UNKNOWN", comm_time,
+                               due_time, "PLAIN", "NULL",
+                               0, 0.0, "PREV","NEXT");
+    m_block[rank]->m_ddl->SetNext(QString::number(DDL_number - 1, 10));//原来的ddl的后继的序号是新的ddl的序号
+    tmp_Label->m_ddl->SetPrev(QString::number(rank, 10));//新的ddl的前驱的序号是原来的ddl
+
+    // 将当前ddl模块的show_tasks信号与其slot_tasks槽连接
+    connect(tmp_Label, SIGNAL(show_tasks()), tmp_Label, SLOT(slot_tasks()));
+
+    // 为ddl模块提供“删除”按钮
+    tmp_Label->Button_delete = new button_delete(tmp_Label);
+    tmp_Label->Button_delete->setGeometry(0, 0, 150, 75);
+    tmp_Label->Button_delete->setParameters(0, 0, 150, 75);
+    tmp_Label->Button_delete->setText("delete");
+    tmp_Label->Button_delete->show();
+
+    // 将“删除”按钮的delete_ddl信号与主窗口的slot_delete槽连接
+    connect(tmp_Label->Button_delete, SIGNAL(delete_ddl(int)), this, SLOT(slot_delete(int)));
+
+    // 为ddl模块提供“后继”按钮，操作同上
+    tmp_Label->Button_next = new button_next(tmp_Label);
+    tmp_Label->Button_next->setGeometry(150, 0, 150, 75);
+    tmp_Label->Button_next->setText("create succ");
+    tmp_Label->Button_next->show();
+    // 记录此ddl模块的秩，在删除时维护ddl序列
+    tmp_Label->Button_delete->rank = DDL_number - 1;
+    tmp_Label->Button_next->rank = DDL_number - 1;
+    tmp_Label->rank = DDL_number - 1;
+    //qDebug() << m_block[rank]->rank << tmp_Label->rank;
+    //connect(tmp_Label->Button_next, SIGNAL(next_ddl(int)), this, SLOT(slot_succ(int)));
+    tmp_Label->setGeometry(m_block[rank]->x(), 1600 - 200 * curr_time.daysTo(end_time), 200, begin_time.daysTo(end_time) * 200);
+    tmp_Label->show();
+
+    //获得ddl持续时间，决定其在界面上的长度和位置
 }
 
-void MainWindow::paintEvent(QPaintEvent *event){
-    QPainter *painter = new QPainter(this);
-    QPen pen;
-    pen.setColor(Qt::black);
-    painter->setPen(pen);
-    QPoint axisStartPoint;
-    QPoint axisXEndPoint; // x 轴终点
-    QPoint axisYEndPoint; // y 轴终点
+//void MainWindow::paintEvent(QPaintEvent *event){
+//    QPainter *painter = new QPainter(this);
+//    QPen pen;
+//    pen.setColor(Qt::black);
+//    painter->setPen(pen);
+//    QPoint axisStartPoint;
+//    QPoint axisXEndPoint; // x 轴终点
+//    QPoint axisYEndPoint; // y 轴终点
 
-    axisStartPoint.setX(30);
-    axisStartPoint.setY(1030);
+//    axisStartPoint.setX(30);
+//    axisStartPoint.setY(1600);
 
-    axisXEndPoint.setX(1600);
-    axisXEndPoint.setY(1030);
+//    axisXEndPoint.setX(1600);
+//    axisXEndPoint.setY(1600);
 
-    axisYEndPoint.setX(30);
-    axisYEndPoint.setY(30);
+//    axisYEndPoint.setX(30);
+//    axisYEndPoint.setY(30);
 
-    painter->drawLine(axisStartPoint, axisXEndPoint);
-    painter->drawLine(axisStartPoint, axisYEndPoint);
-}
+//    painter->drawLine(axisStartPoint, axisXEndPoint);
+//    painter->drawLine(axisStartPoint, axisYEndPoint);
+//}
 
 //void MainWindow::slot_tasks()
 //{

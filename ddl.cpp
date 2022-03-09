@@ -84,37 +84,41 @@ Set_Result DDL::SetEstimation(const int& est_Day, const float& est_Hour){
 }
 
 Set_Result DDL::SetPrev(QString prev){
-    if(prev.localeAwareCompare("UNKNOWN") == 0){//OK：并不存在前驱
-        m_prev = prev;
-        return VALID;
-    }
-    //在m_allDDL中搜索prev
-    auto Finder = [&prev](shared_ptr<DDL> ptr)->bool{return (ptr->GetName() == prev);};
-    auto it = find_if(m_allDDL.begin(), m_allDDL.end(), Finder);
-    if (it == m_allDDL.end()) {//若未找到则前驱不存在
-        return INVALID;
-    }else{
-        m_prev = prev;
-        return VALID;
-    }
+//    if(prev.localeAwareCompare("UNKNOWN") == 0){//OK：并不存在前驱
+//        m_prev = prev;
+//        return VALID;
+//    }
+//    //在m_allDDL中搜索prev
+//    auto Finder = [&prev](shared_ptr<DDL> ptr)->bool{return (ptr->GetName() == prev);};
+//    auto it = find_if(m_allDDL.begin(), m_allDDL.end(), Finder);
+//    if (it == m_allDDL.end()) {//若未找到则前驱不存在
+//        return INVALID;
+//    }else{
+//        m_prev = prev;
+//        return VALID;
+//    }
+    m_prev = prev;
+    return VALID;
 }
 
 Set_Result DDL::SetNext(QString next){
-    if(next == "UNKNOWN"){//OK：并不存在后继
-        m_next = next;
-        return VALID;
-    }else if(next.localeAwareCompare(m_prev) == 0){//Error：前驱后继相同
-        return INVALID;
-    }
-    //在m_allDDL中搜索next
-    auto Finder = [&next](shared_ptr<DDL> ptr)->bool{return (ptr->GetName() == next);};
-    auto it = find_if(m_allDDL.begin(), m_allDDL.end(), Finder);
-    if (it == m_allDDL.end()) {//若未找到则后继不存在
-        return INVALID;
-    }else{
-        m_next = next;
-        return VALID;
-    }
+//    if(next == "UNKNOWN"){//OK：并不存在后继
+//        m_next = next;
+//        return VALID;
+//    }else if(next.localeAwareCompare(m_prev) == 0){//Error：前驱后继相同
+//        return INVALID;
+//    }
+//    //在m_allDDL中搜索next
+//    auto Finder = [&next](shared_ptr<DDL> ptr)->bool{return (ptr->GetName() == next);};
+//    auto it = find_if(m_allDDL.begin(), m_allDDL.end(), Finder);
+//    if (it == m_allDDL.end()) {//若未找到则后继不存在
+//        return INVALID;
+//    }else{
+//        m_next = next;
+//        return VALID;
+//    }
+    m_next = next;
+    return VALID;
 }
 
 Set_Result DDL::SetDuration(){

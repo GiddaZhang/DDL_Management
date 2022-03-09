@@ -27,6 +27,7 @@ public:
                 QString dur,
                 DDL* prev, DDL* next);
     int rank;//记录其在数组中的序号
+    int line_rank;//记录其的line编号
     int m_x;
     int m_y;
     int m_length;

@@ -32,11 +32,12 @@ public slots:
     void OnClickedPopMenu();//点击菜单选项的槽函数
 
 protected:
-    void paintEvent(QPaintEvent *event);
+    //void paintEvent(QPaintEvent *event);
 
 private:
     Ui::MainWindow *ui;
     int DDL_number;         // 记录当前有效的ddl的个数
+    int DDL_lines_number;//一组前驱后继算一条线
 };
 
 #endif // MAINWINDOW_H
