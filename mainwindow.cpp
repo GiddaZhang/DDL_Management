@@ -17,12 +17,12 @@ MainWindow::MainWindow(QWidget *parent):
     // 设置并显示主窗口UI
     ui->setupUi(this);
     this->setGeometry(20, 40, 1600, 1080);
+    AxisPainter *axis = new AxisPainter(this);
+    axis->show();
     this->show();
     this->setWindowTitle("DDL_management");
 
     // 设置并显示坐标轴UI
-    AxisPainter *axis = new AxisPainter(this);
-    axis->show();
 
     // 设置并显示左上角的新建DDL模块按键
     m_button = new button_new(this);
