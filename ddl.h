@@ -79,6 +79,8 @@ public:
     double GetUrgency();                                        // 返回DDL紧迫程度，预期耗时/(DDL时间-当前时间)*100%
     QString GetName() const;                                    // 返回DDL名称
     QDateTime GetDue() const;                                   // 返回DDL截止时间
+    QString GetNext() const;                                    // 返回后继DDL名称
+    QString GetPrev() const;                                    // 返回前驱DDL名称
 
     // 重载运算符
     bool operator < (const DDL&);                               // 比较时间的先后用于排序："<"——先发生

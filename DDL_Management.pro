@@ -33,7 +33,8 @@ SOURCES += \
     ddl_block.cpp \
         main.cpp \
         mainwindow.cpp \
-    ddl.cpp
+    ddl.cpp \
+    axispainter.cpp
 
 HEADERS += \
     button_delete.h \
@@ -44,7 +45,8 @@ HEADERS += \
     button_new.h \
     ddl_block.h \
         mainwindow.h \
-    ddl.h
+    ddl.h \
+    axispainter.h
 
 FORMS += \
         mainwindow.ui

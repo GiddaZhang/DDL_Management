@@ -22,7 +22,6 @@ MainWindow::MainWindow(QWidget *parent) :
     m_button->show();
     connect(this->m_button, SIGNAL(newddl()), this, SLOT(create_ddl()));
 
-
 }
 
 MainWindow::~MainWindow()
@@ -104,4 +103,36 @@ void MainWindow::slot_succ(int rank)
 {
     create_ddl();
     this->m_block[DDL_number - 1]->m_ddl->SetNext(QString::number(rank, 10));
+    qDebug() << this->m_block[DDL_number - 1]->m_ddl->GetNext();
 }
+
+void MainWindow::paintEvent(QPaintEvent *event)
+{
+    QPainter *painter = new QPainter(this);
+    QPen pen;
+    pen.setColor(Qt::black);
+    painter->setPen(pen);
+    QPoint axisStartPoint;
+    QPoint axisXEndPoint; // x 轴终点
+    QPoint axisYEndPoint; // y 轴终点
+
+    axisStartPoint.setX(30);
+    axisStartPoint.setY(1030);
+
+    axisXEndPoint.setX(1600);
+    axisXEndPoint.setY(1030);
+
+    axisYEndPoint.setX(30);
+    axisYEndPoint.setY(30);
+
+    painter->drawLine(axisStartPoint, axisXEndPoint);
+    painter->drawLine(axisStartPoint, axisYEndPoint);
+}
+
+//void MainWindow::slot_tasks()
+//{
+//    qDebug() << "sdfhjkdhk";
+//}
+
+
+

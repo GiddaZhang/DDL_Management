@@ -259,6 +259,16 @@ QDateTime DDL::GetDue() const
     return this->m_due;
 }
 
+QString DDL::GetNext() const
+{
+    return this->m_next;
+}
+
+QString DDL::GetPrev() const
+{
+    return this->m_prev;
+}
+
 shared_ptr<DDL> DDL::GetDDLPtr(const QString& name)
 {
     for(auto it = m_allDDL.begin();it != m_allDDL.end();it++){
