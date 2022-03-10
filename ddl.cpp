@@ -247,6 +247,17 @@ FileResult DDL::OpenAllFile()
     return FileResult::SUCCESS;
 }
 
+FileResult DDL::OpenFile(const QString& path)
+{
+    for(auto it = m_allFilePath.begin();it != m_allFilePath.end();it++) {
+        if(it->GetFilePath() == path) {
+            if(it->OpenFile() == FileResult::SUCCESS)
+                return FileResult::SUCCESS;
+        }
+    }
+    return FileResult::NFOUND;
+}
+
 double DDL::GetUrgency()
 {
     qint64 cur_sec = QDateTime::currentDateTime().secsTo(this->m_due);    // 目前剩余时间，单位秒

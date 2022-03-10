@@ -74,6 +74,7 @@ public:
 
     // 打开所有文件
     FileResult OpenAllFile();                                   // 一口气打开所有文件
+    FileResult OpenFile(const QString&);                        // 打开特定文件
 
     // 公有Getter
     double GetUrgency();                                        // 返回DDL紧迫程度，预期耗时/(DDL时间-当前时间)*100%
