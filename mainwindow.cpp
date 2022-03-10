@@ -64,7 +64,10 @@ void MainWindow::create_ddl(){
     tmp_Label->setStyleSheet("QLabel{border:2px solid rgb(0, 255, 255);}");
     isOccupied[this->DDL_number] = true;
     this->m_block[this->DDL_number] = tmp_Label;
-    this->m_block[this->DDL_number++]->line_rank = DDL_lines_number;
+    tmp_Label->rank = this->DDL_number;
+    tmp_Label->line_rank = DDL_lines_number;
+    this->number_each_line[tmp_Label->line_rank]++;
+    DDL_number++;
     DDL_lines_number++;
     //初始化ddl
 
@@ -74,10 +77,14 @@ void MainWindow::create_ddl(){
 //    QString comm_time = type_in_commence.getText(tmp_Label, "comm_time", "please type in commence time", QLineEdit::Normal);
 //    QInputDialog type_in_due(tmp_Label);
 //    QString due_time = type_in_due.getText(tmp_Label, "due_time", "please type in due time", QLineEdit::Normal);
-      QInputDialog type_in_name(tmp_Label);
-      QString tmp_name = type_in_name.getText(tmp_Label, "name", "please type in ddl name", QLineEdit::Normal);
-      tmp_Label->m_ddl->SetName(tmp_name);
-      tmp_Label->setText(tmp_name);
+
+     //输入并在ddl块上显示当前时间
+//      QInputDialog type_in_name(tmp_Label);
+//      QString tmp_name = type_in_name.getText(tmp_Label, "name", "please type in ddl name", QLineEdit::Normal);
+//      tmp_Label->m_ddl->SetName(tmp_name);
+//      tmp_Label->setText(tmp_name);
+
+    tmp_Label->setText(QString::number(tmp_Label->rank, 10) + QString::number(tmp_Label->line_rank, 10));
 
 
     //测试版
@@ -132,6 +139,7 @@ void MainWindow::create_ddl(){
     {
         tmp_Label->m_pMenu->exec(QCursor::pos());
     });
+    //qDebug() << tmp_Label->line_rank;
 }
 
 //按秩删除ddl并维护ddl序列
@@ -151,27 +159,55 @@ void MainWindow::slot_delete(int rank){
         m_block[rank]->m_ddl->SetNext("NEXT");
     }
     this->m_block[rank]->Button_delete->hide();
-    for(int i = rank + 1; i < DDL_number; i++){
+
+    int deleted_linerank = this->m_block[rank]->line_rank;//记录被灭绝的line's rank
+
+    for(int i = rank + 1; i < DDL_number; i++)
+    {
         this->m_block[i - 1] = this->m_block[i];//依次前移
-        this->m_block[i]->Button_delete->rank--;
-        this->m_block[i]->Button_next->rank = this->m_block[i]->Button_delete->rank;
-        this->m_block[i]->setGeometry(this->m_block[i]->x(), this->m_block[i]->y() - 200,
-                                          this->m_block[i]->width(), this->m_block[i]->height());
-        this->m_block[i]->Button_delete->setParameters(this->m_block[i]->x(), this->m_block[i]->y(),
-                                                     200, 100);
-        this->m_block[i]->Button_next->setParameters(this->m_block[i]->x() + 200, this->m_block[i]->y()
-                                                     , 200, 100);
+        this->m_block[i - 1]->rank--;
+//        qDebug() << m_block[i - 1]->rank;
+        this->m_block[i - 1]->setText(QString::number(this->m_block[i - 1]->rank));
+        this->m_block[i - 1]->Button_delete->rank--;
+        this->m_block[i - 1]->Button_next->rank = this->m_block[i]->Button_delete->rank;
     }
+    //调整位置
+    this->number_each_line[deleted_linerank]--;
+
+    //如果这个ddl删除导致了少了一条line
+    if(this->number_each_line[deleted_linerank] == 0)
+    {
+        for(int i = deleted_linerank; i < DDL_lines_number - 1; i++)//重新计数
+            number_each_line[i] = 0;
+        for(int i = 0; i < DDL_number - 1; i++)//对于每一个ddl
+        {
+            if(this->m_block[i]->line_rank > deleted_linerank)//如果他的linerank大于被删掉的
+            {
+                this->m_block[i]->line_rank--;
+                number_each_line[this->m_block[i]->line_rank]++;
+            }
+            this->m_block[i]->setGeometry(200 + this->m_block[i]->line_rank * 200,
+                                          this->m_block[i]->y(), 200, this->m_block[i]->height());
+        }
+        this->number_each_line[DDL_lines_number] = 0;
+        this->DDL_lines_number--;//少了一条线
+
+    }
+    //如果这个ddl删除没有导致少了一条line,不需要更多改动了
     DDL_number--;
 }
 
 // 为当前DDl设置后继
 void MainWindow::slot_succ(int rank){
-    //qDebug() << rank;
     ddl_block *tmp_Label = new ddl_block(this);
     tmp_Label->setStyleSheet("QLabel{border:2px solid rgb(0, 255, 255);}");
     isOccupied[this->DDL_number] = true;
-    this->m_block[this->DDL_number++] = tmp_Label;
+    this->m_block[this->DDL_number] = tmp_Label;
+    tmp_Label->rank = this->DDL_number;
+    tmp_Label->line_rank = m_block[rank]->line_rank;//后继应该与被后继的在同一line中
+    this->number_each_line[tmp_Label->line_rank]++;
+    DDL_number++;
+
     //输入当前时间，格式为yyyy-MM-dd hh:mm:ss，存储在QString变量里
 //    QInputDialog type_in_commence(tmp_Label);
 //    QString comm_time = type_in_commence.getText(tmp_Label, "comm_time", "please type in commence time", QLineEdit::Normal);
@@ -214,6 +250,7 @@ void MainWindow::slot_succ(int rank){
     //connect(tmp_Label->Button_next, SIGNAL(next_ddl(int)), this, SLOT(slot_succ(int)));
     tmp_Label->setGeometry(m_block[rank]->x(), 1080 - 200 * curr_time.daysTo(end_time), 200, begin_time.daysTo(end_time) * 200);
     tmp_Label->show();
+    tmp_Label->setText(QString::number(tmp_Label->rank, 10) + QString::number(tmp_Label->line_rank, 10));
 
     //获得ddl持续时间，决定其在界面上的长度和位置
 }
