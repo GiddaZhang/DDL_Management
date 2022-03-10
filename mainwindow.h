@@ -21,6 +21,7 @@ public:
     ~MainWindow();
     button_new *m_button;
     ddl_block *m_block[30];
+    //QString *name_block[30];
     bool isOccupied[30] = {0};//记录对应位置是否有ddl，有就是true，没有就是false
     void keyPressEvent(QKeyEvent *event) override;
 
@@ -38,6 +39,7 @@ private:
     Ui::MainWindow *ui;
     int DDL_number;         // 记录当前有效的ddl的个数
     int DDL_lines_number;//一组前驱后继算一条线
+    int number_each_line[30] = {0};
 };
 
 #endif // MAINWINDOW_H

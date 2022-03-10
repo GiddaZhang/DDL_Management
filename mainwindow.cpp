@@ -133,22 +133,29 @@ void MainWindow::create_ddl(){
     this->m_block[this->DDL_number] = tmp_Label;
     this->m_block[this->DDL_number++]->line_rank = DDL_lines_number;
     DDL_lines_number++;
+    //初始化ddl
 
-//    //输入当前时间，格式为yyyy-MM-dd hh:mm:ss，存储在QString变量里
+
+    //输入当前时间，格式为yyyy-MM-dd hh:mm:ss，存储在QString变量里
 //    QInputDialog type_in_commence(tmp_Label);
 //    QString comm_time = type_in_commence.getText(tmp_Label, "comm_time", "please type in commence time", QLineEdit::Normal);
 //    QInputDialog type_in_due(tmp_Label);
 //    QString due_time = type_in_due.getText(tmp_Label, "due_time", "please type in due time", QLineEdit::Normal);
+      QInputDialog type_in_name(tmp_Label);
+      QString tmp_name = type_in_name.getText(tmp_Label, "name", "please type in ddl name", QLineEdit::Normal);
+      tmp_Label->m_ddl->SetName(tmp_name);
+      tmp_Label->setText(tmp_name);
+
 
     //测试版
     QString comm_time = "2022-03-10 00:00:00";
     QString due_time = "2022-03-12 00:00:00";
 
 
-    //初始化ddl
-    tmp_Label->m_ddl = new DDL("UNKNOWN", comm_time,
-                               due_time, "PLAIN", "NULL",
-                               0, 0.0, "PREV","NEXT");
+//    //初始化ddl
+//    tmp_Label->m_ddl = new DDL("UNKNOWN", comm_time,
+//                               due_time, "PLAIN", "NULL",
+//                               0, 0.0, "PREV","NEXT");
     //获得ddl持续时间，决定其在界面上的长度和位置
     QDateTime begin_time = QDateTime::fromString(comm_time, "yyyy-MM-dd hh:mm:ss");
     QDateTime end_time = QDateTime::fromString(due_time, "yyyy-MM-dd hh:mm:ss");
@@ -230,7 +237,7 @@ void MainWindow::slot_succ(int rank){
 //    QString due_time = type_in_due.getText(tmp_Label, "due_time", "please type in due time", QLineEdit::Normal);
 
     //测试版
-    QString comm_time = "2022-03-12 00:00:00";
+    QString comm_time = "2022-03-13 00:00:00";
     QString due_time = "2022-03-15 00:00:00";
     QDateTime begin_time = QDateTime::fromString(comm_time, "yyyy-MM-dd hh:mm:ss");
     QDateTime end_time = QDateTime::fromString(due_time, "yyyy-MM-dd hh:mm:ss");
