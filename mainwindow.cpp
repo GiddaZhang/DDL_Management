@@ -155,7 +155,7 @@ void MainWindow::create_ddl(){
     QDateTime curr_time = QDateTime::currentDateTime();
 
     //qDebug() << begin_time.daysTo(end_time);//获取ddl的长度（日）
-    tmp_Label->setGeometry(200 + tmp_Label->line_rank * 200, 1600 - 200 * curr_time.daysTo(end_time), 200, begin_time.daysTo(end_time) * 200);
+    tmp_Label->setGeometry(200 + tmp_Label->line_rank * 200, 1080 - 200 * curr_time.daysTo(end_time), 200, begin_time.daysTo(end_time) * 200);
     //tmp_Label->setGeometry(400, 400, 400, 400);
 
     // 将当前ddl模块的show_tasks信号与其slot_tasks槽连接
@@ -236,10 +236,6 @@ void MainWindow::slot_succ(int rank){
     QDateTime end_time = QDateTime::fromString(due_time, "yyyy-MM-dd hh:mm:ss");
     QDateTime curr_time = QDateTime::currentDateTime();
 
-    //初始化ddl
-    tmp_Label->m_ddl = new DDL("UNKNOWN", comm_time,
-                               due_time, "PLAIN", "NULL",
-                               0, 0.0, "PREV","NEXT");
     m_block[rank]->m_ddl->SetNext(QString::number(DDL_number - 1, 10));//原来的ddl的后继的序号是新的ddl的序号
     tmp_Label->m_ddl->SetPrev(QString::number(rank, 10));//新的ddl的前驱的序号是原来的ddl
 
@@ -267,7 +263,7 @@ void MainWindow::slot_succ(int rank){
     tmp_Label->rank = DDL_number - 1;
     //qDebug() << m_block[rank]->rank << tmp_Label->rank;
     //connect(tmp_Label->Button_next, SIGNAL(next_ddl(int)), this, SLOT(slot_succ(int)));
-    tmp_Label->setGeometry(m_block[rank]->x(), 1600 - 200 * curr_time.daysTo(end_time), 200, begin_time.daysTo(end_time) * 200);
+    tmp_Label->setGeometry(m_block[rank]->x(), 1080 - 200 * curr_time.daysTo(end_time), 200, begin_time.daysTo(end_time) * 200);
     tmp_Label->show();
 
     //获得ddl持续时间，决定其在界面上的长度和位置

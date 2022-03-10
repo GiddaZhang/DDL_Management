@@ -2,7 +2,8 @@
 
 ddl_block::ddl_block(QMainWindow *parent) : QLabel(parent)
 {
-
+    this->m_ddl = new DDL;
+    qDebug() << this->m_ddl->GetName();
 }
 
 void ddl_block::keyPressEvent(QKeyEvent *event)
