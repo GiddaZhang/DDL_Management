@@ -4,6 +4,8 @@ ddl_block::ddl_block(QMainWindow *parent) : QLabel(parent)
 {
     this->m_ddl = new DDL;      // 初始化DDL
 
+    m_ddl->AddPath("D:/Desktop/2.txt");
+
     // 初始化菜单
     this->m_pMenu = new PrimaryMenu(parent);
 
@@ -28,11 +30,8 @@ ddl_block::ddl_block(QMainWindow *parent) : QLabel(parent)
         connect(this->m_act[i], SIGNAL(triggered()), this, SLOT(OnClickedPopMenu()));
     }
 
-//    QList<QAction*> list = m_pMenu->actions();
-//    foreach (QAction* pAction, list)
-//    delete pAction;
-//    delete m_pMenu;
-//    释放内存会出问题
+    this->setAcceptDrops(true);         // 启用放下操作
+    this->SetWorkingFileSpace();        // 初始化工作文件窗口
 }
 
 void ddl_block::keyPressEvent(QKeyEvent *event)
@@ -91,7 +90,7 @@ void ddl_block::OnClickedPopMenu()
     switch (iType)
     {
     case 1:
-        QMessageBox::about(this, "工作", this->m_ddl->GetName());
+        this->ShowWorkingFileSpace();
         break;
     case 2:
 //        QMessageBox::about(this, "删除", pEven->text());
@@ -110,7 +109,63 @@ void ddl_block::OnClickedPopMenu()
     }
 }
 
+void ddl_block::dragEnterEvent(QDragEnterEvent *e)
+{
+    //对拖放事件进行筛选
+    if (true)
+    {
+        e->acceptProposedAction();	//放行，否则不会执行dropEvent()函数
+    }
+}
 
+// 在拖动文件图标到ddl_block区域后被触发
+void ddl_block::dropEvent(QDropEvent *e)
+{
+    QList<QUrl> urls = e->mimeData()->urls();
+    if(urls.isEmpty())
+        return ;
+    foreach (QUrl u, urls)
+    {
+        QString filepath = u.toLocalFile();
+        this->m_ddl->AddPath(filepath);
+        WorkingFileListItem* tmp = new WorkingFileListItem(filepath);
+        m_ListWidget->addItem(tmp);
 
+        // 连接双击点击列表路径信号，和打开文件槽
+        connect(m_ListWidget, &QListWidget::itemDoubleClicked, this, &ddl_block::slot_open);
+    }
+}
+
+void ddl_block::SetWorkingFileSpace()
+{
+    this->m_FileWidget = new QWidget;       // 新建工作文件窗口
+    m_FileWidget->setWindowTitle("工作文件");
+    m_FileWidget->resize(500,500);
+
+    this->m_ListWidget = new QListWidget(this->m_FileWidget);     // 新建工作文件列表
+    m_ListWidget->resize(500,400);
+    m_ListWidget->setFont(QFont("Hack",14));
+    vector<WorkingFile> allFile = this->m_ddl->GetWorkingFile();
+
+    // 显示工作文件路径
+    for(auto it = allFile.begin(); it != allFile.end(); it++) {
+        WorkingFileListItem* tmp = new WorkingFileListItem(it->GetFilePath());
+        m_ListWidget->addItem(tmp);
+
+        // 连接双击点击列表路径信号，和打开文件槽
+        connect(m_ListWidget, &QListWidget::itemDoubleClicked, this, &ddl_block::slot_open);
+    }
+}
+
+void ddl_block::ShowWorkingFileSpace()
+{
+    this->m_FileWidget->show();
+}
+
+void ddl_block::slot_open(QListWidgetItem *item)
+{
+    QString path = item->text();
+    this->m_ddl->OpenFile(path);
+}
 
 

@@ -205,7 +205,7 @@ Set_Result DDL::ModifyDescription(const int& num, const QString& new_Description
 Set_Result DDL::AddPath(const QString& filePath){
     // 先判断路径是否存在
     QFileInfo dir(filePath);
-    if(dir.exists() == false && filePath != "NULL") {
+    if(dir.exists() == false) {
         return INVALID;
     }
     WorkingFile Temp(filePath);
@@ -247,6 +247,17 @@ FileResult DDL::OpenAllFile()
     return FileResult::SUCCESS;
 }
 
+FileResult DDL::OpenFile(const QString& path)
+{
+    for(auto it = m_allFilePath.begin();it != m_allFilePath.end();it++) {
+        if(it->GetFilePath() == path) {
+            if(it->OpenFile() == FileResult::SUCCESS)
+                return FileResult::SUCCESS;
+        }
+    }
+    return FileResult::NFOUND;
+}
+
 double DDL::GetUrgency()
 {
     qint64 cur_sec = QDateTime::currentDateTime().secsTo(this->m_due);    // 目前剩余时间，单位秒
@@ -271,6 +282,11 @@ QString DDL::GetNext() const
 QString DDL::GetPrev() const
 {
     return this->m_prev;
+}
+
+vector<WorkingFile> DDL::GetWorkingFile() const
+{
+    return this->m_allFilePath;
 }
 
 shared_ptr<DDL> DDL::GetDDLPtr(const QString& name)
