@@ -41,7 +41,6 @@ MainWindow::MainWindow(QWidget *parent):
 
     //修改属性，设置为自定义菜单模式
     setContextMenuPolicy(Qt::CustomContextMenu);
-
 }
 
 // 析构函数
@@ -131,7 +130,6 @@ void MainWindow::create_ddl(){
     //给信号设置相应的槽函数
     connect(tmp_Label, &QLabel::customContextMenuRequested, [=](const QPoint &pos)
     {
-        qDebug()<<pos;//参数pos用来传递右键点击时的鼠标的坐标，这个坐标一般是相对于控件左上角而言的
         tmp_Label->m_pMenu->exec(QCursor::pos());
     });
 }
