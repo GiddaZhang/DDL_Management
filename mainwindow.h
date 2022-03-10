@@ -29,6 +29,7 @@ public slots:
     void create_ddl();
     void slot_delete(int rank);
     void slot_succ(int rank);
+//    void slot_openWorkingFile();
 
 protected:
     //void paintEvent(QPaintEvent *event);

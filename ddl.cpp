@@ -205,7 +205,7 @@ Set_Result DDL::ModifyDescription(const int& num, const QString& new_Description
 Set_Result DDL::AddPath(const QString& filePath){
     // 先判断路径是否存在
     QFileInfo dir(filePath);
-    if(dir.exists() == false && filePath != "NULL") {
+    if(dir.exists() == false) {
         return INVALID;
     }
     WorkingFile Temp(filePath);
@@ -271,6 +271,11 @@ QString DDL::GetNext() const
 QString DDL::GetPrev() const
 {
     return this->m_prev;
+}
+
+vector<WorkingFile> DDL::GetWorkingFile() const
+{
+    return this->m_allFilePath;
 }
 
 shared_ptr<DDL> DDL::GetDDLPtr(const QString& name)

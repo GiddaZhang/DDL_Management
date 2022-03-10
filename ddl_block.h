@@ -10,11 +10,14 @@
 #include <QDebug>
 #include <QMouseEvent>
 #include <QMessageBox>
+#include <QListWidget>
+#include <QListWidgetItem>
 #include "ddl.h"
 #include "button_delete.h"
 #include "button_new.h"
 #include "button_next.h"
 #include "primarymenu.h"
+#include "workingfilelistitem.h"
 
 
 class ddl_block : public QLabel
@@ -40,8 +43,10 @@ public:
     button_next *Button_next;
 
     DDL* m_ddl;                // DDL成员
-    PrimaryMenu* m_pMenu;      // DDL菜单
+    PrimaryMenu* m_pMenu;
     QAction* m_act[5];         // 菜单中的选项：工作，删除，留言，添加后继
+
+    void WorkingFileSpace();   // 显示工作文件
 
 private:
 

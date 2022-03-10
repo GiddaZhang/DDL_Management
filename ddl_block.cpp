@@ -4,6 +4,8 @@ ddl_block::ddl_block(QMainWindow *parent) : QLabel(parent)
 {
     this->m_ddl = new DDL;      // 初始化DDL
 
+    m_ddl->AddPath("D:/Desktop/2.txt");
+
     // 初始化菜单
     this->m_pMenu = new PrimaryMenu(parent);
 
@@ -27,12 +29,6 @@ ddl_block::ddl_block(QMainWindow *parent) : QLabel(parent)
     for(int i = 0; i < 5; i++) {
         connect(this->m_act[i], SIGNAL(triggered()), this, SLOT(OnClickedPopMenu()));
     }
-
-//    QList<QAction*> list = m_pMenu->actions();
-//    foreach (QAction* pAction, list)
-//    delete pAction;
-//    delete m_pMenu;
-//    释放内存会出问题
 }
 
 void ddl_block::keyPressEvent(QKeyEvent *event)
@@ -91,7 +87,7 @@ void ddl_block::OnClickedPopMenu()
     switch (iType)
     {
     case 1:
-        QMessageBox::about(this, "工作", this->m_ddl->GetName());
+        this->WorkingFileSpace();
         break;
     case 2:
 //        QMessageBox::about(this, "删除", pEven->text());
@@ -110,6 +106,24 @@ void ddl_block::OnClickedPopMenu()
     }
 }
 
+void ddl_block::WorkingFileSpace()
+{
+    QWidget *widget = new QWidget;       // 新建工作文件窗口
+    widget->setWindowTitle("工作文件");
+    widget->resize(500,500);
+
+    QListWidget *listWidget = new QListWidget(widget);     // 新建工作文件列表
+    listWidget->resize(500,400);
+    listWidget->setFont(QFont("Hack",14));
+    vector<WorkingFile> allFile = this->m_ddl->GetWorkingFile();
+
+    // 显示工作文件路径
+    for(auto it = allFile.begin(); it != allFile.end(); it++) {
+        WorkingFileListItem* tmp = new WorkingFileListItem(it->GetFilePath());
+        listWidget->addItem(tmp);
+    }
+    widget->show();
+}
 
 
 

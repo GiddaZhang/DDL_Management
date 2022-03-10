@@ -81,6 +81,7 @@ public:
     QDateTime GetDue() const;                                   // 返回DDL截止时间
     QString GetNext() const;                                    // 返回后继DDL名称
     QString GetPrev() const;                                    // 返回前驱DDL名称
+    vector<WorkingFile> GetWorkingFile() const;                 // 返回Workingfile向量
 
     // 重载运算符
     bool operator < (const DDL&);                               // 比较时间的先后用于排序："<"——先发生
@@ -92,7 +93,7 @@ public:
     //静态公有接口
     static Read_Write_Result LoadFromFile();                    // 加载信息，路径由函数自动确定
     static Read_Write_Result SaveToFile();                      // 存储信息，路径由函数自动确定
-    static shared_ptr<DDL> GetDDLPtr(const QString&);
+    static shared_ptr<DDL> GetDDLPtr(const QString&);           // 获得全部DDL
 
     void OutputToStream(ostream&) const;                        // 输出流
 
