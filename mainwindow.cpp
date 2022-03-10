@@ -44,72 +44,6 @@ MainWindow::MainWindow(QWidget *parent):
 
 }
 
-// 这个函数在ui界面声明
-void MainWindow::on_MainWindow_customContextMenuRequested(const QPoint &pos)
-{
-    PrimaryMenu* pMenu = new PrimaryMenu(this);
-
-    //设置快捷键为T
-    QAction *pTest1 = new QAction("工作", this);
-    QAction *pTest2 = new QAction("删除", this);
-    QAction *pTest3 = new QAction("留言", this);
-    QAction *pTest4 = new QAction("添加后继", this);
-
-    //把QAction对象添加到菜单上
-    pMenu->addAction(pTest1);
-    pMenu->addAction(pTest2);
-    pMenu->addAction(pTest3);
-    pMenu->addAction(pTest4);
-
-    //设置点击后发送的数据
-    pTest1->setData(1);
-    pTest2->setData(2);
-    pTest3->setData(3);
-    pTest4->setData(4);
-
-    //连接鼠标右键点击信号
-    connect(pTest1, SIGNAL(triggered()), this, SLOT(OnClickedPopMenu()));
-    connect(pTest2, SIGNAL(triggered()), this, SLOT(OnClickedPopMenu()));
-    connect(pTest3, SIGNAL(triggered()), this, SLOT(OnClickedPopMenu()));
-    connect(pTest4, SIGNAL(triggered()), this, SLOT(OnClickedPopMenu()));
-
-    //在鼠标右键点击的地方显示菜单
-    pMenu->exec(cursor().pos());
-
-    //释放内存,若此处不手动释放，则必须等到程序结束时才都能释放
-    QList<QAction*> list = pMenu->actions();
-    foreach (QAction* pAction, list)
-    delete pAction;
-    delete pMenu;
-}
-
-// 注意，这里的点击菜单项出来text只是一个任意添加的演示功能，其他功能另写
-// 另外，PrimaryMenu类现在我不知道要加什么东西，只是继承了一下Menu，这也要再加
-void MainWindow::OnClickedPopMenu(){
-    QAction *pEven = qobject_cast<QAction *>(this->sender());
-    qDebug() << 1;
-
-    //获取发送信息
-    int iType = pEven->data().toInt();
-    switch (iType)
-    {
-    case 1:
-        QMessageBox::about(this, "工作", pEven->text());
-        break;
-    case 2:
-        QMessageBox::about(this, "删除", pEven->text());
-        break;
-    case 3:
-        QMessageBox::about(this, "留言", pEven->text());
-        break;
-    case 4:
-        QMessageBox::about(this, "添加后继", pEven->text());
-        break;
-    default:
-        break;
-    }
-}
-
 // 析构函数
 MainWindow::~MainWindow(){
 
@@ -190,6 +124,16 @@ void MainWindow::create_ddl(){
 
     connect(tmp_Label->Button_next, SIGNAL(next_ddl(int)), this, SLOT(slot_succ(int)));
     tmp_Label->show();
+
+    // 下面开始设置ddl_block出现的菜单
+    tmp_Label->setContextMenuPolicy(Qt::CustomContextMenu);
+    //鼠标右键点击控件时会发送一个void QWidget::customContextMenuRequested(const QPoint &pos)信号
+    //给信号设置相应的槽函数
+    connect(tmp_Label, &QLabel::customContextMenuRequested, [=](const QPoint &pos)
+    {
+        qDebug()<<pos;//参数pos用来传递右键点击时的鼠标的坐标，这个坐标一般是相对于控件左上角而言的
+        tmp_Label->m_pMenu->exec(QCursor::pos());
+    });
 }
 
 //按秩删除ddl并维护ddl序列
@@ -199,7 +143,7 @@ void MainWindow::slot_delete(int rank){
     if(DDL_number == 0)return;
     isOccupied[DDL_number - 1] = false;//clear out the position
     this->m_block[rank]->hide();//clear out the GUI of that ddl
-    //给前驱后继擦屁股
+    // 给前驱后继擦屁股
     if(m_block[rank]->m_ddl->GetPrev() != "PREV")
     {
         m_block[rank]->m_ddl->SetPrev("PREV");
@@ -314,3 +258,4 @@ void MainWindow::slot_succ(int rank){
 // 问题：paintEvent函数中重复写入QPainter中的代码，是否考虑加入一个AxisPainter成员
 // 问题：slot_delete需要删除底层all_ddl中的相应指针。需要手动调用all_ddl的erase函数以避免移位操作
 // ... 另slot_delete需要析构ddl_block，这会重复析构其中的m_ddl，可能需要智能指针
+

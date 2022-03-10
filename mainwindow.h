@@ -29,13 +29,11 @@ public slots:
     void create_ddl();
     void slot_delete(int rank);
     void slot_succ(int rank);
-    void OnClickedPopMenu();//点击菜单选项的槽函数
 
 protected:
     //void paintEvent(QPaintEvent *event);
 
 private slots:
-    void on_MainWindow_customContextMenuRequested(const QPoint &pos);
 
 private:
     Ui::MainWindow *ui;

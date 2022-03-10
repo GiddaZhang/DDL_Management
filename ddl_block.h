@@ -9,10 +9,12 @@
 #include <QKeyEvent>
 #include <QDebug>
 #include <QMouseEvent>
+#include <QMessageBox>
 #include "ddl.h"
 #include "button_delete.h"
 #include "button_new.h"
 #include "button_next.h"
+#include "primarymenu.h"
 
 
 class ddl_block : public QLabel
@@ -36,12 +38,12 @@ public:
     virtual ~ddl_block();
     button_delete *Button_delete;
     button_next *Button_next;
-    DDL *m_ddl;
 
+    DDL* m_ddl;                // DDL成员
+    PrimaryMenu* m_pMenu;      // DDL菜单
+    QAction* m_act[5];         // 菜单中的选项：工作，删除，留言，添加后继
 
 private:
-
-
 
 signals:
     void deleteddl();
@@ -49,6 +51,7 @@ signals:
 public slots:
     void slot_delete();
     void slot_tasks();
+    void OnClickedPopMenu();    // 点击菜单选项的槽函数
 
 };
 
