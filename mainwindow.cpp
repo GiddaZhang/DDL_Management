@@ -41,13 +41,12 @@ MainWindow::MainWindow(QWidget *parent):
 
     //修改属性，设置为自定义菜单模式
     setContextMenuPolicy(Qt::CustomContextMenu);
-    //关联信号和槽
-    connect(this, &MainWindow::customContextMenuRequested, this, &MainWindow::showContextMenu );
-
 
 }
 
-void MainWindow::showContextMenu(const QPoint &pos){
+// 这个函数在ui界面声明
+void MainWindow::on_MainWindow_customContextMenuRequested(const QPoint &pos)
+{
     PrimaryMenu* pMenu = new PrimaryMenu(this);
 
     //设置快捷键为T
@@ -69,10 +68,10 @@ void MainWindow::showContextMenu(const QPoint &pos){
     pTest4->setData(4);
 
     //连接鼠标右键点击信号
-    connect(pTest1, SIGNAL(&QAction::triggered), this, SLOT(&MainWindow::OnClickedPopMenu));
-    connect(pTest2, SIGNAL(&QAction::triggered), this, SLOT(&MainWindow::OnClickedPopMenu));
-    connect(pTest3, SIGNAL(&QAction::triggered), this, SLOT(&MainWindow::OnClickedPopMenu));
-    connect(pTest4, SIGNAL(&QAction::triggered), this, SLOT(&MainWindow::OnClickedPopMenu));
+    connect(pTest1, SIGNAL(triggered()), this, SLOT(OnClickedPopMenu()));
+    connect(pTest2, SIGNAL(triggered()), this, SLOT(OnClickedPopMenu()));
+    connect(pTest3, SIGNAL(triggered()), this, SLOT(OnClickedPopMenu()));
+    connect(pTest4, SIGNAL(triggered()), this, SLOT(OnClickedPopMenu()));
 
     //在鼠标右键点击的地方显示菜单
     pMenu->exec(cursor().pos());
@@ -88,6 +87,7 @@ void MainWindow::showContextMenu(const QPoint &pos){
 // 另外，PrimaryMenu类现在我不知道要加什么东西，只是继承了一下Menu，这也要再加
 void MainWindow::OnClickedPopMenu(){
     QAction *pEven = qobject_cast<QAction *>(this->sender());
+    qDebug() << 1;
 
     //获取发送信息
     int iType = pEven->data().toInt();

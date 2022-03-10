@@ -29,11 +29,13 @@ public slots:
     void create_ddl();
     void slot_delete(int rank);
     void slot_succ(int rank);
-    void showContextMenu(const QPoint &pos); //右键显示一级菜单的槽函数
     void OnClickedPopMenu();//点击菜单选项的槽函数
 
 protected:
     //void paintEvent(QPaintEvent *event);
+
+private slots:
+    void on_MainWindow_customContextMenuRequested(const QPoint &pos);
 
 private:
     Ui::MainWindow *ui;
