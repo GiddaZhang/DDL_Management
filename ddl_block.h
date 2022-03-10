@@ -12,6 +12,10 @@
 #include <QMessageBox>
 #include <QListWidget>
 #include <QListWidgetItem>
+#include <QList>
+#include <QDragEnterEvent>
+#include <QFile>
+#include <QMimeData>
 #include "ddl.h"
 #include "button_delete.h"
 #include "button_new.h"
@@ -42,11 +46,18 @@ public:
     button_delete *Button_delete;
     button_next *Button_next;
 
-    DDL* m_ddl;                // DDL成员
+    DDL* m_ddl;                     // DDL成员
     PrimaryMenu* m_pMenu;
-    QAction* m_act[5];         // 菜单中的选项：工作，删除，留言，添加后继
+    QAction* m_act[5];              // 菜单中的选项：工作，删除，留言，添加后继
+    QWidget* m_FileWidget;          // 工作文件窗口
+    QListWidget* m_ListWidget;      // 工作文件列表
 
-    void WorkingFileSpace();   // 显示工作文件
+    void SetWorkingFileSpace();     // 设置工作文件界面
+    void ShowWorkingFileSpace();    // 显示工作文件界面
+
+protected:
+    void dragEnterEvent(QDragEnterEvent *e);    // 拖动文件用到的信号1
+    void dropEvent(QDropEvent *e);              // 拖动文件用到的信号2(这两个信号都需要把文件拖动到ddl_block区域)
 
 private:
 
@@ -56,7 +67,8 @@ signals:
 public slots:
     void slot_delete();
     void slot_tasks();
-    void OnClickedPopMenu();    // 点击菜单选项的槽函数
+    void OnClickedPopMenu();                 // 点击菜单选项的槽函数
+    void slot_open(QListWidgetItem *item);   // 点击工作文件路径的槽函数
 
 };
 
