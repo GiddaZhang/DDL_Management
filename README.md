@@ -1,5 +1,7 @@
 # DDL_Management
 
+![主界面](https://github.com/GiddaZhang/Image/blob/main/main.jpg)
+
 ## 建议
 
 - 写注释
