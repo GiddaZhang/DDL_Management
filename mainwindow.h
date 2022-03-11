@@ -7,6 +7,8 @@
 #include "ddl_block.h"
 #include "button.h"
 #include "button_new.h"
+#include "button_next.h"
+#include "button_prev.h"
 #include "primarymenu.h"
 namespace Ui {
 class MainWindow;
@@ -29,7 +31,7 @@ public slots:
     void create_ddl();
     void slot_delete(int rank);
     void slot_succ(int rank);
-//    void slot_openWorkingFile();
+    void slot_prev(int rank);
 
 protected:
     //void paintEvent(QPaintEvent *event);

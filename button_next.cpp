@@ -12,6 +12,6 @@ void button_next::mousePressEvent(QMouseEvent *ev)
     if(ev->button() == Qt::LeftButton)
     {
         emit next_ddl(this->rank);
-        qDebug() << rank;
+        //qDebug() << rank;
     }
 }

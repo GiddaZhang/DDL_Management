@@ -22,6 +22,7 @@
 #include "button_next.h"
 #include "primarymenu.h"
 #include "workingfilelistitem.h"
+#include "button_prev.h"
 
 
 class ddl_block : public QLabel
@@ -45,6 +46,7 @@ public:
     virtual ~ddl_block();
     button_delete *Button_delete;
     button_next *Button_next;
+    button_prev *Button_prev;
 
     DDL* m_ddl;                     // DDL成员
     PrimaryMenu* m_pMenu;
