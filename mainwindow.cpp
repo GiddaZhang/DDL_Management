@@ -21,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent):
 
     // 设置并显示主窗口UI
     ui->setupUi(this);
-    this->setGeometry(20, 40, 1600, 1080);
+    this->setGeometry(20, 40, 1920, 1080);
     AxisPainter *axis = new AxisPainter(this);
     axis->show();
     this->show();
@@ -88,8 +88,8 @@ void MainWindow::create_ddl(){
 
 
     //测试版
-    QString comm_time = "2022-03-10 00:00:00";
-    QString due_time = "2022-03-12 00:00:00";
+    QString comm_time = "2022-03-13 00:00:00";
+    QString due_time = "2022-03-15 00:00:00";
 
 
 //    //初始化ddl
@@ -116,6 +116,11 @@ void MainWindow::create_ddl(){
     tmp_Label->Button_delete->show();
     // 将“删除”按钮的delete_ddl信号与主窗口的slot_delete槽连接
     connect(tmp_Label->Button_delete, SIGNAL(delete_ddl(int)), this, SLOT(slot_delete(int)));
+    connect(tmp_Label, SIGNAL(getInt(int)), this, SLOT(slot_delete(int)));
+    connect(tmp_Label, SIGNAL(getInt_succ(int)), this, SLOT(slot_succ(int)));
+    connect(tmp_Label, SIGNAL(getInt_prev(int)), this, SLOT(slot_prev(int)));
+
+
 
     // 为ddl模块提供“后继”按钮，操作同上
     tmp_Label->Button_next = new button_next(tmp_Label);
@@ -148,6 +153,7 @@ void MainWindow::create_ddl(){
         tmp_Label->m_pMenu->exec(QCursor::pos());
     });
     //qDebug() << tmp_Label->line_rank;
+    //qDebug() << tmp_Label->x() << tmp_Label->y() << tmp_Label->width() << tmp_Label->height();
 }
 
 //按秩删除ddl并维护ddl序列
@@ -223,8 +229,8 @@ void MainWindow::slot_succ(int rank){
 //    QString due_time = type_in_due.getText(tmp_Label, "due_time", "please type in due time", QLineEdit::Normal);
 
     //测试版
-    QString comm_time = "2022-03-13 00:00:00";
-    QString due_time = "2022-03-15 00:00:00";
+    QString comm_time = "2022-03-15 00:00:00";
+    QString due_time = "2022-03-16 00:00:00";
     QDateTime begin_time = QDateTime::fromString(comm_time, "yyyy-MM-dd hh:mm:ss");
     QDateTime end_time = QDateTime::fromString(due_time, "yyyy-MM-dd hh:mm:ss");
     QDateTime curr_time = QDateTime::currentDateTime();
