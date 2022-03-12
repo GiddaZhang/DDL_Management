@@ -32,6 +32,7 @@ public slots:
     void slot_delete(int rank);
     void slot_succ(int rank);
     void slot_prev(int rank);
+//    void slot_openWorkingFile();
 
 protected:
     //void paintEvent(QPaintEvent *event);

@@ -29,6 +29,9 @@ ddl_block::ddl_block(QMainWindow *parent) : QLabel(parent)
     for(int i = 0; i < 5; i++) {
         connect(this->m_act[i], SIGNAL(triggered()), this, SLOT(OnClickedPopMenu()));
     }
+    connect(this->m_act[1], SIGNAL(triggered()), this, SLOT(emit_interchange()));
+    connect(this->m_act[3], SIGNAL(triggered()), this, SLOT(emit_interchange_succ()));
+    connect(this->m_act[4], SIGNAL(triggered()), this, SLOT(emit_interchange_prev()));
 
     this->setAcceptDrops(true);         // 启用放下操作
     this->SetWorkingFileSpace();        // 初始化工作文件窗口
@@ -187,5 +190,27 @@ void ddl_block::slot_open(QListWidgetItem *item)
     QString path = item->text();
     this->m_ddl->OpenFile(path);
 }
+
+void ddl_block::slot_voidToint(int rank)
+{
+    emit getInt(rank);
+}
+
+void ddl_block::emit_interchange()
+{
+    emit getInt(this->rank);
+}
+
+void ddl_block::emit_interchange_prev()
+{
+    emit getInt_prev(this->rank);
+}
+
+
+void ddl_block::emit_interchange_succ()
+{
+    emit getInt_succ(this->rank);
+}
+
 
 

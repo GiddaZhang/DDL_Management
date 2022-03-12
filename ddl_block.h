@@ -66,12 +66,19 @@ private:
 signals:
     void deleteddl();
     void show_tasks();
+    void getInt(int);
+    void getInt_succ(int);
+    void getInt_prev(int);
 public slots:
     void slot_delete();
     void slot_tasks();
     void OnClickedPopMenu();                 // 点击菜单选项的槽函数
     void slot_open(QListWidgetItem *item);   // 点击工作文件路径的槽函数
-    void OnClickedWorkingFileMenu();         // 右键工作文件路径显示菜单的槽函数
+    void slot_voidToint(int rank);
+    void emit_interchange();
+    void emit_interchange_succ();
+    void emit_interchange_prev();
+
 };
 
 #endif // DDL_BLOCK_H
