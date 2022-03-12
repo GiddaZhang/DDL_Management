@@ -161,24 +161,24 @@ void ddl_block::SetWorkingFileSpace()
     }
 }
 
-void ddl_block::OnClickedWorkingFileMenu()
-{
-    QAction *pEven = qobject_cast<QAction *>(this->sender());
+//void ddl_block::OnClickedWorkingFileMenu()
+//{
+//    QAction *pEven = qobject_cast<QAction *>(this->sender());
 
-    //获取发送信息
-    int iType = pEven->data().toInt();
-    switch (iType)
-    {
-    case 1:
-        break;
-    case 2:
-        break;
-    case 3:
-        break;
-    default:
-        break;
-    }
-}
+//    //获取发送信息
+//    int iType = pEven->data().toInt();
+//    switch (iType)
+//    {
+//    case 1:
+//        break;
+//    case 2:
+//        break;
+//    case 3:
+//        break;
+//    default:
+//        break;
+//    }
+//}
 
 void ddl_block::ShowWorkingFileSpace()
 {
