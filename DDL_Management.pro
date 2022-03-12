@@ -23,18 +23,51 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 
+#INCLUDEPATH += \
+#            interactive_buttons/ \
+#            facile_menu/ \
+#            image/
+
 SOURCES += \
+    button_delete.cpp \
+    button_next.cpp \
+    button_prev.cpp \
+    workingfile.cpp \
+    description.cpp \
+    button.cpp \
+    button_new.cpp \
+    ddl_block.cpp \
         main.cpp \
         mainwindow.cpp \
     ddl.cpp \
+<<<<<<< HEAD
     date.cpp \
     message.cpp
+=======
+    axispainter.cpp \
+    primarymenu.cpp \
+    workingfilelistitem.cpp
+>>>>>>> 5158a368e8a379055a0c615422b79a1e6f42bbf1
 
 HEADERS += \
+    button_delete.h \
+    button_next.h \
+    button_prev.h \
+    workingfile.h \
+    description.h \
+    button.h \
+    button_new.h \
+    ddl_block.h \
         mainwindow.h \
     ddl.h \
+<<<<<<< HEAD
     date.h \
     message.h
+=======
+    axispainter.h \
+    primarymenu.h \
+    workingfilelistitem.h
+>>>>>>> 5158a368e8a379055a0c615422b79a1e6f42bbf1
 
 FORMS += \
         mainwindow.ui

@@ -1,10 +1,6 @@
 # DDL_Management
 
-## 功能与界面
-
-![image](https://github.com/GiddaZhang/Image/blob/main/main.jpg)
-
-![image](https://github.com/GiddaZhang/Image/blob/main/sub.jpg)
+![主界面](https://github.com/GiddaZhang/Image/blob/main/main.jpg)
 
 ## 建议
 
@@ -13,10 +9,28 @@
 - 别人更改后用`git pull`指令更新本地文件
 
 ## 进展
+3-9:
+- 界面已经基本按预期实现
+- 欠缺的功能：一组前驱后继被全部移除，右边的组要及时补过来。明天解决这个事情
+- 之后就是Menu的功能了
 
-2-27：
 
-- 确定功能
+3-5:
+- 删除功能开发最大的技术障碍被解决
+- 可以预见明天的工作将是先完善删除功能，然后开始细化到前驱、后继等功能
+- 已经逐渐成型
+
+3-4:
+- 可以通过鼠标单击创建ddl了
+- 解决了一些嵌套问题
+- ddl删除功能正在开发
+
+2-28:
+- 可以预见到接下来MVC中V的主要部分是对MainWindow文件进行操作。
+- 创建了ddl_block类（继承自QLabel）用于在界面中调用ddl
+- 暂时不考虑界面美观问题
+
+2-25：
 
 2-24：
 
