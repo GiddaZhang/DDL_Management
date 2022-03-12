@@ -71,7 +71,7 @@ public slots:
     void slot_tasks();
     void OnClickedPopMenu();                 // 点击菜单选项的槽函数
     void slot_open(QListWidgetItem *item);   // 点击工作文件路径的槽函数
-
+    void OnClickedWorkingFileMenu();         // 右键工作文件路径显示菜单的槽函数
 };
 
 #endif // DDL_BLOCK_H

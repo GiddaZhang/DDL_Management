@@ -154,6 +154,26 @@ void ddl_block::SetWorkingFileSpace()
 
         // 连接双击点击列表路径信号，和打开文件槽
         connect(m_ListWidget, &QListWidget::itemDoubleClicked, this, &ddl_block::slot_open);
+//        connect(m_ListWidget, &QAction::triggered, this, &)
+    }
+}
+
+void ddl_block::OnClickedWorkingFileMenu()
+{
+    QAction *pEven = qobject_cast<QAction *>(this->sender());
+
+    //获取发送信息
+    int iType = pEven->data().toInt();
+    switch (iType)
+    {
+    case 1:
+        break;
+    case 2:
+        break;
+    case 3:
+        break;
+    default:
+        break;
     }
 }
 
