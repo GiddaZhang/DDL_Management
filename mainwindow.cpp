@@ -12,6 +12,7 @@
 #include <QDialog>
 #include <QInputDialog>
 #include <QDateTimeEdit>
+#include <QGridLayout>
 
 // 构造函数
 MainWindow::MainWindow(QWidget *parent):
@@ -72,11 +73,19 @@ void MainWindow::create_ddl(){
     DDL_number++;
     DDL_lines_number++;
     //初始化ddl
-    QDateTimeEdit time_selector;
-    time_selector.setCalendarPopup(true);
-    qDebug() << time_selector.calendarPopup();
 
+    //测试版
+    QString comm_time = "2022-03-14 18:00:00";
+    QString due_time = "2022-03-15 00:00:00";
 
+    //人性化的让用户选择日期时间
+//    QDateTimeEdit *time_selector = new QDateTimeEdit(QDateTime::currentDateTime(), this);
+//    time_selector->setDisplayFormat("yyyy-MM-dd hh:mm:ss");
+//    time_selector->setCalendarPopup(true);
+//    time_selector->setGeometry(400, 400, 400, 400);
+//    time_selector->show();
+
+    //QMessageBox *hint_time = new QMessageBox(this);
     //输入当前时间，格式为yyyy-MM-dd hh:mm:ss，存储在QString变量里
 //    QInputDialog type_in_commence(tmp_Label);
 //    QString comm_time = type_in_commence.getText(tmp_Label, "comm_time", "please type in commence time\n format:yyyy-MM-dd hh:mm:ss", QLineEdit::Normal);
@@ -92,9 +101,7 @@ void MainWindow::create_ddl(){
     //tmp_Label->setText(QString::number(tmp_Label->rank, 10) + QString::number(tmp_Label->line_rank, 10));
 
 
-    //测试版
-    QString comm_time = "2022-03-14 18:00:00";
-    QString due_time = "2022-03-15 00:00:00";
+
 
 
 //    //初始化ddl
