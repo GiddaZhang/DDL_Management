@@ -40,14 +40,9 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     ddl.cpp \
-<<<<<<< HEAD
-    date.cpp \
-    message.cpp
-=======
     axispainter.cpp \
     primarymenu.cpp \
     workingfilelistitem.cpp
->>>>>>> 5158a368e8a379055a0c615422b79a1e6f42bbf1
 
 HEADERS += \
     button_delete.h \
@@ -60,14 +55,9 @@ HEADERS += \
     ddl_block.h \
         mainwindow.h \
     ddl.h \
-<<<<<<< HEAD
-    date.h \
-    message.h
-=======
     axispainter.h \
     primarymenu.h \
     workingfilelistitem.h
->>>>>>> 5158a368e8a379055a0c615422b79a1e6f42bbf1
 
 FORMS += \
         mainwindow.ui
