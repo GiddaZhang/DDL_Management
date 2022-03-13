@@ -34,6 +34,7 @@ MainWindow::MainWindow(QWidget *parent):
     m_button->setGeometry(0, 0, 100, 100);
     m_button->setStyleSheet("QLabel{border:2px solid rgb(0, 255, 0);}");
     m_button->setText("clickhere\nfor new ddl");
+    m_button->setFont(QFont("Hack", 10));
     m_button->show();
 
     // 将“新建”按钮的newddl信号与主窗口的create_ddl槽连接
@@ -74,15 +75,15 @@ void MainWindow::create_ddl(){
 
     //输入当前时间，格式为yyyy-MM-dd hh:mm:ss，存储在QString变量里
     QInputDialog type_in_commence(tmp_Label);
-    QString comm_time = type_in_commence.getText(tmp_Label, "comm_time", "please type in commence time", QLineEdit::Normal);
+    QString comm_time = type_in_commence.getText(tmp_Label, "comm_time", "please type in commence time\n format:yyyy-MM-dd hh:mm:ss", QLineEdit::Normal);
     QInputDialog type_in_due(tmp_Label);
-    QString due_time = type_in_due.getText(tmp_Label, "due_time", "please type in due time", QLineEdit::Normal);
+    QString due_time = type_in_due.getText(tmp_Label, "due_time", "please type in due time\n format:yyyy-MM-dd hh:mm:ss", QLineEdit::Normal);
 
      //输入并在ddl块上显示当前时间
-      QInputDialog type_in_name(tmp_Label);
-      QString tmp_name = type_in_name.getText(tmp_Label, "name", "please type in ddl name", QLineEdit::Normal);
-      tmp_Label->m_ddl->SetName(tmp_name);
-      tmp_Label->setText(tmp_name);
+    QInputDialog type_in_name(tmp_Label);
+    QString tmp_name = type_in_name.getText(tmp_Label, "name", "please type in ddl name", QLineEdit::Normal);
+    tmp_Label->m_ddl->SetName(tmp_name);
+    tmp_Label->setText(tmp_name);
 
     //tmp_Label->setText(QString::number(tmp_Label->rank, 10) + QString::number(tmp_Label->line_rank, 10));
 
