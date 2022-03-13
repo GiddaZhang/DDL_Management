@@ -2,9 +2,11 @@
 #define WORKINGFILE_H
 
 #include <QString>
+#include <QDebug>
 #include <memory>
 #include <vector>
 #include <QDesktopServices>
+#include <QCoreApplication>
 #include <QUrl>
 #include <QDir>
 #include <QDate>

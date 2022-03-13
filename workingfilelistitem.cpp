@@ -23,7 +23,12 @@ WorkingFileListItem::WorkingFileListItem(QString path) : QListWidgetItem(path)
     // 连接鼠标右键点击信号
 //    for(int i = 0; i < 3; i++) {
 //        QObject::connect(this->m_act[i], &QAction::triggered, this, &WorkingFileListItem::OnClickedWorkingFileMenu);
-//    }
+    //    }
+}
+
+void WorkingFileListItem::saveData()
+{
+    this->m_file->SaveToFolder(this->m_file->GetFilePath());
 }
 
 
