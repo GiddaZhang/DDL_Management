@@ -29,9 +29,6 @@ ddl_block::ddl_block(QMainWindow *parent) : QLabel(parent)
     for(int i = 0; i < 5; i++) {
         connect(this->m_act[i], SIGNAL(triggered()), this, SLOT(OnClickedPopMenu()));
     }
-    connect(this->m_act[1], SIGNAL(triggered()), this, SLOT(emit_interchange()));
-    connect(this->m_act[3], SIGNAL(triggered()), this, SLOT(emit_interchange_succ()));
-    connect(this->m_act[4], SIGNAL(triggered()), this, SLOT(emit_interchange_prev()));
 
     this->setAcceptDrops(true);         // 启用放下操作
     this->SetWorkingFileSpace();        // 初始化工作文件窗口
@@ -96,16 +93,16 @@ void ddl_block::OnClickedPopMenu()
         this->ShowWorkingFileSpace();
         break;
     case 2:
-//        QMessageBox::about(this, "删除", pEven->text());
+        emit_interchange();
         break;
     case 3:
-        QMessageBox::about(this, "留言", pEven->text());
+        QMessageBox::about(this, "留言功能开发中", pEven->text());
         break;
     case 4:
-        QMessageBox::about(this, "添加后继", pEven->text());
+        emit_interchange_succ();
         break;
     case 5:
-        QMessageBox::about(this, "添加前驱", pEven->text());
+        emit_interchange_prev();
         break;
     default:
         break;
