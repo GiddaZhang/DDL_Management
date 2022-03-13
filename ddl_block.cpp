@@ -4,7 +4,7 @@ ddl_block::ddl_block(QMainWindow *parent) : QLabel(parent)
 {
     this->m_ddl = new DDL;      // 初始化DDL
 
-    m_ddl->AddPath("D:/Desktop/2.txt");
+//    m_ddl->AddPath("D:/Desktop/2.txt");
 
     // 初始化菜单
     this->m_pMenu = new PrimaryMenu(parent);
@@ -78,7 +78,7 @@ void ddl_block::slot_delete()
 
 void ddl_block::slot_tasks()
 {
-    qDebug() << "Cyka";
+    //qDebug() << "Cyka";
 }
 
 void ddl_block::OnClickedPopMenu()
@@ -93,16 +93,16 @@ void ddl_block::OnClickedPopMenu()
         this->ShowWorkingFileSpace();
         break;
     case 2:
-//        QMessageBox::about(this, "删除", pEven->text());
+        emit_interchange();
         break;
     case 3:
-        QMessageBox::about(this, "留言", pEven->text());
+        QMessageBox::about(this, "留言功能开发中", pEven->text());
         break;
     case 4:
-        QMessageBox::about(this, "添加后继", pEven->text());
+        emit_interchange_succ();
         break;
     case 5:
-        QMessageBox::about(this, "添加前驱", pEven->text());
+        emit_interchange_prev();
         break;
     default:
         break;
@@ -154,8 +154,47 @@ void ddl_block::SetWorkingFileSpace()
 
         // 连接双击点击列表路径信号，和打开文件槽
         connect(m_ListWidget, &QListWidget::itemDoubleClicked, this, &ddl_block::slot_open);
+//        connect(m_ListWidget, &QAction::triggered, this, &)
     }
+    // 设置一键打开按钮
+    QPushButton* openAllFileButton = new QPushButton(m_FileWidget);
+    openAllFileButton->setText("Open All");
+    openAllFileButton->setFont(QFont("Hack", 12));
+    openAllFileButton->resize(100,30);
+    openAllFileButton->move(200, 430);
+
+    // 连接
+    connect(openAllFileButton, &QPushButton::pressed, this, &ddl_block::slot_openAll);
+
+    // 设置一键存档按钮
+    QPushButton* saveAllFileButton = new QPushButton(m_FileWidget);
+    saveAllFileButton->setText("Save All");
+    saveAllFileButton->setFont(QFont("Hack", 12));
+    saveAllFileButton->resize(100,30);
+    saveAllFileButton->move(200, 465);
+
+    // 连接
+    connect(saveAllFileButton, &QPushButton::pressed, this, &ddl_block::slot_saveAll);
 }
+
+//void ddl_block::OnClickedWorkingFileMenu()
+//{
+//    QAction *pEven = qobject_cast<QAction *>(this->sender());
+
+//    //获取发送信息
+//    int iType = pEven->data().toInt();
+//    switch (iType)
+//    {
+//    case 1:
+//        break;
+//    case 2:
+//        break;
+//    case 3:
+//        break;
+//    default:
+//        break;
+//    }
+//}
 
 void ddl_block::ShowWorkingFileSpace()
 {
@@ -167,5 +206,45 @@ void ddl_block::slot_open(QListWidgetItem *item)
     QString path = item->text();
     this->m_ddl->OpenFile(path);
 }
+
+void ddl_block::slot_openAll()
+{
+    this->m_ddl->OpenAllFile();
+}
+
+void ddl_block::slot_saveAll()
+{
+    // 遍历所有文件路径
+//    vector<QString> itemFilePath;
+    QString path;
+    for (int j = 0; j < this->m_ListWidget->count(); j++) {
+        path = this->m_ListWidget->item(j)->text();
+        WorkingFile* tmp = new WorkingFile(path);
+        tmp->SaveToFolder(path);
+        delete tmp;
+        }
+}
+
+void ddl_block::slot_voidToint(int rank)
+{
+    emit getInt(rank);
+}
+
+void ddl_block::emit_interchange()
+{
+    emit getInt(this->rank);
+}
+
+void ddl_block::emit_interchange_prev()
+{
+    emit getInt_prev(this->rank);
+}
+
+
+void ddl_block::emit_interchange_succ()
+{
+    emit getInt_succ(this->rank);
+}
+
 
 

@@ -46,8 +46,15 @@ FileResult WorkingFile::OpenFile()
 
 FileResult WorkingFile::SaveToFolder(const QString& path)
 {
-    QString FolderPath = GetCurrentPath();
+    QString FolderPath = QDir::currentPath();
+//    QString exePath = QCoreApplication::applicationFilePath();
+    QString l = "/";
+//    QString FolderPath;
+//    = exePath.mid(exePath.indexOf(l) + 1);
+
+//    qDebug() << QDir::currentPath();
     FolderPath += "/backup/";
+//    qDebug() << FolderPath;
     QDate date = QDate::currentDate();
     QString YMD = date.toString("yyyy.MM.dd");
     FolderPath += YMD;
@@ -58,13 +65,15 @@ FileResult WorkingFile::SaveToFolder(const QString& path)
         bool ismkdir = dir.mkdir(FolderPath);
         if(!ismkdir) {
             // 如果新建文件夹失败
+            qDebug() <<FolderPath;
             return FileResult::FAILURE;
         }
+
         // 新建文件夹成功
     }
-
+//2022-3-13 18:00:00
     // 从文件路径获取文件名并转换为保存路径
-    QString l = "/";
+
     QString fileName = path.mid(path.lastIndexOf(l) + 1);
     FolderPath += "/" + fileName;
 

@@ -20,8 +20,15 @@ WorkingFileListItem::WorkingFileListItem(QString path) : QListWidgetItem(path)
         this->m_act[i]->setData(i + 1);
     }
 
-//    // 连接鼠标右键点击信号
+    // 连接鼠标右键点击信号
 //    for(int i = 0; i < 3; i++) {
-//        connect(this->m_act[i], SIGNAL(triggered()), this, SLOT(OnClickedPopMenu()));
-//    }
+//        QObject::connect(this->m_act[i], &QAction::triggered, this, &WorkingFileListItem::OnClickedWorkingFileMenu);
+    //    }
 }
+
+void WorkingFileListItem::saveData()
+{
+    this->m_file->SaveToFolder(this->m_file->GetFilePath());
+}
+
+
