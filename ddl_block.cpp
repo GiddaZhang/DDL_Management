@@ -78,7 +78,7 @@ void ddl_block::slot_delete()
 
 void ddl_block::slot_tasks()
 {
-    qDebug() << "Cyka";
+    //qDebug() << "Cyka";
 }
 
 void ddl_block::OnClickedPopMenu()

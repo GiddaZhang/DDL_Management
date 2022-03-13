@@ -11,6 +11,7 @@
 #include <QMenu>
 #include <QDialog>
 #include <QInputDialog>
+#include <QDateTimeEdit>
 
 // 构造函数
 MainWindow::MainWindow(QWidget *parent):
@@ -71,13 +72,16 @@ void MainWindow::create_ddl(){
     DDL_number++;
     DDL_lines_number++;
     //初始化ddl
+    QDateTimeEdit time_selector;
+    time_selector.setCalendarPopup(true);
+    qDebug() << time_selector.calendarPopup();
 
 
     //输入当前时间，格式为yyyy-MM-dd hh:mm:ss，存储在QString变量里
-    QInputDialog type_in_commence(tmp_Label);
-    QString comm_time = type_in_commence.getText(tmp_Label, "comm_time", "please type in commence time\n format:yyyy-MM-dd hh:mm:ss", QLineEdit::Normal);
-    QInputDialog type_in_due(tmp_Label);
-    QString due_time = type_in_due.getText(tmp_Label, "due_time", "please type in due time\n format:yyyy-MM-dd hh:mm:ss", QLineEdit::Normal);
+//    QInputDialog type_in_commence(tmp_Label);
+//    QString comm_time = type_in_commence.getText(tmp_Label, "comm_time", "please type in commence time\n format:yyyy-MM-dd hh:mm:ss", QLineEdit::Normal);
+//    QInputDialog type_in_due(tmp_Label);
+//    QString due_time = type_in_due.getText(tmp_Label, "due_time", "please type in due time\n format:yyyy-MM-dd hh:mm:ss", QLineEdit::Normal);
 
      //输入并在ddl块上显示当前时间
     QInputDialog type_in_name(tmp_Label);
@@ -89,8 +93,8 @@ void MainWindow::create_ddl(){
 
 
     //测试版
-//    QString comm_time = "2022-03-14 00:00:00";
-//    QString due_time = "2022-03-15 00:00:00";
+    QString comm_time = "2022-03-14 18:00:00";
+    QString due_time = "2022-03-15 00:00:00";
 
 
 //    //初始化ddl
@@ -102,8 +106,8 @@ void MainWindow::create_ddl(){
     QDateTime end_time = QDateTime::fromString(due_time, "yyyy-MM-dd hh:mm:ss");
     QDateTime curr_time = QDateTime::currentDateTime();
 
-    //qDebug() << begin_time.daysTo(end_time);//获取ddl的长度（日）
-    tmp_Label->setGeometry(200 + tmp_Label->line_rank * 200, 1080 - 200 * curr_time.daysTo(end_time), 200, begin_time.daysTo(end_time) * 200);
+    //qDebug() << begin_time.secsTo(end_time) * 200 / 1440 / 60;//获取ddl的长度（日）
+    tmp_Label->setGeometry(200 + tmp_Label->line_rank * 200, 1080 - 200 * curr_time.secsTo(end_time) / 1440 / 60, 200, begin_time.secsTo(end_time) * 200 / 1440 / 60);
     //tmp_Label->setGeometry(400, 400, 400, 400);
 
     // 将当前ddl模块的show_tasks信号与其slot_tasks槽连接
@@ -278,7 +282,7 @@ void MainWindow::slot_succ(int rank){
     tmp_Label->rank = DDL_number - 1;
     //qDebug() << m_block[rank]->rank << tmp_Label->rank;
     //connect(tmp_Label->Button_next, SIGNAL(next_ddl(int)), this, SLOT(slot_succ(int)));
-    tmp_Label->setGeometry(m_block[rank]->x(), 1080 - 200 * curr_time.daysTo(end_time), 200, begin_time.daysTo(end_time) * 200);
+    tmp_Label->setGeometry(m_block[rank]->x(), 1080 - 200 * curr_time.secsTo(end_time) / 1440 / 60, 200, begin_time.secsTo(end_time) * 200 / 1440 / 60);
     tmp_Label->show();
     //tmp_Label->setText(QString::number(tmp_Label->rank, 10) + QString::number(tmp_Label->line_rank, 10));
 
@@ -363,7 +367,8 @@ void MainWindow::slot_prev(int rank)
     tmp_Label->rank = DDL_number - 1;
     //qDebug() << m_block[rank]->rank << tmp_Label->rank;
     //connect(tmp_Label->Button_next, SIGNAL(next_ddl(int)), this, SLOT(slot_succ(int)));
-    tmp_Label->setGeometry(m_block[rank]->x(), 1080 - 200 * curr_time.daysTo(end_time), 200, begin_time.daysTo(end_time) * 200);
+    //double minutes = 1080 - 200 * curr_time.daysTo(end_time) / 1440;
+    tmp_Label->setGeometry(m_block[rank]->x(), 1080 - 200 * curr_time.secsTo(end_time) / 1440 / 60, 200, begin_time.secsTo(end_time) * 200 / 1440 / 60);
     tmp_Label->show();
     //tmp_Label->setText(QString::number(tmp_Label->rank, 10) + QString::number(tmp_Label->line_rank, 10));
 
