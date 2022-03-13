@@ -75,8 +75,8 @@ void MainWindow::create_ddl(){
     //初始化ddl
 
     //测试版
-    QString comm_time = "2022-03-14 18:00:00";
-    QString due_time = "2022-03-15 00:00:00";
+//    QString comm_time = "2022-03-14 18:00:00";
+//    QString due_time = "2022-03-15 00:00:00";
 
     //人性化的让用户选择日期时间
 //    QDateTimeEdit *time_selector = new QDateTimeEdit(QDateTime::currentDateTime(), this);
@@ -87,21 +87,31 @@ void MainWindow::create_ddl(){
 
     //QMessageBox *hint_time = new QMessageBox(this);
     //输入当前时间，格式为yyyy-MM-dd hh:mm:ss，存储在QString变量里
-//    QInputDialog type_in_commence(tmp_Label);
-//    QString comm_time = type_in_commence.getText(tmp_Label, "comm_time", "please type in commence time\n format:yyyy-MM-dd hh:mm:ss", QLineEdit::Normal);
-//    QInputDialog type_in_due(tmp_Label);
-//    QString due_time = type_in_due.getText(tmp_Label, "due_time", "please type in due time\n format:yyyy-MM-dd hh:mm:ss", QLineEdit::Normal);
+    QInputDialog type_in_commence(tmp_Label);
+    QString comm_time = type_in_commence.getText(tmp_Label, "comm_time",
+                        "please type in commence time\n format:yyyy-MM-dd hh:mm:ss", QLineEdit::Normal);
+    QInputDialog type_in_due(tmp_Label);
+    QString due_time = type_in_due.getText(tmp_Label, "due_time",
+                         "please type in due time\n format:yyyy-MM-dd hh:mm:ss", QLineEdit::Normal);
 
      //输入并在ddl块上显示当前时间
     QInputDialog type_in_name(tmp_Label);
     QString tmp_name = type_in_name.getText(tmp_Label, "name", "please type in ddl name", QLineEdit::Normal);
     tmp_Label->m_ddl->SetName(tmp_name);
     tmp_Label->setText(tmp_name);
+    tmp_Label->setFont(QFont("Hack", 16));
+    tmp_Label->setAlignment(Qt::AlignCenter);
 
     //tmp_Label->setText(QString::number(tmp_Label->rank, 10) + QString::number(tmp_Label->line_rank, 10));
 
 
+<<<<<<< HEAD
 
+=======
+    //测试版
+//    QString comm_time = "2022-03-14 18:00:00";
+//    QString due_time = "2022-03-15 00:00:00";
+>>>>>>> 40dc9fe29daf7ff52370a355a04a160656770f0a
 
 
 //    //初始化ddl
@@ -239,9 +249,11 @@ void MainWindow::slot_succ(int rank){
 
     //输入当前时间，格式为yyyy-MM-dd hh:mm:ss，存储在QString变量里
     QInputDialog type_in_commence(tmp_Label);
-    QString comm_time = type_in_commence.getText(tmp_Label, "comm_time", "please type in commence time", QLineEdit::Normal);
+    QString comm_time = type_in_commence.getText(tmp_Label, "comm_time",
+                        "please type in commence time\n format:yyyy-MM-dd hh:mm:ss", QLineEdit::Normal);
     QInputDialog type_in_due(tmp_Label);
-    QString due_time = type_in_due.getText(tmp_Label, "due_time", "please type in due time", QLineEdit::Normal);
+    QString due_time = type_in_due.getText(tmp_Label, "due_time",
+                        "please type in due time\n format:yyyy-MM-dd hh:mm:ss", QLineEdit::Normal);
 
     QInputDialog type_in_name(tmp_Label);
     QString tmp_name = type_in_name.getText(tmp_Label, "name", "please type in ddl name", QLineEdit::Normal);
@@ -290,6 +302,8 @@ void MainWindow::slot_succ(int rank){
     //qDebug() << m_block[rank]->rank << tmp_Label->rank;
     //connect(tmp_Label->Button_next, SIGNAL(next_ddl(int)), this, SLOT(slot_succ(int)));
     tmp_Label->setGeometry(m_block[rank]->x(), 1080 - 200 * curr_time.secsTo(end_time) / 1440 / 60, 200, begin_time.secsTo(end_time) * 200 / 1440 / 60);
+    tmp_Label->setFont(QFont("Hack", 16));
+    tmp_Label->setAlignment(Qt::AlignCenter);
     tmp_Label->show();
     //tmp_Label->setText(QString::number(tmp_Label->rank, 10) + QString::number(tmp_Label->line_rank, 10));
 
@@ -324,9 +338,11 @@ void MainWindow::slot_prev(int rank)
 
     //输入当前时间，格式为yyyy-MM-dd hh:mm:ss，存储在QString变量里
     QInputDialog type_in_commence(tmp_Label);
-    QString comm_time = type_in_commence.getText(tmp_Label, "comm_time", "please type in commence time", QLineEdit::Normal);
+    QString comm_time = type_in_commence.getText(tmp_Label, "comm_time",
+                        "please type in commence time\n format:yyyy-MM-dd hh:mm:ss", QLineEdit::Normal);
     QInputDialog type_in_due(tmp_Label);
-    QString due_time = type_in_due.getText(tmp_Label, "due_time", "please type in due time", QLineEdit::Normal);
+    QString due_time = type_in_due.getText(tmp_Label, "due_time",
+                        "please type in due time\n format:yyyy-MM-dd hh:mm:ss", QLineEdit::Normal);
 
     //测试版
 //    QString comm_time = "2022-03-13 00:00:00";
@@ -376,6 +392,8 @@ void MainWindow::slot_prev(int rank)
     //connect(tmp_Label->Button_next, SIGNAL(next_ddl(int)), this, SLOT(slot_succ(int)));
     //double minutes = 1080 - 200 * curr_time.daysTo(end_time) / 1440;
     tmp_Label->setGeometry(m_block[rank]->x(), 1080 - 200 * curr_time.secsTo(end_time) / 1440 / 60, 200, begin_time.secsTo(end_time) * 200 / 1440 / 60);
+    tmp_Label->setFont(QFont("Hack", 16));
+    tmp_Label->setAlignment(Qt::AlignCenter);
     tmp_Label->show();
     //tmp_Label->setText(QString::number(tmp_Label->rank, 10) + QString::number(tmp_Label->line_rank, 10));
 

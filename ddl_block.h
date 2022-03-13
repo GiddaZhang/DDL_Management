@@ -74,6 +74,8 @@ public slots:
     void slot_tasks();
     void OnClickedPopMenu();                 // 点击菜单选项的槽函数
     void slot_open(QListWidgetItem *item);   // 点击工作文件路径的槽函数
+    void slot_openAll();                     // 点击一键打开文件的槽函数
+    void slot_saveAll();                     // 点击一键存储文件的槽函数
     void slot_voidToint(int rank);
     void emit_interchange();
     void emit_interchange_succ();

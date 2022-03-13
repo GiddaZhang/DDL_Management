@@ -4,7 +4,7 @@ ddl_block::ddl_block(QMainWindow *parent) : QLabel(parent)
 {
     this->m_ddl = new DDL;      // 初始化DDL
 
-    m_ddl->AddPath("D:/Desktop/2.txt");
+//    m_ddl->AddPath("D:/Desktop/2.txt");
 
     // 初始化菜单
     this->m_pMenu = new PrimaryMenu(parent);
@@ -156,6 +156,25 @@ void ddl_block::SetWorkingFileSpace()
         connect(m_ListWidget, &QListWidget::itemDoubleClicked, this, &ddl_block::slot_open);
 //        connect(m_ListWidget, &QAction::triggered, this, &)
     }
+    // 设置一键打开按钮
+    QPushButton* openAllFileButton = new QPushButton(m_FileWidget);
+    openAllFileButton->setText("Open All");
+    openAllFileButton->setFont(QFont("Hack", 12));
+    openAllFileButton->resize(100,30);
+    openAllFileButton->move(200, 430);
+
+    // 连接
+    connect(openAllFileButton, &QPushButton::pressed, this, &ddl_block::slot_openAll);
+
+    // 设置一键存档按钮
+    QPushButton* saveAllFileButton = new QPushButton(m_FileWidget);
+    saveAllFileButton->setText("Save All");
+    saveAllFileButton->setFont(QFont("Hack", 12));
+    saveAllFileButton->resize(100,30);
+    saveAllFileButton->move(200, 465);
+
+    // 连接
+    connect(saveAllFileButton, &QPushButton::pressed, this, &ddl_block::slot_saveAll);
 }
 
 //void ddl_block::OnClickedWorkingFileMenu()
@@ -186,6 +205,24 @@ void ddl_block::slot_open(QListWidgetItem *item)
 {
     QString path = item->text();
     this->m_ddl->OpenFile(path);
+}
+
+void ddl_block::slot_openAll()
+{
+    this->m_ddl->OpenAllFile();
+}
+
+void ddl_block::slot_saveAll()
+{
+    // 遍历所有文件路径
+//    vector<QString> itemFilePath;
+    QString path;
+    for (int j = 0; j < this->m_ListWidget->count(); j++) {
+        path = this->m_ListWidget->item(j)->text();
+        WorkingFile* tmp = new WorkingFile(path);
+        tmp->SaveToFolder(path);
+        delete tmp;
+        }
 }
 
 void ddl_block::slot_voidToint(int rank)

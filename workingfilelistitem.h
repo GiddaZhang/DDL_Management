@@ -28,6 +28,7 @@ public:
     WorkingFileListItem(QString);
     QAction* m_act[3];                  // 菜单中的选项：打开，备份，删除
     QMenu* m_menu;
+    void saveData();                    // 备份文件
 private:
     WorkingFile* m_file;
 //public slots:
