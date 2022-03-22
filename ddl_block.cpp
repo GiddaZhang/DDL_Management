@@ -96,10 +96,10 @@ void ddl_block::dropEvent(QDropEvent *e){
     }
     foreach (QUrl u, urls){
         QString filepath = u.toLocalFile();
-        AddPath(filepath);
+        this->AddPath(filepath);
         WorkingFileListItem* tmp = new WorkingFileListItem(filepath);
         m_ListWidget->addItem(tmp);
-        delete tmp;
+        // delete tmp;
         // 连接双击点击列表路径信号，和打开文件槽
         connect(m_ListWidget, &QListWidget::itemDoubleClicked, this, &ddl_block::slot_open);
     }
@@ -115,7 +115,7 @@ void ddl_block::SetWorkingFileSpace(){
     m_ListWidget->setFont(QFont("Hack",14));            // 设置字体
 
     // 显示工作文件路径
-    for(auto it = m_allFilePath.begin(); it != m_allFilePath.end(); it++) {
+    for(auto it = (this->m_allFilePath).begin(); it != (this->m_allFilePath).end(); it++) {
         WorkingFileListItem* tmp = new WorkingFileListItem(it->GetFilePath());
         m_ListWidget->addItem(tmp);
         // delete tmp;
