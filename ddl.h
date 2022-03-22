@@ -53,8 +53,16 @@ public:
     DDL(QString name = "UNKNOWN", QString commence = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"),
         QString due = "2050-01-01 00:00:00", QString description = "PLAIN", QString filePath = "NULL",
         int est_Day = 0, float est_Hour = 0.0, QString prev = "PREV", QString next = "Next");
+//    // 拷贝构造函数
+//    DDL(const DDL&);
+//    // 重载赋值运算符
+//    DDL& operator =(const DDL&);
+//    // 析构函数
+//    ~DDL();
 
     // 公有Setter
+    Set_Result SetDDL(QString name, QString commence, QString due, QString description, QString filePath,
+                      int est_Day, float est_Hour, QString prev, QString next);
     Set_Result SetName(const QString&);                         // 设置任务名称
     Set_Result SetCompleteDegree(const CompleteDegree&);        // 设置任务完成度
     Set_Result SetCommence(const QString&);                     // 设置任务开始时间
@@ -98,19 +106,6 @@ public:
 
     void OutputToStream(ostream&) const;                        // 输出流
 
-    // 公有常引用作为私有变量的只读版本
-//    const QString& Name;
-//    const CompleteDegree& CompleteState;
-//    const qint64& Duration;
-//    const qint64& Estimation;
-//    const QDateTime& Commence;
-//    const QDateTime& Due;
-//    const QDateTime& TimeToStart;
-//    const QString& Prev;
-//    const QString& Next;
-//    const vector<Description>& AllDescription;
-//    const vector<WorkingFile>& AllFilePath;
-
 protected:
     Set_Result SetDuration();                                   // 设置任务持续时间
     Set_Result SetTimeToStart();                                // 设置最晚开始时间
@@ -118,7 +113,6 @@ protected:
     Set_Result SetDue_Con(const QString&);                      // 设置任务截止时间，仅用于构造函数中
     Set_Result SetEstimation_Con(const int&, const float&);     // 设置预期完成耗时，仅用于构造函数中
 
-private:
     QString m_name;                                             // 任务名称
     CompleteDegree m_completeState;                             // 任务完成度
     qint64 m_duration_sec;                                      // 任务持续时间（秒）
@@ -128,8 +122,8 @@ private:
     QDateTime m_timeToStart;                                    // 最晚开始时间
     QString m_prev;                                             // 前驱任务
     QString m_next;                                             // 后继任务
-    vector<Description> m_allDescription;           // DDL描述语序列
-    vector<WorkingFile> m_allFilePath;              // 文档路径序列
+    vector<Description> m_allDescription;                       // DDL描述语序列
+    vector<WorkingFile> m_allFilePath;                          // 文档路径序列
 
     static vector<shared_ptr<DDL>> m_allDDL;                    // 静态存储DDL对象
 // 说明：任务结束时间在基类QDateTime中，任务紧迫度通过接口GetUrgency()间接计算，不用属性进行维护

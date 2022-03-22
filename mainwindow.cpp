@@ -88,7 +88,7 @@ void MainWindow::create_ddl(){
      //输入并在ddl块上显示当前时间
     QInputDialog type_in_name(tmp_Label);
     QString tmp_name = type_in_name.getText(tmp_Label, "name", "please type in ddl name", QLineEdit::Normal);
-    tmp_Label->m_ddl->SetName(tmp_name);
+    tmp_Label->SetName(tmp_name);
     tmp_Label->setText(tmp_name);
     tmp_Label->setFont(QFont("Hack", 16));
     tmp_Label->setAlignment(Qt::AlignCenter);
@@ -101,10 +101,8 @@ void MainWindow::create_ddl(){
 //    QString due_time = "2022-03-15 00:00:00";
 
 
-//    //初始化ddl
-    tmp_Label->m_ddl = new DDL("UNKNOWN", comm_time,
-                               due_time, "PLAIN", "NULL",
-                               0, 0.0, "PREV","NEXT");
+    //初始化ddl
+    tmp_Label->SetDDL("UNKNOWN", comm_time, due_time, "PLAIN", "NULL", 0, 0.0, "PREV","NEXT");
     //获得ddl持续时间，决定其在界面上的长度和位置
     QDateTime begin_time = QDateTime::fromString(comm_time, "yyyy-MM-dd hh:mm:ss");
     QDateTime end_time = QDateTime::fromString(due_time, "yyyy-MM-dd hh:mm:ss");
@@ -176,13 +174,13 @@ void MainWindow::slot_delete(int rank){
     isOccupied[DDL_number - 1] = false;//clear out the position
     this->m_block[rank]->hide();//clear out the GUI of that ddl
     // 给前驱后继擦屁股
-    if(m_block[rank]->m_ddl->GetPrev() != "PREV")
+    if(m_block[rank]->GetPrev() != "PREV")
     {
-        m_block[rank]->m_ddl->SetPrev("PREV");
+        m_block[rank]->SetPrev("PREV");
     }
-    if(m_block[rank]->m_ddl->GetNext() != "NEXT")
+    if(m_block[rank]->GetNext() != "NEXT")
     {
-        m_block[rank]->m_ddl->SetNext("NEXT");
+        m_block[rank]->SetNext("NEXT");
     }
     this->m_block[rank]->Button_delete->hide();
 
@@ -244,7 +242,7 @@ void MainWindow::slot_succ(int rank){
 
     QInputDialog type_in_name(tmp_Label);
     QString tmp_name = type_in_name.getText(tmp_Label, "name", "please type in ddl name", QLineEdit::Normal);
-    tmp_Label->m_ddl->SetName(tmp_name);
+    tmp_Label->SetName(tmp_name);
     tmp_Label->setText(tmp_name);
 
     //测试版
@@ -254,8 +252,8 @@ void MainWindow::slot_succ(int rank){
     QDateTime end_time = QDateTime::fromString(due_time, "yyyy-MM-dd hh:mm:ss");
     QDateTime curr_time = QDateTime::currentDateTime();
 
-    m_block[rank]->m_ddl->SetNext(QString::number(DDL_number - 1, 10));//原来的ddl的后继的序号是新的ddl的序号
-    tmp_Label->m_ddl->SetPrev(QString::number(rank, 10));//新的ddl的前驱的序号是原来的ddl
+    m_block[rank]->SetNext(QString::number(DDL_number - 1, 10));//原来的ddl的后继的序号是新的ddl的序号
+    tmp_Label->SetPrev(QString::number(rank, 10));//新的ddl的前驱的序号是原来的ddl
 
     // 将当前ddl模块的show_tasks信号与其slot_tasks槽连接
     connect(tmp_Label, SIGNAL(show_tasks()), tmp_Label, SLOT(slot_tasks()));
@@ -340,11 +338,11 @@ void MainWindow::slot_prev(int rank)
 
     QInputDialog type_in_name(tmp_Label);
     QString tmp_name = type_in_name.getText(tmp_Label, "name", "please type in ddl name", QLineEdit::Normal);
-    tmp_Label->m_ddl->SetName(tmp_name);
+    tmp_Label->SetName(tmp_name);
     tmp_Label->setText(tmp_name);
 
-    m_block[rank]->m_ddl->SetPrev(QString::number(DDL_number - 1, 10));//原来的ddl的后继的序号是新的ddl的序号
-    tmp_Label->m_ddl->SetNext(QString::number(rank, 10));//新的ddl的前驱的序号是原来的ddl
+    m_block[rank]->SetPrev(QString::number(DDL_number - 1, 10));//原来的ddl的后继的序号是新的ddl的序号
+    tmp_Label->SetNext(QString::number(rank, 10));//新的ddl的前驱的序号是原来的ddl
 
     // 将当前ddl模块的show_tasks信号与其slot_tasks槽连接
     connect(tmp_Label, SIGNAL(show_tasks()), tmp_Label, SLOT(slot_tasks()));
