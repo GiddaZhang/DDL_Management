@@ -5,8 +5,7 @@
 vector<shared_ptr<DDL>> DDL::m_allDDL{};// 静态存储DDL对象
 
 DDL::DDL(QString name, QString commence, QString due, QString description,
-          QString filePath,int est_Day, float est_Hour, QString prev, QString next)
-{
+          QString filePath,int est_Day, float est_Hour, QString prev, QString next){
     //因为无法在调用构造函数的情况下验证数据合理性，所以这里先假设业务流程类已经先调用了静态验证函数
     SetName(name);
     SetCompleteDegree(TO_BE_STARTED);
@@ -21,6 +20,21 @@ DDL::DDL(QString name, QString commence, QString due, QString description,
     SetTimeToStart();
 
     m_allDDL.push_back(shared_ptr<DDL>(this));
+}
+
+Set_Result DDL::SetDDL(QString name, QString commence, QString due, QString description, QString filePath,
+                  int est_Day, float est_Hour, QString prev, QString next){
+    SetName(name);
+    SetCompleteDegree(TO_BE_STARTED);
+    SetCommence_Con(commence);
+    SetDue_Con(due);
+    SetEstimation_Con(est_Day, est_Hour);
+    SetPrev(prev);
+    SetNext(next);
+    AddDescription(description);
+    AddPath(filePath);
+    SetDuration();
+    SetTimeToStart();
 }
 
 Set_Result DDL::SetName(const QString& name){
