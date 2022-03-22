@@ -42,10 +42,6 @@ public:
         this->m_filePath = other.m_filePath;
         return *this;
     }
-
-    // 常引用作为私有变量的公有只读版本
-//    const QString& FilePath;
-    // 常引用只读有时候不好使
     QString GetFilePath();
 
 private:

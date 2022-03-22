@@ -22,11 +22,6 @@ public:
         this->m_timeStamp = other.m_timeStamp;
         return *this;
     }
-
-    //常引用只读
-//    const QDateTime& TimeStamp;
-//    const QString& Note;
-    // 常引用只读有时候不好使
     QDateTime GetStamp();
     QString GetNote();
 

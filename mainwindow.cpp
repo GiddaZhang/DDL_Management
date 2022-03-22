@@ -22,11 +22,11 @@ MainWindow::MainWindow(QWidget *parent):
 
     // 设置并显示主窗口UI
     ui->setupUi(this);
-    this->setGeometry(20, 40, 1920, 1080);
-    AxisPainter *axis = new AxisPainter(this);
-    axis->show();
+    this->setGeometry(20, 20, 1920, 1080);
+//    AxisPainter *axis = new AxisPainter(this);
+//    axis->show();
     this->show();
-    this->setWindowTitle("DDL_management");
+    this->setWindowTitle("DDL_Management");
 
     // 设置并显示坐标轴UI
 

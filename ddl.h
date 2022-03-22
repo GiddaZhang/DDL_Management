@@ -98,19 +98,6 @@ public:
 
     void OutputToStream(ostream&) const;                        // 输出流
 
-    // 公有常引用作为私有变量的只读版本
-//    const QString& Name;
-//    const CompleteDegree& CompleteState;
-//    const qint64& Duration;
-//    const qint64& Estimation;
-//    const QDateTime& Commence;
-//    const QDateTime& Due;
-//    const QDateTime& TimeToStart;
-//    const QString& Prev;
-//    const QString& Next;
-//    const vector<Description>& AllDescription;
-//    const vector<WorkingFile>& AllFilePath;
-
 protected:
     Set_Result SetDuration();                                   // 设置任务持续时间
     Set_Result SetTimeToStart();                                // 设置最晚开始时间
