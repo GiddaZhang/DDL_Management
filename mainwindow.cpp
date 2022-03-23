@@ -25,21 +25,38 @@ MainWindow::MainWindow(QWidget *parent):
     this->setGeometry(20, 20, 1920, 1080);
 //    AxisPainter *axis = new AxisPainter(this);
 //    axis->show();
-    this->show();
-    this->setWindowTitle("DDL_Management");
+    this->setWindowTitle("DDL_MANAGEMENT");
 
-    // 设置并显示坐标轴UI
+    // 初始化菜单栏和菜单项
+    this->m_menuBar = this->menuBar();
+    m_menuBar->setMinimumHeight(30);
+    this->m_Menu = this->m_menuBar->addMenu("开始");
+    this->m_createDDLAction = new QAction("新建DDL", this);
+    this->m_Menu->addAction(m_createDDLAction);        // 将菜单项添加到子菜单
+    // 添加菜单响应函数
+    connect(m_createDDLAction, &QAction::triggered, this, &MainWindow::create_ddl);
+
+    // 初始化滚动条
+    this->m_scrollArea = new QScrollArea(this);
+    m_scrollArea->setBackgroundRole(QPalette::Light);                   // 背景色
+    m_scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);    // 只让竖直滚动
+    m_scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    m_scrollArea->setGeometry(0, 30, 1920, 1080);
+
+    // 初始化滚动区域
+    this->m_scrollWidget = new QWidget(this);
+    this->m_scrollWidget->setGeometry(0, 0, 1920, 3000);
+    m_scrollArea->setWidget(this->m_scrollWidget);
 
     // 设置并显示左上角的新建DDL模块按键
-    m_button = new button_new(this);
-    m_button->setGeometry(0, 0, 100, 100);
-    m_button->setStyleSheet("QLabel{border:2px solid rgb(0, 255, 0);}");
-    m_button->setText("clickhere\nfor new ddl");
-    m_button->setFont(QFont("Hack", 10));
-    m_button->show();
+//    m_button = new button_new(this);
+//    m_button->setGeometry(0, 0, 100, 100);
+//    m_button->setStyleSheet("QLabel{border:2px solid rgb(0, 255, 0);}");
+//    m_button->setText("clickhere\nfor new ddl");
+//    m_button->setFont(QFont("Hack", 10));
 
     // 将“新建”按钮的newddl信号与主窗口的create_ddl槽连接
-    connect(this->m_button, SIGNAL(newddl()), this, SLOT(create_ddl()));
+//    connect(this->m_button, SIGNAL(newddl()), this, SLOT(create_ddl()));
 
     //修改属性，设置为自定义菜单模式
     setContextMenuPolicy(Qt::CustomContextMenu);
@@ -47,13 +64,11 @@ MainWindow::MainWindow(QWidget *parent):
 
 // 析构函数
 MainWindow::~MainWindow(){
-
     delete ui;
 }
 
 // 新建ddl快捷键(W)的设置
 void MainWindow::keyPressEvent(QKeyEvent *event){
-
     if(event->key() == Qt::Key_W){
         create_ddl();
     }
@@ -62,7 +77,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
 // 槽：新建ddl模块
 void MainWindow::create_ddl(){
      //新建DDL指针并设置参数，维护DDL序列,并且初始化ddl
-    ddl_block *tmp_Label = new ddl_block(this);
+    ddl_block *tmp_Label = new ddl_block(this->m_scrollWidget);
     tmp_Label->setStyleSheet("QLabel{border:2px solid rgb(0, 255, 255);}");
     isOccupied[this->DDL_number] = true;
     this->m_block[this->DDL_number] = tmp_Label;

@@ -29,7 +29,7 @@ class ddl_block : public QLabel, public DDL
 {
     Q_OBJECT
 public:
-    explicit ddl_block(QMainWindow *parent = nullptr);
+    explicit ddl_block(QWidget *parent = nullptr);
     void mousePressEvent(QMouseEvent *ev) override;
     int rank;//记录其在数组中的序号
     int line_rank;//记录其line编号

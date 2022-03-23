@@ -1,6 +1,6 @@
 #include "ddl_block.h"
 
-ddl_block::ddl_block(QMainWindow *parent) : QLabel(parent), DDL(){
+ddl_block::ddl_block(QWidget *parent) : QLabel(parent), DDL(){
     // 用parent初始化QLabel基类，DDL基类只调用默认构造函数
 
     // 初始化菜单指针，类型为pointer to QMenu

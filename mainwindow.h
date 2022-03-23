@@ -3,6 +3,12 @@
 
 #include <QMainWindow>
 #include <QPushButton>
+#include <QScrollArea>
+#include <QScrollBar>
+#include <QWidget>
+#include <QMenuBar>
+#include <QMenu>
+#include <QAction>
 #include "axispainter.h"
 #include "ddl_block.h"
 #include "button.h"
@@ -41,8 +47,13 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    int DDL_number;         // 记录当前有效的ddl的个数
-    int DDL_lines_number;//一组前驱后继算一条线
+    QScrollArea* m_scrollArea;      // 滚动区域
+    QWidget* m_scrollWidget;        // 滚动窗口（窗口大于区域）
+    QMenuBar* m_menuBar;            // 最顶上的菜单栏
+    QMenu* m_Menu;                  // 菜单项
+    QAction* m_createDDLAction;       // 菜单动作：新建DDL
+    int DDL_number;                 // 记录当前有效的DDL的个数
+    int DDL_lines_number;           //一组前驱后继算一条线
     int number_each_line[30] = {0};
 };
 
