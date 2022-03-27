@@ -9,6 +9,8 @@
 #include <QMenuBar>
 #include <QMenu>
 #include <QAction>
+#include <memory>
+#include "ddl.h"
 #include "axispainter.h"
 #include "ddl_block.h"
 #include "button.h"
