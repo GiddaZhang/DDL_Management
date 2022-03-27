@@ -28,7 +28,6 @@ public:
     //QString *name_block[30];
     //bool isOccupied[30] = {0};//记录对应位置是否有ddl，有就是true，没有就是false
     void keyPressEvent(QKeyEvent *event) override;
-    void func_ddl_create(ddl_block* tmp_Label, QString comm_time, QString due_time);
 
 public slots:
     void create_ddl();
