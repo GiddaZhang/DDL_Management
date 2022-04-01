@@ -24,38 +24,42 @@ MainWindow::MainWindow(QWidget *parent):
 
     // 设置并显示主窗口UI
     ui->setupUi(this);
-    this->setGeometry(20, 40, 1920, 1080);
-    AxisPainter *axis = new AxisPainter(this);
-    axis->show();
-    this->show();
-    this->setWindowTitle("DDL_management");
+    this->setGeometry(20, 20, 1920, 1080);
+//    AxisPainter *axis = new AxisPainter(this);
+//    axis->show();
+    this->setWindowTitle("DDL_MANAGEMENT");
 
-    // 设置并显示坐标轴UI
+    // 初始化菜单栏和菜单项
+    this->m_menuBar = this->menuBar();
+    m_menuBar->setMinimumHeight(30);
+    this->m_Menu = this->m_menuBar->addMenu("开始");
+    this->m_createDDLAction = new QAction("新建DDL", this);
+    this->m_Menu->addAction(m_createDDLAction);        // 将菜单项添加到子菜单
+    // 添加菜单响应函数
+    connect(m_createDDLAction, &QAction::triggered, this, &MainWindow::create_ddl);
 
-    // 设置并显示左上角的新建DDL模块按键
-    m_button = new button_new(this);
-    m_button->setGeometry(0, 0, 100, 100);
-    m_button->setStyleSheet("QLabel{border:2px solid rgb(0, 255, 0);}");
-    m_button->setText("clickhere\nfor new ddl");
-    m_button->setFont(QFont("Hack", 10));
-    m_button->show();
+    // 初始化滚动条
+    this->m_scrollArea = new QScrollArea(this);
+    m_scrollArea->setBackgroundRole(QPalette::Light);                   // 背景色
+    m_scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);    // 只让竖直滚动
+    m_scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    m_scrollArea->setGeometry(0, 30, 1920, 1080);
 
-    // 将“新建”按钮的newddl信号与主窗口的create_ddl槽连接
-    connect(this->m_button, SIGNAL(newddl()), this, SLOT(create_ddl()));
-
+    // 初始化滚动区域
+    this->m_scrollWidget = new QWidget(this);
+    this->m_scrollWidget->setGeometry(0, 0, 1920, 3000);
+    m_scrollArea->setWidget(this->m_scrollWidget);
     //修改属性，设置为自定义菜单模式
     setContextMenuPolicy(Qt::CustomContextMenu);
 }
 
 // 析构函数
 MainWindow::~MainWindow(){
-
     delete ui;
 }
 
 // 新建ddl快捷键(W)的设置
 void MainWindow::keyPressEvent(QKeyEvent *event){
-
     if(event->key() == Qt::Key_W){
         create_ddl();
     }
@@ -64,20 +68,19 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
 void MainWindow::func_ddl_create(ddl_block* tmp_Label, QString comm_time, QString due_time)
 {
     tmp_Label->setStyleSheet("QLabel{border:2px solid rgb(0, 255, 255);}");
-    //this->m_block[this->DDL_number] = tmp_Label;
     m_block.push_back(tmp_Label);
     tmp_Label->rank = m_block.size() - 1;
      //输入并在ddl块上显示当前时间
     QInputDialog type_in_name(tmp_Label);
     QString tmp_name = type_in_name.getText(tmp_Label, "name", "please type in ddl name", QLineEdit::Normal);
-    tmp_Label->m_ddl->SetName(tmp_name);
+    tmp_Label->SetName(tmp_name);
     tmp_Label->setText(tmp_name);
     tmp_Label->setFont(QFont("Hack", 16));
     tmp_Label->setAlignment(Qt::AlignCenter);
 //    //初始化ddl
-    tmp_Label->m_ddl = new DDL("UNKNOWN", comm_time,
-                               due_time, "PLAIN", "NULL",
-                               0, 0.0, "PREV","NEXT");
+    // tmp_Label->setDDL("UNKNOWN", comm_time,
+    //                            due_time, "PLAIN", "NULL",
+    //                            0, 0.0, "PREV","NEXT");
 
     // 将当前ddl模块的show_tasks信号与其slot_tasks槽连接
     connect(tmp_Label, SIGNAL(show_tasks()), tmp_Label, SLOT(slot_tasks()));
@@ -94,11 +97,13 @@ void MainWindow::func_ddl_create(ddl_block* tmp_Label, QString comm_time, QStrin
     });
 }
 
+// 槽：新建ddl模块
 void MainWindow::create_ddl(){
-    ddl_block *tmp_Label = new ddl_block(this);
+     //新建DDL指针并设置参数，维护DDL序列,并且初始化ddl
+    ddl_block *tmp_Label = new ddl_block(this->m_scrollWidget);
     //测试版
-   QString comm_time = "2022-03-27 18:00:00";
-   QString due_time = "2022-03-29 00:00:00";
+   QString comm_time = "2022-04-02 18:00:00";
+   QString due_time = "2022-04-04 00:00:00";
    // QInputDialog type_in_commence(tmp_Label);
     // QString comm_time = type_in_commence.getText(tmp_Label, "comm_time",
     //                     "please type in commence time\n format:yyyy-MM-dd hh:mm:ss", QLineEdit::Normal);
@@ -124,13 +129,13 @@ void MainWindow::slot_delete(int rank){
     if(m_block.size() == 0)return;
     this->m_block[rank]->hide();//clear out the GUI of that ddl
     // 给前驱后继擦屁股
-    if(m_block[rank]->m_ddl->GetPrev() != "PREV")
+    if(m_block[rank]->GetPrev() != "PREV")
     {
-        m_block[rank]->m_ddl->SetPrev("PREV");
+        m_block[rank]->SetPrev("PREV");
     }
-    if(m_block[rank]->m_ddl->GetNext() != "NEXT")
+    if(m_block[rank]->GetNext() != "NEXT")
     {
-        m_block[rank]->m_ddl->SetNext("NEXT");
+        m_block[rank]->SetNext("NEXT");
     }
     //this->m_block[rank]->Button_delete->hide();
 
@@ -166,14 +171,13 @@ void MainWindow::slot_delete(int rank){
         this->m_block[i]->setGeometry(200 + this->m_block[i]->line_rank * 200,
                                          this->m_block[i]->y(), 200, this->m_block[i]->height());
     }
-    //如果这个ddl删除没有导致少了一条line,不需要更多改动了
 }
 
 // 为当前DDl设置后继
 void MainWindow::slot_succ(int rank){
-    ddl_block *tmp_Label = new ddl_block(this);
-    QString comm_time = "2022-03-29 18:00:00";
-   QString due_time = "2022-03-30 00:00:00";
+    ddl_block *tmp_Label = new ddl_block(this->m_scrollWidget);
+    QString comm_time = "2022-04-05 18:00:00";
+   QString due_time = "2022-04-07 00:00:00";
    // QInputDialog type_in_commence(tmp_Label);
     // QString comm_time = type_in_commence.getText(tmp_Label, "comm_time",
     //                     "please type in commence time\n format:yyyy-MM-dd hh:mm:ss", QLineEdit::Normal);
@@ -187,13 +191,13 @@ void MainWindow::slot_succ(int rank){
     tmp_Label->line_rank = m_block[rank]->line_rank;//后继应该与被后继的在同一line中
     this->number_each_line[tmp_Label->line_rank]++;
     tmp_Label->setGeometry(m_block[rank]->x(), 1080 - 200 * curr_time.secsTo(end_time) / 1440 / 60, 200, begin_time.secsTo(end_time) * 200 / 1440 / 60);
-    m_block[rank]->m_ddl->SetNext(QString::number(m_block.size() - 1, 10));//原来的ddl的后继的序号是新的ddl的序号
-    tmp_Label->m_ddl->SetPrev(QString::number(rank, 10));//新的ddl的前驱的序号是原来的ddl
+    m_block[rank]->SetNext(QString::number(m_block.size() - 1, 10));//原来的ddl的后继的序号是新的ddl的序号
+    tmp_Label->SetPrev(QString::number(rank, 10));//新的ddl的前驱的序号是原来的ddl
 }
 
 void MainWindow::slot_prev(int rank)
 {
-    ddl_block *tmp_Label = new ddl_block(this);
+    ddl_block *tmp_Label = new ddl_block(this->m_scrollWidget);
     QString comm_time = "2022-03-29 18:00:00";
    QString due_time = "2022-03-30 00:00:00";
    // QInputDialog type_in_commence(tmp_Label);
@@ -209,8 +213,8 @@ void MainWindow::slot_prev(int rank)
     tmp_Label->line_rank = m_block[rank]->line_rank;//后继应该与被后继的在同一line中
     this->number_each_line[tmp_Label->line_rank]++;
     tmp_Label->setGeometry(m_block[rank]->x(), 1080 - 200 * curr_time.secsTo(end_time) / 1440 / 60, 200, begin_time.secsTo(end_time) * 200 / 1440 / 60);
-    m_block[rank]->m_ddl->SetPrev(QString::number(m_block.size() - 1, 10));//原来的ddl的后继的序号是新的ddl的序号
-    tmp_Label->m_ddl->SetNext(QString::number(rank, 10));//新的ddl的前驱的序号是原来的ddl
+    m_block[rank]->SetPrev(QString::number(m_block.size() - 1, 10));//原来的ddl的后继的序号是新的ddl的序号
+    tmp_Label->SetNext(QString::number(rank, 10));//新的ddl的前驱的序号是原来的ddl
 }
 //s
 //void MainWindow::paintEvent(QPaintEvent *event){

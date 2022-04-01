@@ -1,7 +1,6 @@
 #include "workingfile.h"
 
 WorkingFile::WorkingFile(const QString& path)
-//    :FilePath(path)
 {
     //因为无法在调用构造函数的情况下验证数据合理性，所以这里先假设业务流程类已经先调用了路径验证函数
     m_filePath = path;
@@ -71,7 +70,6 @@ FileResult WorkingFile::SaveToFolder(const QString& path)
 
         // 新建文件夹成功
     }
-//2022-3-13 18:00:00
     // 从文件路径获取文件名并转换为保存路径
 
     QString fileName = path.mid(path.lastIndexOf(l) + 1);

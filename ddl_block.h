@@ -16,28 +16,26 @@
 #include <QDragEnterEvent>
 #include <QFile>
 #include <QMimeData>
+#include <QMenu>
 #include "ddl.h"
 #include "button_delete.h"
 #include "button_new.h"
 #include "button_next.h"
-#include "primarymenu.h"
 #include "workingfilelistitem.h"
 #include "button_prev.h"
 
 
-class ddl_block : public QLabel
+class ddl_block : public QLabel, public DDL
 {
     Q_OBJECT
 public:
-    explicit ddl_block(QMainWindow *parent = nullptr);
-    void keyPressEvent(QKeyEvent *event) override;
+    explicit ddl_block(QWidget *parent = nullptr);
     void mousePressEvent(QMouseEvent *ev) override;
-    void setddl(int degree, bool state, bool turn,
-                QString time, QString des,
-                QString dur,
-                DDL* prev, DDL* next);
+    // void setDDL(QString m_name = "UNKNOWN", QString m_commence = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"),
+    //     QString m_due = "2050-01-01 00:00:00", QString m_description = "PLAIN", QString m_filePath = "NULL",
+    //     int m_est_Day = 0, float m_est_Hour = 0.0, QString m_prev = "PREV", QString m_next = "Next");
     int rank;//记录其在数组中的序号
-    int line_rank;//记录其的line编号
+    int line_rank;//记录其line编号
     int m_x;
     int m_y;
     int m_length;
@@ -48,8 +46,7 @@ public:
     button_next *Button_next;
     button_prev *Button_prev;
 
-    DDL* m_ddl;                     // DDL成员
-    PrimaryMenu* m_pMenu;
+    QMenu* m_pMenu;
     QAction* m_act[5];              // 菜单中的选项：工作，删除，留言，添加后继
     QWidget* m_FileWidget;          // 工作文件窗口
     QListWidget* m_ListWidget;      // 工作文件列表
