@@ -180,3 +180,22 @@ void ddl_block::emit_interchange_prev(){
 void ddl_block::emit_interchange_succ(){
     emit getInt_succ(rank);
 }
+
+// void ddl_block::setDDL(QString m_name = "UNKNOWN", QString m_commence = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"),
+//         QString m_due = "2050-01-01 00:00:00", QString m_description = "PLAIN", QString m_filePath = "NULL",
+//         int m_est_Day = 0, float m_est_Hour = 0.0, QString m_prev = "PREV", QString m_next = "Next")
+//         {
+//             SetName(name);
+//     SetCompleteDegree(TO_BE_STARTED);
+//     SetCommence_Con(commence);
+//     SetDue_Con(due);
+//     SetEstimation_Con(est_Day, est_Hour);
+//     SetPrev(prev);
+//     SetNext(next);
+//     AddDescription(description);
+//     AddPath(filePath);
+//     SetDuration();
+//     SetTimeToStart();
+
+//     m_allDDL.push_back(shared_ptr<DDL>(this));
+//         }

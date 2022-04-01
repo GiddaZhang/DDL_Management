@@ -31,6 +31,9 @@ class ddl_block : public QLabel, public DDL
 public:
     explicit ddl_block(QWidget *parent = nullptr);
     void mousePressEvent(QMouseEvent *ev) override;
+    // void setDDL(QString m_name = "UNKNOWN", QString m_commence = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"),
+    //     QString m_due = "2050-01-01 00:00:00", QString m_description = "PLAIN", QString m_filePath = "NULL",
+    //     int m_est_Day = 0, float m_est_Hour = 0.0, QString m_prev = "PREV", QString m_next = "Next");
     int rank;//记录其在数组中的序号
     int line_rank;//记录其line编号
     int m_x;
