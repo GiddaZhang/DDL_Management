@@ -91,7 +91,7 @@ void MainWindow::fileInit()
     ddl_block* curDDL;
     for(auto it = prevDDL.begin(); it != prevDDL.end(); it++) {
         if(!isDDLexsited((*it)->GetName())) {
-            curRank = this->create_ddl_auto((*it)->GetComm(), (*it)->GetDue(), (*it)->GetName());
+            curRank = this->create_ddl_auto((**it));
 
             // 下面创建前驱后继
             curDDL = m_block[curRank];
@@ -100,7 +100,7 @@ void MainWindow::fileInit()
                 curDDL->SetPrev((*it)->GetPrev());
                 for(auto it = prevDDL.begin(); it != prevDDL.end(); it++) {
                     if((*it)->GetName() == curDDL->GetPrev()) {
-                        this->prev_ddl_auto(curRank, (*it)->GetComm(), (*it)->GetDue(), (*it)->GetName());
+                        this->prev_ddl_auto(curRank, (**it));
                     }
                 }
             }
@@ -109,7 +109,7 @@ void MainWindow::fileInit()
                 curDDL->SetNext((*it)->GetNext());
                 for(auto it = prevDDL.begin(); it != prevDDL.end(); it++) {
                     if((*it)->GetName() == curDDL->GetNext()) {
-                        this->succ_ddl_auto(curRank, (*it)->GetComm(), (*it)->GetDue(), (*it)->GetName());
+                        this->succ_ddl_auto(curRank, (**it));
                     }
                 }
             }
@@ -147,12 +147,7 @@ void MainWindow::func_ddl_create(ddl_block* tmp_Label, QString name)
     tmp_Label->setAlignment(Qt::AlignCenter);
 
     m_block.push_back(tmp_Label);
-//    qDebug() << "TMP NAME" << tmp_Label->GetName();
 
-//    for(unsigned int i = 0; i < m_block.size(); i++){
-//        qDebug() << m_block[i]->GetName();
-//    }
-//    qDebug() << "1234";
 //    vector<shared_ptr<DDL>> prevDDL = DDL::GetAllDDLPtr();  // 把存档中的DDL存在prevDDL里
 //    for(auto it = prevDDL.begin(); it!=prevDDL.end();it++) {
 //        qDebug() << (*it)->GetName();
@@ -202,19 +197,25 @@ void MainWindow::create_ddl(){
                            begin_time.secsTo(end_time) * 200 / 1440 / 60);
 }
 
-int MainWindow::create_ddl_auto(QDateTime comm_time, QDateTime due_time, QString name)
+//int MainWindow::create_ddl_auto(QDateTime comm_time, QDateTime due_time, QString name)
+int MainWindow::create_ddl_auto(DDL& ddl)
 {
     //新建DDL指针并设置参数，维护DDL序列,并且初始化ddl
-    ddl_block *tmp_Label = new ddl_block(this->m_scrollWidget);
+//    ddl_block *tmp_Label = new ddl_block(this->m_scrollWidget);
+    ddl_block *tmp_Label = new ddl_block(ddl, this->m_scrollWidget);
 
-    func_ddl_create(tmp_Label, name);
+//    func_ddl_create(tmp_Label, name);
+    func_ddl_create(tmp_Label, ddl.GetName());
     tmp_Label->line_rank = DDL_lines_number;
     this->number_each_line[tmp_Label->line_rank]++;
     DDL_lines_number++;
     QDateTime curr_time = QDateTime::currentDateTime();
+//    tmp_Label->setGeometry(200 + tmp_Label->line_rank * 200,
+//                          1080 - 200 * curr_time.secsTo(due_time) / 1440 / 60,
+//                          200, comm_time.secsTo(due_time) * 200 / 1440 / 60);
     tmp_Label->setGeometry(200 + tmp_Label->line_rank * 200,
-                          1080 - 200 * curr_time.secsTo(due_time) / 1440 / 60,
-                          200, comm_time.secsTo(due_time) * 200 / 1440 / 60);
+                          1080 - 200 * curr_time.secsTo(ddl.GetDue()) / 1440 / 60,
+                          200, ddl.GetComm().secsTo(ddl.GetDue()) * 200 / 1440 / 60);
     return tmp_Label->rank;
 }
 
@@ -298,17 +299,17 @@ void MainWindow::slot_succ(int rank)
 //    tmp_Label->SetPrev(QString::number(rank, 10));                          //新的ddl的前驱的序号是原来的ddl
 }
 
-void MainWindow::succ_ddl_auto(int rank, QDateTime comm_time, QDateTime due_time, QString name)
+void MainWindow::succ_ddl_auto(int rank, DDL& ddl)
 {
     QDateTime curr_time = QDateTime::currentDateTime();
-    ddl_block *tmp_Label = new ddl_block(this->m_scrollWidget);
-    func_ddl_create(tmp_Label, name);
+    ddl_block *tmp_Label = new ddl_block(ddl, this->m_scrollWidget);
+    func_ddl_create(tmp_Label, ddl.GetName());
 
     tmp_Label->line_rank = m_block[rank]->line_rank;                        //后继应该与被后继的在同一line中
     this->number_each_line[tmp_Label->line_rank]++;
     tmp_Label->setGeometry(m_block[rank]->x(),
-                           1080 - 200 * curr_time.secsTo(due_time) / 1440 / 60,
-                           200, comm_time.secsTo(due_time) * 200 / 1440 / 60);
+                           1080 - 200 * curr_time.secsTo(ddl.GetDue()) / 1440 / 60,
+                           200, ddl.GetComm().secsTo(ddl.GetDue()) * 200 / 1440 / 60);
 //    m_block[rank]->SetNext(QString::number(m_block.size() - 1, 10));        //原来的ddl的后继的序号是新的ddl的序号
 //    tmp_Label->SetPrev(QString::number(rank, 10));                          //新的ddl的前驱的序号是原来的ddl
 }
@@ -337,17 +338,17 @@ void MainWindow::slot_prev(int rank)
 //    tmp_Label->SetNext(QString::number(rank, 10));                          //新的ddl的前驱的序号是原来的ddl
 }
 
-void MainWindow::prev_ddl_auto(int rank, QDateTime comm_time, QDateTime due_time, QString name)
+void MainWindow::prev_ddl_auto(int rank, DDL& ddl)
 {
     QDateTime curr_time = QDateTime::currentDateTime();
-    ddl_block *tmp_Label = new ddl_block(this->m_scrollWidget);
-    func_ddl_create(tmp_Label, name);
+    ddl_block *tmp_Label = new ddl_block(ddl, this->m_scrollWidget);
+    func_ddl_create(tmp_Label, ddl.GetName());
 
     tmp_Label->line_rank = m_block[rank]->line_rank;                        //后继应该与被后继的在同一line中
     this->number_each_line[tmp_Label->line_rank]++;
     tmp_Label->setGeometry(m_block[rank]->x(),
-                           1080 - 200 * curr_time.secsTo(due_time) / 1440 / 60, 200,
-                           comm_time.secsTo(due_time) * 200 / 1440 / 60);
+                           1080 - 200 * curr_time.secsTo(ddl.GetDue()) / 1440 / 60, 200,
+                           ddl.GetComm().secsTo(ddl.GetDue()) * 200 / 1440 / 60);
 //    m_block[rank]->SetPrev(QString::number(m_block.size() - 1, 10));        //原来的ddl的后继的序号是新的ddl的序号
 //    tmp_Label->SetNext(QString::number(rank, 10));                          //新的ddl的前驱的序号是原来的ddl
 }

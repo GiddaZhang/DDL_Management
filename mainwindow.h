@@ -43,10 +43,10 @@ public:
     void fileInit();         // 读取存档初始化
 
     // 下面带auto的函数和孙哥的差不多，不过是根据从文档里读到的数据新建，不是由用户决定，
-    // 在孙哥的基础上去掉和用户交互的界面，所以参数更多。
-    int create_ddl_auto(QDateTime, QDateTime, QString);             // 创建之后返回rank
-    void succ_ddl_auto(int, QDateTime, QDateTime, QString);
-    void prev_ddl_auto(int, QDateTime, QDateTime, QString);
+    // 在孙哥的基础上去掉和用户交互的界面。
+    int create_ddl_auto(DDL&);             // 创建之后返回rank
+    void succ_ddl_auto(int, DDL&);         // 第一个参数是rank
+    void prev_ddl_auto(int, DDL&);         // 第一个参数是rank
     bool isDDLexsited(QString);
 
 public slots:
@@ -67,7 +67,7 @@ private:
     QWidget* m_scrollWidget;        // 滚动窗口（窗口大于区域）
     QMenuBar* m_menuBar;            // 最顶上的菜单栏
     QMenu* m_Menu;                  // 菜单项
-    QAction* m_createDDLAction;       // 菜单动作：新建DDL
+    QAction* m_createDDLAction;     // 菜单动作：新建DDL
     // int DDL_number;                 // 记录当前有效的DDL的个数
     int DDL_lines_number;           //一组前驱后继算一条线
     int number_each_line[30] = {0};
