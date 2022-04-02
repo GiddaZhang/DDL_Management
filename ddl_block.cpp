@@ -24,6 +24,32 @@ ddl_block::ddl_block(QWidget *parent) : QLabel(parent), DDL(){
     SetWorkingFileSpace();               // 初始化工作文件窗口
 }
 
+ddl_block::ddl_block(DDL& ddl, QWidget *parent)
+: QLabel(parent), DDL(ddl)
+{
+    // 用parent初始化QLabel基类，DDL基类只调用默认构造函数
+
+    // 初始化菜单指针，类型为pointer to QMenu
+    m_pMenu = new QMenu(parent);
+
+    // 初始化菜单栏指针，类型为pointer to QAction
+    m_act[0] = new QAction("工作", this);
+    m_act[1] = new QAction("删除", this);
+    m_act[2] = new QAction("留言", this);
+    m_act[3] = new QAction("添加后继", this);
+    m_act[4] = new QAction("添加前驱", this);
+
+    // 设置五个菜单栏
+    for(int i = 0; i < 5; i++) {
+        m_pMenu->addAction(m_act[i]);    // 将菜单栏添加到菜单上
+        m_act[i]->setData(i + 1);        //设置菜单栏发送的数据（int型），它们会在槽OnClickedPopMenu()中与具体行为产生联系
+        connect(m_act[i], SIGNAL(triggered()), this, SLOT(OnClickedPopMenu())); // 连接鼠标右键点击信号
+    }
+
+    setAcceptDrops(true);                // 允许将文档拖动到窗口中
+    SetWorkingFileSpace();               // 初始化工作文件窗口
+}
+
 void ddl_block::mousePressEvent(QMouseEvent *ev)
 {
     if(ev->button() == Qt::RightButton)
@@ -105,7 +131,8 @@ void ddl_block::dropEvent(QDropEvent *e){
     }
 }
 
-void ddl_block::SetWorkingFileSpace(){
+void ddl_block::SetWorkingFileSpace()
+{
     m_FileWidget = new QWidget;                         // 新建工作文件窗口
     m_FileWidget->setWindowTitle("工作文件");            // 设置窗口名称
     m_FileWidget->resize(500,500);                      // 设置大小
