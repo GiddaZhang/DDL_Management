@@ -17,6 +17,8 @@
 #include <QFile>
 #include <QMimeData>
 #include <QMenu>
+#include <stdlib.h>
+#include <time.h>
 #include "ddl.h"
 #include "button_delete.h"
 #include "button_new.h"
@@ -51,6 +53,8 @@ public:
 
     void SetWorkingFileSpace();     // 设置工作文件界面
     void ShowWorkingFileSpace();    // 显示工作文件界面
+
+    void SetColor();                // 设置颜色
 
 protected:
     void dragEnterEvent(QDragEnterEvent *e);    // 拖动文件用到的信号1

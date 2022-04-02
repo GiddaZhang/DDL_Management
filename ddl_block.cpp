@@ -22,6 +22,7 @@ ddl_block::ddl_block(QWidget *parent) : QLabel(parent), DDL(){
 
     setAcceptDrops(true);                // 允许将文档拖动到窗口中
     SetWorkingFileSpace();               // 初始化工作文件窗口
+    SetColor();                          // 随机一个颜色
 }
 
 ddl_block::ddl_block(DDL& ddl, QWidget *parent)
@@ -48,6 +49,7 @@ ddl_block::ddl_block(DDL& ddl, QWidget *parent)
 
     setAcceptDrops(true);                // 允许将文档拖动到窗口中
     SetWorkingFileSpace();               // 初始化工作文件窗口
+    SetColor();                          // 随机一个颜色
 }
 
 void ddl_block::mousePressEvent(QMouseEvent *ev)
@@ -175,6 +177,13 @@ void ddl_block::SetWorkingFileSpace()
 
 void ddl_block::ShowWorkingFileSpace(){
     m_FileWidget->show();
+}
+
+void ddl_block::SetColor()
+{
+    int random_num = rand() % 5 + 1;
+    QString style = "ddl_block" + QString::number(random_num);
+    this->setObjectName(style);    // 设置名称让Qss匹配，随机一个颜色
 }
 
 void ddl_block::slot_open(QListWidgetItem *item){
