@@ -52,7 +52,7 @@ public:
     // 构造函数
     DDL(QString name = "UNKNOWN", QString commence = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"),
         QString due = "2050-01-01 00:00:00", QString description = "PLAIN", QString filePath = "NULL",
-        int est_Day = 0, float est_Hour = 0.0, QString prev = "PREV", QString next = "Next");
+        int est_Day = 0, float est_Hour = 0.0, QString prev = "PREV", QString next = "NEXT");
 //    // 拷贝构造函数
 //    DDL(const DDL&);
 //    // 重载赋值运算符
@@ -63,7 +63,7 @@ public:
     // 公有Setter
     Set_Result SetDDL(QString name, QString commence, QString due, QString description, QString filePath,
                       int est_Day, float est_Hour, QString prev, QString next);
-    Set_Result SetName(const QString&);                         // 设置任务名称
+    Set_Result SetName(const QString&, bool hard = true);       // 设置任务名称
     Set_Result SetCompleteDegree(const CompleteDegree&);        // 设置任务完成度
     Set_Result SetCommence(const QString&);                     // 设置任务开始时间
     Set_Result SetDue(const QString&);                          // 设置任务截止时间
@@ -86,7 +86,8 @@ public:
 
     // 公有Getter
     double GetUrgency();                                        // 返回DDL紧迫程度，预期耗时/(DDL时间-当前时间)*100%
-    QString GetName() const;                                    // 返回DDL名称
+    QString GetName() const;                                    //
+    QDateTime GetComm() const;                                  // 返回DDL开始时间
     QDateTime GetDue() const;                                   // 返回DDL截止时间
     QString GetNext() const;                                    // 返回后继DDL名称
     QString GetPrev() const;                                    // 返回前驱DDL名称
@@ -102,7 +103,12 @@ public:
     //静态公有接口
     static Read_Write_Result LoadFromFile();                    // 加载信息，路径由函数自动确定
     static Read_Write_Result SaveToFile();                      // 存储信息，路径由函数自动确定
-    static shared_ptr<DDL> GetDDLPtr(const QString&);           // 获得全部DDL
+    static shared_ptr<DDL> GetDDLPtr(const QString&);           // 从静态变量获得某条DDL
+    static vector<shared_ptr<DDL>> GetAllDDLPtr();              // 从静态变量获得全部DDL（读取）
+    static vector<shared_ptr<DDL>>* GetAllDDLPtrPtr();          // 从静态变量获得全部DDL指针，用于修改
+    static void RemoveDDL(const QString&);                      // 从静态变量中移除某条DDL
+//    static void PopDDL();                                       // 弹出最后一条DDL
+    bool isDDLexsisted(const QString&);                         // 根据名称判断m_allDDL里是否已经存在
 
     void OutputToStream(ostream&) const;                        // 输出流
 

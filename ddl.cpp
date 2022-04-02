@@ -19,7 +19,9 @@ DDL::DDL(QString name, QString commence, QString due, QString description,
     SetDuration();
     SetTimeToStart();
 
-    m_allDDL.push_back(shared_ptr<DDL>(this));
+    if(!this->isDDLexsisted(name) && name != "UNKNOWN")
+        // 不往里加默认构造的，也不往里加已经有的
+        m_allDDL.push_back(shared_ptr<DDL>(this));
 }
 
 Set_Result DDL::SetDDL(QString name, QString commence, QString due, QString description, QString filePath,
@@ -37,15 +39,21 @@ Set_Result DDL::SetDDL(QString name, QString commence, QString due, QString desc
     SetTimeToStart();
 }
 
-Set_Result DDL::SetName(const QString& name){
+Set_Result DDL::SetName(const QString& name, bool hard){
     //在m_allDDL中寻找重名者
     auto Finder = [&name](shared_ptr<DDL> ptr)->bool{return (ptr->GetName() == name);};
     auto it = find_if(m_allDDL.begin(), m_allDDL.end(), Finder);
-    if (it == m_allDDL.end()) {//若未找到则为合理名字
+    if(!hard) {
+        // 此时不允许重名
+        if (it == m_allDDL.end()) {//若未找到则为合理名字
+            m_name = name;
+            return VALID;
+        }else{
+            return INVALID;
+        }
+    }
+    else {
         m_name = name;
-        return VALID;
-    }else{
-        return INVALID;
     }
 }
 
@@ -57,8 +65,9 @@ Set_Result DDL::SetCompleteDegree(const CompleteDegree& degree){
 Set_Result DDL::SetCommence(const QString& commence){
     //将开始时间与此时相比，只有晚于此时且早于默认上限才合理
     QDateTime Temp = QDateTime::fromString(commence, "yyyy-MM-dd hh:mm:ss");
-    if(Temp >= QDateTime::currentDateTime()
-     && Temp <= QDateTime::fromString("2050-01-01 00:00:00")){
+    if(Temp >= QDateTime::currentDateTime())
+        //&& Temp <= QDateTime::fromString("2050-01-01 00:00:00")加上这个会有问题
+    {
         m_commence = Temp;
         SetDuration();
         return VALID;
@@ -70,7 +79,8 @@ Set_Result DDL::SetCommence(const QString& commence){
 Set_Result DDL::SetDue(const QString& due){
     //将开始时间与开始时间相比，只有晚于开始时间且早于默认上限才合理
     QDateTime Temp = QDateTime::fromString(due, "yyyy-MM-dd hh:mm:ss");
-    if(Temp>m_commence && Temp <= QDateTime::fromString("2050-01-01 00:00:00")){
+    if(Temp > m_commence){
+        // 这里加上这个会赋不上值：&& Temp <= QDateTime::fromString("2050-01-01 00:00:00")
         m_due = Temp;
         SetDuration();
         return VALID;
@@ -278,6 +288,11 @@ QString DDL::GetName() const
     return this->m_name;
 }
 
+QDateTime DDL::GetComm() const
+{
+    return this->m_commence;
+}
+
 QDateTime DDL::GetDue() const
 {
     return this->m_due;
@@ -306,6 +321,51 @@ shared_ptr<DDL> DDL::GetDDLPtr(const QString& name)
         }
     }
     return nullptr;
+}
+
+vector<shared_ptr<DDL>> DDL::GetAllDDLPtr()
+{
+    return m_allDDL;
+}
+
+vector<shared_ptr<DDL> > *DDL::GetAllDDLPtrPtr()
+{
+    return &m_allDDL;
+}
+
+void DDL::RemoveDDL(const QString& name)
+{
+//    auto Finder = [&name](shared_ptr<DDL> ptr)->bool{return (ptr->GetName() == name);};
+//    auto it = find_if(m_allDDL.begin(), m_allDDL.end(), Finder);
+//    if (it != m_allDDL.end()) {//若找到则删除
+//        m_allDDL.erase(it);
+//    }
+//    for(auto it = m_allDDL.begin();it != m_allDDL.end();it++){
+//        if((*it)->GetName() == name){
+//            m_allDDL.erase(it);
+//            return;
+//        }
+//    }
+    auto Finder = [&name](shared_ptr<DDL> ptr)->bool{return (ptr->GetName() == name);};
+    auto it = find_if(m_allDDL.begin(), m_allDDL.end(), Finder);
+    //判断DDL是否存在
+    if (it == m_allDDL.end()) {
+        throw invalid_argument("No such DDL.");
+    }
+    //存在则直接erase
+    else {
+        it = m_allDDL.erase(it);
+    }
+}
+
+bool DDL::isDDLexsisted(const QString& name)
+{
+    for(auto it = m_allDDL.begin();it != m_allDDL.end();it++){
+        if((*it)->GetName() == name){
+            return true;
+        }
+    }
+    return false;
 }
 
 bool DDL::operator < (const DDL& b)
@@ -397,8 +457,8 @@ Read_Write_Result DDL::LoadFromFile()
             }
         }
 
-        DDL* ddl = new DDL();       // 调用默认构造函数
-        ddl->SetName(QString::fromStdString(f_name));
+        DDL* ddl = new DDL(QString::fromStdString(f_name));       // 调用默认构造函数
+//        ddl->SetName(QString::fromStdString(f_name));
         ddl->SetCompleteDegree(fromStr(f_complete_degree_str));
         ddl->SetCommence(QString::fromStdString(f_commence_str));
         ddl->SetDue(QString::fromStdString(f_due_str));
