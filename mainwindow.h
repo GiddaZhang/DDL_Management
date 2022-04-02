@@ -31,13 +31,23 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     button_new *m_button;
-    //ddl_block *m_block[30];
     vector<ddl_block*> m_block;
-    //QString *name_block[30];
-    //bool isOccupied[30] = {0};//记录对应位置是否有ddl，有就是true，没有就是false
-    void func_ddl_create(ddl_block* tmp_Label, QString comm_time, QString due_time);
+    void func_ddl_create(ddl_block* tmp_Label, QString name = "Default");
     void keyPressEvent(QKeyEvent *event) override;
-//    void func_ddl_create(ddl_block* tmp_Label, QString comm_time, QString due_time);
+
+    // 以下为界面初始化
+    void windowInit();       // 初始化窗口名称、大小
+    void menuInit();         // 初始化菜单栏和菜单项
+    void scrollBarInit();    // 初始化滚动条
+    void scrollAreaInit();   // 初始化滚动区域
+    void fileInit();         // 读取存档初始化
+
+    // 下面带auto的函数和孙哥的差不多，不过是根据从文档里读到的数据新建，不是由用户决定，
+    // 在孙哥的基础上去掉和用户交互的界面，所以参数更多。
+    int create_ddl_auto(QDateTime, QDateTime, QString);             // 创建之后返回rank
+    void succ_ddl_auto(int, QDateTime, QDateTime, QString);
+    void prev_ddl_auto(int, QDateTime, QDateTime, QString);
+    bool isDDLexsited(QString);
 
 public slots:
     void create_ddl();

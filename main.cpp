@@ -9,9 +9,6 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     MainWindow w;
     w.show();
-
-//    void test();
-//    test();
     return a.exec();
 }
 
@@ -22,4 +19,3 @@ int main(int argc, char *argv[])
 //    shared_ptr<DDL> a = DDL::GetDDLPtr("Homework");
 //    a->OpenAllFile();
 //}
-
