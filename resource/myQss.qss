@@ -1,0 +1,104 @@
+QLabel#ddl_block1
+{
+    font-family: "Consolas, STZhongsong";
+    font-size: 22px;
+    color: #fafafa;
+    font-style: normal;
+    font-weight: normal;
+
+    border-style: solid;
+    border-width: 2px;
+    border-color: rgb(178, 179, 179);
+    border-radius: 20px;
+
+    padding-top: 2px;
+
+    background-color: #4d76d4;
+    /* background-image: url("./image.png"); */
+    background-repeat: no-repeat;
+    background-position: left center;
+}
+
+QLabel#ddl_block2
+{
+    font-family: "Consolas, STZhongsong";
+    font-size: 22px;
+    color: #fafafa;
+    font-style: normal;
+    font-weight: normal;
+
+    border-style: solid;
+    border-width: 2px;
+    border-color: rgb(178, 179, 179);
+    border-radius: 20px;
+
+    padding-top: 2px;
+
+    background-color: #d68f25;
+    /* background-image: url("./image.png"); */
+    background-repeat: no-repeat;
+    background-position: left center;
+}
+
+QLabel#ddl_block3
+{
+    font-family: "Consolas, STZhongsong";
+    font-size: 22px;
+    color: #fafafa;
+    font-style: normal;
+    font-weight: normal;
+
+    border-style: solid;
+    border-width: 2px;
+    border-color: rgb(178, 179, 179);
+    border-radius: 20px;
+
+    padding-top: 2px;
+
+    background-color: #f82727;
+    /* background-image: url("./image.png"); */
+    background-repeat: no-repeat;
+    background-position: left center;
+}
+
+QLabel#ddl_block4
+{
+    font-family: "Consolas, STZhongsong";
+    font-size: 22px;
+    color: #fafafa;
+    font-style: normal;
+    font-weight: normal;
+
+    border-style: solid;
+    border-width: 2px;
+    border-color: rgb(178, 179, 179);
+    border-radius: 20px;
+
+    padding-top: 2px;
+
+    background-color: #25d643;
+    /* background-image: url("./image.png"); */
+    background-repeat: no-repeat;
+    background-position: left center;
+}
+
+QLabel#ddl_block5
+{
+    font-family: "Consolas, STZhongsong";
+    font-size: 22px;
+    color: #fafafa;
+    font-style: normal;
+    font-weight: normal;
+
+    border-style: solid;
+    border-width: 2px;
+    border-color: rgb(178, 179, 179);
+    border-radius: 20px;
+
+    padding-top: 2px;
+
+    background-color: #6c746d;
+    /* background-image: url("./image.png"); */
+    background-repeat: no-repeat;
+    background-position: left center;
+}
