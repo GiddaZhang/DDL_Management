@@ -123,6 +123,9 @@ void ddl_block::dropEvent(QDropEvent *e){
     foreach (QUrl u, urls){
         QString filepath = u.toLocalFile();
         this->AddPath(filepath);
+        // 不知道为什么上面并不会吧静态变量里的DDL添加工作文件
+        shared_ptr<DDL> thisBlock = DDL::GetDDLPtr(this->GetName());
+        thisBlock->AddPath(filepath);
         WorkingFileListItem* tmp = new WorkingFileListItem(filepath);
         m_ListWidget->addItem(tmp);
         // delete tmp;
