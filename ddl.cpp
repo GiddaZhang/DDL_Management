@@ -24,6 +24,21 @@ DDL::DDL(QString name, QString commence, QString due, QString description,
         m_allDDL.push_back(shared_ptr<DDL>(this));
 }
 
+DDL::DDL(const DDL& other)
+{
+    this->m_name = other.m_name;
+    this->m_completeState = other.m_completeState;
+    this->m_duration_sec = other.m_duration_sec;
+    this->m_estimation_sec = other.m_estimation_sec;
+    this->m_commence = other.m_commence;
+    this->m_due = other.m_due;
+    this->m_timeToStart = other.m_timeToStart;
+    this->m_prev = other.m_prev;
+    this->m_next = other.m_next;
+    this->m_allDescription = other.m_allDescription;
+    this->m_allFilePath = other.m_allFilePath;
+}
+
 Set_Result DDL::SetDDL(QString name, QString commence, QString due, QString description, QString filePath,
                   int est_Day, float est_Hour, QString prev, QString next){
     SetName(name);
@@ -335,17 +350,6 @@ vector<shared_ptr<DDL> > *DDL::GetAllDDLPtrPtr()
 
 void DDL::RemoveDDL(const QString& name)
 {
-//    auto Finder = [&name](shared_ptr<DDL> ptr)->bool{return (ptr->GetName() == name);};
-//    auto it = find_if(m_allDDL.begin(), m_allDDL.end(), Finder);
-//    if (it != m_allDDL.end()) {//若找到则删除
-//        m_allDDL.erase(it);
-//    }
-//    for(auto it = m_allDDL.begin();it != m_allDDL.end();it++){
-//        if((*it)->GetName() == name){
-//            m_allDDL.erase(it);
-//            return;
-//        }
-//    }
     auto Finder = [&name](shared_ptr<DDL> ptr)->bool{return (ptr->GetName() == name);};
     auto it = find_if(m_allDDL.begin(), m_allDDL.end(), Finder);
     //判断DDL是否存在
@@ -458,7 +462,6 @@ Read_Write_Result DDL::LoadFromFile()
         }
 
         DDL* ddl = new DDL(QString::fromStdString(f_name));       // 调用默认构造函数
-//        ddl->SetName(QString::fromStdString(f_name));
         ddl->SetCompleteDegree(fromStr(f_complete_degree_str));
         ddl->SetCommence(QString::fromStdString(f_commence_str));
         ddl->SetDue(QString::fromStdString(f_due_str));

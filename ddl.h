@@ -53,8 +53,8 @@ public:
     DDL(QString name = "UNKNOWN", QString commence = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"),
         QString due = "2050-01-01 00:00:00", QString description = "PLAIN", QString filePath = "NULL",
         int est_Day = 0, float est_Hour = 0.0, QString prev = "PREV", QString next = "NEXT");
-//    // 拷贝构造函数
-//    DDL(const DDL&);
+    // 拷贝构造函数
+    DDL(const DDL&);
 //    // 重载赋值运算符
 //    DDL& operator =(const DDL&);
 //    // 析构函数
@@ -107,7 +107,6 @@ public:
     static vector<shared_ptr<DDL>> GetAllDDLPtr();              // 从静态变量获得全部DDL（读取）
     static vector<shared_ptr<DDL>>* GetAllDDLPtrPtr();          // 从静态变量获得全部DDL指针，用于修改
     static void RemoveDDL(const QString&);                      // 从静态变量中移除某条DDL
-//    static void PopDDL();                                       // 弹出最后一条DDL
     bool isDDLexsisted(const QString&);                         // 根据名称判断m_allDDL里是否已经存在
 
     void OutputToStream(ostream&) const;                        // 输出流
