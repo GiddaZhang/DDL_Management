@@ -120,7 +120,8 @@ void MainWindow::fileInit()
     }
 }
 
-void MainWindow::func_ddl_create(ddl_block* tmp_Label, QString name)
+void MainWindow::func_ddl_create(ddl_block* tmp_Label, QDateTime com,
+                                 QDateTime due, QString name)
 {
     tmp_Label->setStyleSheet("QLabel{border:2px solid rgb(0, 255, 255);}");
     tmp_Label->rank = m_block.size();
@@ -128,15 +129,21 @@ void MainWindow::func_ddl_create(ddl_block* tmp_Label, QString name)
     QString tmp_name;
 
     // 以下用name来判断这个函数是由用户调用还是读存档时自动调用
+    // 当name是"Default"，表面用户在调用
     if(name == "Default") {
         //输入并在ddl块上显示当前时间
         QInputDialog type_in_name(tmp_Label);
         tmp_name = type_in_name.getText(tmp_Label, "name", "please type in ddl name", QLineEdit::Normal);
-        tmp_Label->SetName(tmp_name);
 
-        DDL* tmp_ddl = new DDL(tmp_name,
-                               tmp_Label->GetComm().toString("yyyy-MM-dd hh:mm:ss"),
-                               tmp_Label->GetDue().toString("yyyy-MM-dd hh:mm:ss"));
+        tmp_Label->SetName(tmp_name);
+        tmp_Label->SetCommence(com.toString("yyyy-MM-dd hh:mm:ss"));
+        tmp_Label->SetDue(due.toString("yyyy-MM-dd hh:mm:ss"));
+        DDL* tmp_ddl = new DDL(tmp_name, com.toString("yyyy-MM-dd hh:mm:ss"),
+                               due.toString("yyyy-MM-dd hh:mm:ss"));
+
+//        DDL* tmp_ddl = new DDL(tmp_name,
+//                               tmp_Label->GetComm().toString("yyyy-MM-dd hh:mm:ss"),
+//                               tmp_Label->GetDue().toString("yyyy-MM-dd hh:mm:ss"));
     }
     else {
         tmp_name = name;
@@ -188,7 +195,8 @@ void MainWindow::create_ddl(){
     QDateTime curr_time = QDateTime::currentDateTime();
     int width = 0;
     int height = 0;
-    func_ddl_create(tmp_Label);
+
+    func_ddl_create(tmp_Label, begin_time, end_time);
     tmp_Label->line_rank = DDL_lines_number;
     this->number_each_line[tmp_Label->line_rank]++;
     DDL_lines_number++;
@@ -197,25 +205,21 @@ void MainWindow::create_ddl(){
                            begin_time.secsTo(end_time) * 200 / 1440 / 60);
 }
 
-//int MainWindow::create_ddl_auto(QDateTime comm_time, QDateTime due_time, QString name)
 int MainWindow::create_ddl_auto(DDL& ddl)
 {
     //新建DDL指针并设置参数，维护DDL序列,并且初始化ddl
-//    ddl_block *tmp_Label = new ddl_block(this->m_scrollWidget);
     ddl_block *tmp_Label = new ddl_block(ddl, this->m_scrollWidget);
 
-//    func_ddl_create(tmp_Label, name);
-    func_ddl_create(tmp_Label, ddl.GetName());
+    func_ddl_create(tmp_Label, QDateTime::currentDateTime(),
+                    QDateTime::currentDateTime(), ddl.GetName());
     tmp_Label->line_rank = DDL_lines_number;
     this->number_each_line[tmp_Label->line_rank]++;
     DDL_lines_number++;
     QDateTime curr_time = QDateTime::currentDateTime();
-//    tmp_Label->setGeometry(200 + tmp_Label->line_rank * 200,
-//                          1080 - 200 * curr_time.secsTo(due_time) / 1440 / 60,
-//                          200, comm_time.secsTo(due_time) * 200 / 1440 / 60);
     tmp_Label->setGeometry(200 + tmp_Label->line_rank * 200,
                           1080 - 200 * curr_time.secsTo(ddl.GetDue()) / 1440 / 60,
                           200, ddl.GetComm().secsTo(ddl.GetDue()) * 200 / 1440 / 60);
+
     return tmp_Label->rank;
 }
 
@@ -289,7 +293,7 @@ void MainWindow::slot_succ(int rank)
     QDateTime begin_time = QDateTime::fromString(comm_time, "yyyy-MM-dd hh:mm:ss");
     QDateTime end_time = QDateTime::fromString(due_time, "yyyy-MM-dd hh:mm:ss");
     QDateTime curr_time = QDateTime::currentDateTime();
-    func_ddl_create(tmp_Label);
+    func_ddl_create(tmp_Label, begin_time, end_time);
     tmp_Label->line_rank = m_block[rank]->line_rank;                        //后继应该与被后继的在同一line中
     this->number_each_line[tmp_Label->line_rank]++;
     tmp_Label->setGeometry(m_block[rank]->x(),
@@ -303,7 +307,8 @@ void MainWindow::succ_ddl_auto(int rank, DDL& ddl)
 {
     QDateTime curr_time = QDateTime::currentDateTime();
     ddl_block *tmp_Label = new ddl_block(ddl, this->m_scrollWidget);
-    func_ddl_create(tmp_Label, ddl.GetName());
+    func_ddl_create(tmp_Label, QDateTime::currentDateTime(),
+                    QDateTime::currentDateTime(), ddl.GetName());
 
     tmp_Label->line_rank = m_block[rank]->line_rank;                        //后继应该与被后继的在同一line中
     this->number_each_line[tmp_Label->line_rank]++;
@@ -328,7 +333,7 @@ void MainWindow::slot_prev(int rank)
     QDateTime begin_time = QDateTime::fromString(comm_time, "yyyy-MM-dd hh:mm:ss");
     QDateTime end_time = QDateTime::fromString(due_time, "yyyy-MM-dd hh:mm:ss");
     QDateTime curr_time = QDateTime::currentDateTime();
-    func_ddl_create(tmp_Label);
+    func_ddl_create(tmp_Label, begin_time, end_time);
     tmp_Label->line_rank = m_block[rank]->line_rank;                        //后继应该与被后继的在同一line中
     this->number_each_line[tmp_Label->line_rank]++;
     tmp_Label->setGeometry(m_block[rank]->x(),
@@ -342,7 +347,8 @@ void MainWindow::prev_ddl_auto(int rank, DDL& ddl)
 {
     QDateTime curr_time = QDateTime::currentDateTime();
     ddl_block *tmp_Label = new ddl_block(ddl, this->m_scrollWidget);
-    func_ddl_create(tmp_Label, ddl.GetName());
+    func_ddl_create(tmp_Label, QDateTime::currentDateTime(),
+                    QDateTime::currentDateTime(), ddl.GetName());
 
     tmp_Label->line_rank = m_block[rank]->line_rank;                        //后继应该与被后继的在同一line中
     this->number_each_line[tmp_Label->line_rank]++;
@@ -361,6 +367,24 @@ bool MainWindow::isDDLexsited(QString name)
         }
     }
     return false;
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    switch(QMessageBox::information(this, tr("退出"),
+           tr("是否退出？系统会自动保存数据。"), tr("是"), tr("否"), 0, 1))
+    {
+    case 0:
+    {
+        DDL::SaveToFile();
+        event->accept();
+        break;
+    }
+    case 1:
+    default:
+        event->ignore();
+        break;
+    }
 }
 //s
 //void MainWindow::paintEvent(QPaintEvent *event){

@@ -10,8 +10,9 @@
 #include <QMenu>
 #include <QAction>
 #include <memory>
-#include "ddl.h"
+#include <QCloseEvent>
 #include <vector>
+#include "ddl.h"
 #include "axispainter.h"
 #include "ddl_block.h"
 #include "button.h"
@@ -32,7 +33,10 @@ public:
     ~MainWindow();
     button_new *m_button;
     vector<ddl_block*> m_block;
-    void func_ddl_create(ddl_block* tmp_Label, QString name = "Default");
+    void func_ddl_create(ddl_block* tmp_Label,
+                         QDateTime com,
+                         QDateTime due,
+                         QString name = "Default");
     void keyPressEvent(QKeyEvent *event) override;
 
     // 以下为界面初始化
@@ -48,6 +52,8 @@ public:
     void succ_ddl_auto(int, DDL&);         // 第一个参数是rank
     void prev_ddl_auto(int, DDL&);         // 第一个参数是rank
     bool isDDLexsited(QString);
+
+    void closeEvent(QCloseEvent*);         // 关闭程序时触发的函数
 
 public slots:
     void create_ddl();

@@ -1,12 +1,12 @@
-3
+4
 Homework1
 TO_BE_STARTED
 2022-04-02 23:18:57
 2022-04-04 00:00:00
 PREV
 Homework2
-1
-1
+0
+0
 Commit 1
 2022-04-02 12:01:00
 Commit 2
@@ -20,8 +20,8 @@ TO_BE_STARTED
 2022-04-07 00:00:00
 Homework1
 NEXT
-1
-1
+0
+0
 Commit 1
 2022-04-02 12:01:00
 Commit 2
@@ -44,4 +44,16 @@ Commit 2
 <DEND>
 D:/Desktop/2.txt
 D:/Desktop/1.txt
+<WEND>
+Play
+TO_BE_STARTED
+2022-04-02 18:00:00
+2022-04-04 00:00:00
+PREV
+NEXT
+0
+0
+PLAIN
+2022-04-02 14:29:37
+<DEND>
 <WEND>
