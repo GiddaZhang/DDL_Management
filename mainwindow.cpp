@@ -25,7 +25,7 @@ MainWindow::MainWindow(QWidget *parent):
     scrollBarInit();    // 初始化滚动条
     scrollAreaInit();   // 初始化滚动区域
 
-    srand(time(NULL));  // 设置随机种子
+//    srand(time(NULL));  // 设置随机种子
     QssInit();          // 初始化样式表
     fileInit();         // 初始化存档里的DDL
 }
@@ -188,8 +188,8 @@ void MainWindow::create_ddl(){
     ddl_block *tmp_Label = new ddl_block(this->m_scrollWidget);
 
     //测试版
-    QString comm_time = "2022-04-02 18:00:00";
-    QString due_time = "2022-04-04 00:00:00";
+    QString comm_time = "2022-04-04 18:00:00";
+    QString due_time = "2022-04-06 00:00:00";
 //    QInputDialog type_in_commence(tmp_Label);
 //    QString comm_time = type_in_commence.getText(tmp_Label, "comm_time",
 //                         "please type in commence time\n format:yyyy-MM-dd hh:mm:ss", QLineEdit::Normal);
@@ -288,7 +288,7 @@ void MainWindow::slot_delete(int rank)
 void MainWindow::slot_succ(int rank)
 {
     ddl_block *tmp_Label = new ddl_block(this->m_scrollWidget);
-    QString comm_time = "2022-04-05 18:00:00";
+    QString comm_time = "2022-04-06 18:00:00";
     QString due_time = "2022-04-07 00:00:00";
     // QInputDialog type_in_commence(tmp_Label);
     // QString comm_time = type_in_commence.getText(tmp_Label, "comm_time",
@@ -305,6 +305,15 @@ void MainWindow::slot_succ(int rank)
     tmp_Label->setGeometry(m_block[rank]->x(),
                            1080 - 200 * curr_time.secsTo(end_time) / 1440 / 60,
                            200, begin_time.secsTo(end_time) * 200 / 1440 / 60);
+
+    m_block[rank]->SetNext(tmp_Label->GetName());                             //原来的ddl的后继的名称是新的ddl的名称
+    tmp_Label->SetPrev(m_block[rank]->GetName());                             //新的ddl的前驱的名称是原来的ddl
+
+    // 修改静态变量中的参数
+    shared_ptr<DDL> thisBlock = DDL::GetDDLPtr(tmp_Label->GetName());
+    thisBlock->SetPrev(m_block[rank]->GetName());
+    thisBlock = DDL::GetDDLPtr(m_block[rank]->GetName());
+    thisBlock->SetNext(tmp_Label->GetName());
 //    m_block[rank]->SetNext(QString::number(m_block.size() - 1, 10));        //原来的ddl的后继的序号是新的ddl的序号
 //    tmp_Label->SetPrev(QString::number(rank, 10));                          //新的ddl的前驱的序号是原来的ddl
 }
@@ -328,8 +337,8 @@ void MainWindow::succ_ddl_auto(int rank, DDL& ddl)
 void MainWindow::slot_prev(int rank)
 {
     ddl_block *tmp_Label = new ddl_block(this->m_scrollWidget);
-    QString comm_time = "2022-03-29 18:00:00";
-    QString due_time = "2022-03-30 00:00:00";
+    QString comm_time = "2022-04-03 12:00:00";
+    QString due_time = "2022-04-04 00:00:00";
     // QInputDialog type_in_commence(tmp_Label);
     // QString comm_time = type_in_commence.getText(tmp_Label, "comm_time",
     //                     "please type in commence time\n format:yyyy-MM-dd hh:mm:ss", QLineEdit::Normal);
@@ -345,6 +354,15 @@ void MainWindow::slot_prev(int rank)
     tmp_Label->setGeometry(m_block[rank]->x(),
                            1080 - 200 * curr_time.secsTo(end_time) / 1440 / 60, 200,
                            begin_time.secsTo(end_time) * 200 / 1440 / 60);
+
+    m_block[rank]->SetPrev(tmp_Label->GetName());                           //原来的ddl的前驱的名称是新的ddl的名称
+    tmp_Label->SetNext(m_block[rank]->GetName());                           //新的ddl的后继的名称是原来的ddl
+
+    // 修改静态变量中的参数
+    shared_ptr<DDL> thisBlock = DDL::GetDDLPtr(tmp_Label->GetName());
+    thisBlock->SetNext(m_block[rank]->GetName());
+    thisBlock = DDL::GetDDLPtr(m_block[rank]->GetName());
+    thisBlock->SetPrev(tmp_Label->GetName());
 //    m_block[rank]->SetPrev(QString::number(m_block.size() - 1, 10));        //原来的ddl的后继的序号是新的ddl的序号
 //    tmp_Label->SetNext(QString::number(rank, 10));                          //新的ddl的前驱的序号是原来的ddl
 }
