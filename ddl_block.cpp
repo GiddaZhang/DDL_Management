@@ -162,7 +162,7 @@ void ddl_block::slot_saveAll(){
         WorkingFile* tmp = new WorkingFile(m_ListWidget->item(j)->text());
         tmp->SaveToFolder(path);
         delete tmp;
-        }
+    }
 }
 
 void ddl_block::slot_voidToint(int rank){
