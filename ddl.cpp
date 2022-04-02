@@ -182,8 +182,8 @@ Set_Result DDL::SetCommence_Con(const QString& commence){
 Set_Result DDL::SetDue_Con(const QString& due){
     //将开始时间与开始时间相比，只有晚于开始时间且早于默认上限才合理
     QDateTime Temp = QDateTime::fromString(due, "yyyy-MM-dd hh:mm:ss");
-    if(Temp > m_commence &&
-       Temp <= QDateTime::fromString("2050-01-01 00:00:00", "yyyy-MM-dd hh:mm:ss")){
+    if(Temp > m_commence){
+        // 加这个有问题Temp <= QDateTime::fromString("2050-01-01 00:00:00", "yyyy-MM-dd hh:mm:ss"
         m_due = Temp;
         return VALID;
     }else{
