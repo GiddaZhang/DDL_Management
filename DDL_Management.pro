@@ -56,3 +56,6 @@ HEADERS += \
 
 FORMS += \
         mainwindow.ui
+
+RESOURCES += \
+    resource/qss.qrc
