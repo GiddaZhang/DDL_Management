@@ -25,6 +25,8 @@ MainWindow::MainWindow(QWidget *parent):
     scrollBarInit();    // 初始化滚动条
     scrollAreaInit();   // 初始化滚动区域
 
+    srand(time(NULL));  // 设置随机种子
+    QssInit();          // 初始化样式表
     fileInit();         // 初始化存档里的DDL
 }
 
@@ -120,10 +122,25 @@ void MainWindow::fileInit()
     }
 }
 
+void MainWindow::QssInit()
+{
+    QFile* qssFile = new QFile(":/myQss.qss");
+    // 只读方式打开该文件
+    qssFile->open(QFile::ReadOnly);
+    if(qssFile->isOpen()) {
+        qDebug() << 1;
+    }
+    // 读取文件全部内容
+    QString styleSheet = QString(qssFile->readAll());
+    // 为QApplication设置样式表
+    qApp->setStyleSheet(styleSheet);
+    qssFile->close();
+    delete qssFile;
+}
+
 void MainWindow::func_ddl_create(ddl_block* tmp_Label, QDateTime com,
                                  QDateTime due, QString name)
 {
-    tmp_Label->setStyleSheet("QLabel{border:2px solid rgb(0, 255, 255);}");
     tmp_Label->rank = m_block.size();
 
     QString tmp_name;
@@ -140,26 +157,15 @@ void MainWindow::func_ddl_create(ddl_block* tmp_Label, QDateTime com,
         tmp_Label->SetDue(due.toString("yyyy-MM-dd hh:mm:ss"));
         DDL* tmp_ddl = new DDL(tmp_name, com.toString("yyyy-MM-dd hh:mm:ss"),
                                due.toString("yyyy-MM-dd hh:mm:ss"));
-
-//        DDL* tmp_ddl = new DDL(tmp_name,
-//                               tmp_Label->GetComm().toString("yyyy-MM-dd hh:mm:ss"),
-//                               tmp_Label->GetDue().toString("yyyy-MM-dd hh:mm:ss"));
     }
     else {
         tmp_name = name;
         tmp_Label->SetName(tmp_name, true);
     }
     tmp_Label->setText(tmp_name);
-    tmp_Label->setFont(QFont("Hack", 16));
     tmp_Label->setAlignment(Qt::AlignCenter);
 
     m_block.push_back(tmp_Label);
-
-//    vector<shared_ptr<DDL>> prevDDL = DDL::GetAllDDLPtr();  // 把存档中的DDL存在prevDDL里
-//    for(auto it = prevDDL.begin(); it!=prevDDL.end();it++) {
-//        qDebug() << (*it)->GetName();
-//    }
-//    qDebug() << "1234";
 
     // 将当前ddl模块的show_tasks信号与其slot_tasks槽连接
     connect(tmp_Label, SIGNAL(show_tasks()), tmp_Label, SLOT(slot_tasks()));

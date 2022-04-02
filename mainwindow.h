@@ -12,6 +12,7 @@
 #include <memory>
 #include <QCloseEvent>
 #include <vector>
+#include <QFile>
 #include "ddl.h"
 #include "axispainter.h"
 #include "ddl_block.h"
@@ -45,6 +46,7 @@ public:
     void scrollBarInit();    // 初始化滚动条
     void scrollAreaInit();   // 初始化滚动区域
     void fileInit();         // 读取存档初始化
+    void QssInit();          // 初始化Qss样式表
 
     // 下面带auto的函数和孙哥的差不多，不过是根据从文档里读到的数据新建，不是由用户决定，
     // 在孙哥的基础上去掉和用户交互的界面。
