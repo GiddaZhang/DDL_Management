@@ -20,6 +20,7 @@ ddl_block::ddl_block(QWidget *parent) : QLabel(parent), DDL(){
 
     setAcceptDrops(true);                // 允许将文档拖动到窗口中
     SetWorkingFileSpace();               // 初始化工作文件窗口
+    SetNoteSpace();                      // 初始化留言窗口
     SetColor();                          // 随机一个颜色
 }
 
@@ -44,6 +45,7 @@ ddl_block::ddl_block(DDL& ddl, QWidget *parent)
 
     setAcceptDrops(true);                // 允许将文档拖动到窗口中
     SetWorkingFileSpace();               // 初始化工作文件窗口
+    SetNoteSpace();                      // 初始化留言窗口
     SetColor();                          // 随机一个颜色
 }
 
@@ -89,7 +91,7 @@ void ddl_block::OnClickedPopMenu(){
         emit_interchange();// 对应删除操作
         break;
     case 3:
-        QMessageBox::about(this, "留言功能开发中", pEven->text());// 显示留言与写入、删除留言
+        this->ShowNoteSpace();// 对应留言操作
         break;
     case 4:
         emit_interchange_succ();// 对应设置后继操作
@@ -150,7 +152,6 @@ void ddl_block::SetWorkingFileSpace(){
     for(auto it = (this->m_allFilePath).begin(); it != (this->m_allFilePath).end(); it++) {
         WorkingFileListItem* tmp = new WorkingFileListItem(it->GetFilePath());
         m_ListWidget->addItem(tmp);
-        // delete tmp;
         // 连接双击点击列表路径信号，和打开文件槽
         connect(m_ListWidget, &QListWidget::itemDoubleClicked, this, &ddl_block::slot_open);
     }
@@ -180,6 +181,38 @@ void ddl_block::ShowWorkingFileSpace(){
     m_FileWidget->show();
 }
 
+// 设置留言界面
+void ddl_block::SetNoteSpace(){
+    m_NoteWidget = new QWidget;                         // 新建留言窗口
+    m_NoteWidget->setWindowTitle("留言");                // 设置窗口名称
+    m_NoteWidget->resize(500,500);                      // 设置大小
+
+    m_NoteListWidget = new QListWidget(m_NoteWidget);       // 新建留言列表，将其放入留言窗口内
+    m_NoteListWidget->resize(500,400);                      // 设置大小
+    m_NoteListWidget->setFont(QFont("Hack",14));            // 设置字体
+
+    // 显示留言
+    for(auto it = (this->m_allDescription).begin(); it != (this->m_allDescription).end(); it++) {
+        NoteListItem* tmp = new NoteListItem((it->GetStamp()).toString()+" "+it->GetNote());
+        m_NoteListWidget->addItem(tmp);
+    }
+
+    // 设置新建留言按钮
+    QPushButton* newNoteButton = new QPushButton(m_NoteWidget);
+    newNoteButton->setText("new Note");
+    newNoteButton->setFont(QFont("Hack", 12));
+    newNoteButton->resize(100,30);
+    newNoteButton->move(200, 465);
+
+    // 连接
+    connect(newNoteButton, &QPushButton::pressed, this, &ddl_block::slot_addNote);
+}
+
+// 显示留言界面
+void ddl_block::ShowNoteSpace(){
+    m_NoteWidget->show();
+}
+
 // 设置block模块颜色
 void ddl_block::SetColor(){
     int random_num = rand() % 5 + 1;
@@ -206,6 +239,26 @@ void ddl_block::slot_saveAll(){
         tmp->SaveToFolder(path);
         delete tmp;
     }
+}
+
+void ddl_block::slot_addNote(){
+    // 获取留言输入
+    QInputDialog type_in_note(this);
+    QString tmp_note = type_in_note.getText(this, "note", "please type in new Note", QLineEdit::Normal);
+
+    // 更新动态变量：更新留言
+    this->AddDescription(tmp_note);
+
+    // 更新静态变量：更新留言
+    shared_ptr<DDL> thisBlock = DDL::GetDDLPtr(this->GetName());
+    thisBlock->AddDescription(tmp_note);
+
+    // 整合留言和时间戳
+    QString integrated_Note = (QDateTime::currentDateTime()).toString()+" "+tmp_note;
+
+    // 将整合后的留言放入显示窗口中
+    NoteListItem* tmp = new NoteListItem(integrated_Note);
+    m_NoteListWidget->addItem(tmp);
 }
 
 // 一些发射信号的函数

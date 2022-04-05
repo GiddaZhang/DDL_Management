@@ -17,6 +17,7 @@
 #include <QFile>
 #include <QMimeData>
 #include <QMenu>
+#include <QInputDialog>
 #include <stdlib.h>
 #include <time.h>
 #include "ddl.h"
@@ -25,6 +26,7 @@
 #include "button_next.h"
 #include "workingfilelistitem.h"
 #include "button_prev.h"
+#include "notelistitem.h"
 
 
 class ddl_block : public QLabel, public DDL
@@ -50,9 +52,13 @@ public:
     QAction* m_act[5];              // 菜单中的选项：工作，删除，留言，添加后继
     QWidget* m_FileWidget;          // 工作文件窗口
     QListWidget* m_ListWidget;      // 工作文件列表
+    QWidget* m_NoteWidget;          // 留言窗口
+    QListWidget* m_NoteListWidget;  // 留言列表
 
     void SetWorkingFileSpace();     // 设置工作文件界面
     void ShowWorkingFileSpace();    // 显示工作文件界面
+    void SetNoteSpace();            // 设置留言界面
+    void ShowNoteSpace();           // 显示留言界面
 
     void SetColor();                // 设置颜色
 
@@ -75,6 +81,7 @@ public slots:
     void slot_open(QListWidgetItem *item);   // 点击工作文件路径的槽函数
     void slot_openAll();                     // 点击一键打开文件的槽函数
     void slot_saveAll();                     // 点击一键存储文件的槽函数
+    void slot_addNote();
     void slot_voidToint(int rank);
     void emit_interchange();
     void emit_interchange_succ();
