@@ -183,7 +183,7 @@ void MainWindow::func_ddl_create(ddl_block* tmp_Label, QDateTime com,
 
 // 用户调用的新建block接口
 void MainWindow::create_ddl(){
-     //新建DDL指针并设置参数，维护DDL序列,并且初始化ddl
+    //新建block
     ddl_block *tmp_Label = new ddl_block(this->m_scrollWidget);
 
 //    测试版
@@ -202,7 +202,7 @@ void MainWindow::create_ddl(){
                           "please type in due time\n format:yyyy-MM-dd hh:mm:ss", QLineEdit::Normal);
     QDateTime end_time = QDateTime::fromString(due_time, "yyyy-MM-dd hh:mm:ss");
 
-    // 将预处理好的ddl_block和两个日起对象传给block构建函数的公用底层func_ddl_create
+    // 将预处理好的ddl_block和两个日期对象传给block构建函数的公用底层func_ddl_create
     func_ddl_create(tmp_Label, begin_time, end_time);
 
     // 处理前驱后继链条数量。当前链条退化为一个点
@@ -219,8 +219,8 @@ void MainWindow::create_ddl(){
 
 // 读存档调用的新建block接口
 int MainWindow::create_ddl_auto(DDL& ddl){
-    //新建DDL指针并设置参数，维护DDL序列,并且初始化ddl
-    ddl_block *tmp_Label = new ddl_block(ddl, this->m_scrollWidget);
+    //新建block
+    ddl_block *tmp_Label = new ddl_block(ddl, this->m_scrollWidget);// 此处用ddl建立block，内部信息直接拷贝，后文省略很多操作
 
     // 将预处理好的ddl_block传给block构建函数的公用底层func_ddl_create
     func_ddl_create(tmp_Label, QDateTime::currentDateTime(),
@@ -240,13 +240,14 @@ int MainWindow::create_ddl_auto(DDL& ddl){
     return tmp_Label->rank;// 当前block的秩在func中修改，现在返回给读存档函数
 }
 
-// 按秩删除ddl并维护ddl序列
+// 用户调用的删除block接口
 void MainWindow::slot_delete(int rank){
     if(m_block.size() == 0){// 判断early exit条件：m_block中无对象
         return;
     }
     this->m_block[rank]->hide();// 关闭当前block的界面
-    // 给前驱后继擦屁股
+
+    // 处理被删除block的前驱后继
     if(m_block[rank]->GetPrev() != "PREV"){
         m_block[rank]->SetPrev("PREV");
     }
@@ -254,12 +255,10 @@ void MainWindow::slot_delete(int rank){
         m_block[rank]->SetNext("NEXT");
     }
 
-    int deleted_linerank = this->m_block[rank]->line_rank;//记录被灭绝的line's rank
-    //调整位置
-
+    int deleted_linerank = this->m_block[rank]->line_rank;//记录被删除的block的链路
     DDL::RemoveDDL(m_block[rank]->GetName());// 更新静态变量：从中删除同名对象
-
     m_block.erase(m_block.begin() + rank);// 更新动态变量：从中删除
+
     for(unsigned int i = 0; i < m_block.size(); i++){
         m_block[i]->rank = i;// 重新设定block的秩
     }
@@ -285,99 +284,130 @@ void MainWindow::slot_delete(int rank){
     }
 }
 
-// 为当前DDl设置后继
+// 用户调用的设置后继接口
 void MainWindow::slot_succ(int rank){
+    // 新建block
     ddl_block *tmp_Label = new ddl_block(this->m_scrollWidget);
-    QString comm_time = "2022-04-06 18:00:00";
-    QString due_time = "2022-04-07 00:00:00";
-    // QInputDialog type_in_commence(tmp_Label);
-    // QString comm_time = type_in_commence.getText(tmp_Label, "comm_time",
-    //                     "please type in commence time\n format:yyyy-MM-dd hh:mm:ss", QLineEdit::Normal);
-    // QInputDialog type_in_due(tmp_Label);
-    // QString due_time = type_in_due.getText(tmp_Label, "due_time",
-    //                      "please type in due time\n format:yyyy-MM-dd hh:mm:ss", QLineEdit::Normal);
+//    QString comm_time = "2022-04-06 18:00:00";
+//    QString due_time = "2022-04-07 00:00:00";
+
+    // 提供窗口并接收用户对开始时间的输入，根据格式转换为字符串
+    QInputDialog type_in_commence(tmp_Label);
+    QString comm_time = type_in_commence.getText(tmp_Label, "comm_time",
+                         "please type in commence time\n format:yyyy-MM-dd hh:mm:ss", QLineEdit::Normal);
     QDateTime begin_time = QDateTime::fromString(comm_time, "yyyy-MM-dd hh:mm:ss");
+
+    // 提供窗口并接收用户对结束时间的输入，根据格式转换为字符串
+    QInputDialog type_in_due(tmp_Label);
+    QString due_time = type_in_due.getText(tmp_Label, "due_time",
+                          "please type in due time\n format:yyyy-MM-dd hh:mm:ss", QLineEdit::Normal);
     QDateTime end_time = QDateTime::fromString(due_time, "yyyy-MM-dd hh:mm:ss");
-    QDateTime curr_time = QDateTime::currentDateTime();
+
+    // 将预处理好的ddl_block和两个日期对象传给block构建函数的公用底层func_ddl_create
     func_ddl_create(tmp_Label, begin_time, end_time);
-    tmp_Label->line_rank = m_block[rank]->line_rank;                        //后继应该与被后继的在同一line中
+
+    // 将后继与原block设置在同一链路中
+    tmp_Label->line_rank = m_block[rank]->line_rank;
     this->number_each_line[tmp_Label->line_rank]++;
+
+    // 根据当前时间和结束时间为ddlblock在界面上确定位置
+    QDateTime curr_time = QDateTime::currentDateTime();
     tmp_Label->setGeometry(m_block[rank]->x(),
                            1080 - 200 * curr_time.secsTo(end_time) / 1440 / 60,
                            200, begin_time.secsTo(end_time) * 200 / 1440 / 60);
 
-    m_block[rank]->SetNext(tmp_Label->GetName());                             //原来的ddl的后继的名称是新的ddl的名称
-    tmp_Label->SetPrev(m_block[rank]->GetName());                             //新的ddl的前驱的名称是原来的ddl
+    // 在动态变量中为原block和新block互设前驱后继
+    m_block[rank]->SetNext(tmp_Label->GetName());// 将原block后继设置为新block的名称
+    tmp_Label->SetPrev(m_block[rank]->GetName());// 将新block前驱设置为原block的名称
 
-    // 修改静态变量中的参数
+    // 在静态变量中为原block和新block互设前驱后继
     shared_ptr<DDL> thisBlock = DDL::GetDDLPtr(tmp_Label->GetName());
-    thisBlock->SetPrev(m_block[rank]->GetName());
+    thisBlock->SetPrev(m_block[rank]->GetName());// 将新block前驱设置为原block的名称
     thisBlock = DDL::GetDDLPtr(m_block[rank]->GetName());
-    thisBlock->SetNext(tmp_Label->GetName());
-//    m_block[rank]->SetNext(QString::number(m_block.size() - 1, 10));        //原来的ddl的后继的序号是新的ddl的序号
-//    tmp_Label->SetPrev(QString::number(rank, 10));                          //新的ddl的前驱的序号是原来的ddl
+    thisBlock->SetNext(tmp_Label->GetName());// 将原block后继设置为新block的名称
 }
 
+// 读存档调用的设置后继接口
 void MainWindow::succ_ddl_auto(int rank, DDL& ddl){
-    QDateTime curr_time = QDateTime::currentDateTime();
-    ddl_block *tmp_Label = new ddl_block(ddl, this->m_scrollWidget);
+    //新建block
+    ddl_block *tmp_Label = new ddl_block(ddl, this->m_scrollWidget);// 此处用ddl建立block，内部信息直接拷贝，后文省略很多操作
+
+    // 将预处理好的ddl_block传给block构建函数的公用底层func_ddl_create
     func_ddl_create(tmp_Label, QDateTime::currentDateTime(),
                     QDateTime::currentDateTime(), ddl.GetName());
 
-    tmp_Label->line_rank = m_block[rank]->line_rank;                        //后继应该与被后继的在同一line中
+    // 将后继与原block设置在同一链路中
+    tmp_Label->line_rank = m_block[rank]->line_rank;
     this->number_each_line[tmp_Label->line_rank]++;
+
+    // 根据当前时间和结束时间为ddlblock在界面上确定位置
+    QDateTime curr_time = QDateTime::currentDateTime();
     tmp_Label->setGeometry(m_block[rank]->x(),
                            1080 - 200 * curr_time.secsTo(ddl.GetDue()) / 1440 / 60,
                            200, ddl.GetComm().secsTo(ddl.GetDue()) * 200 / 1440 / 60);
-//    m_block[rank]->SetNext(QString::number(m_block.size() - 1, 10));        //原来的ddl的后继的序号是新的ddl的序号
-//    tmp_Label->SetPrev(QString::number(rank, 10));                          //新的ddl的前驱的序号是原来的ddl
 }
 
+// 用户调用的设置前驱接口
 void MainWindow::slot_prev(int rank){
+    // 新建block
     ddl_block *tmp_Label = new ddl_block(this->m_scrollWidget);
-    QString comm_time = "2022-04-03 12:00:00";
-    QString due_time = "2022-04-04 00:00:00";
-    // QInputDialog type_in_commence(tmp_Label);
-    // QString comm_time = type_in_commence.getText(tmp_Label, "comm_time",
-    //                     "please type in commence time\n format:yyyy-MM-dd hh:mm:ss", QLineEdit::Normal);
-    // QInputDialog type_in_due(tmp_Label);
-    // QString due_time = type_in_due.getText(tmp_Label, "due_time",
-    //                      "please type in due time\n format:yyyy-MM-dd hh:mm:ss", QLineEdit::Normal);
+//    QString comm_time = "2022-04-03 12:00:00";
+//    QString due_time = "2022-04-04 00:00:00";
+
+    // 提供窗口并接收用户对开始时间的输入，根据格式转换为字符串
+    QInputDialog type_in_commence(tmp_Label);
+    QString comm_time = type_in_commence.getText(tmp_Label, "comm_time",
+                         "please type in commence time\n format:yyyy-MM-dd hh:mm:ss", QLineEdit::Normal);
     QDateTime begin_time = QDateTime::fromString(comm_time, "yyyy-MM-dd hh:mm:ss");
+
+    // 提供窗口并接收用户对结束时间的输入，根据格式转换为字符串
+    QInputDialog type_in_due(tmp_Label);
+    QString due_time = type_in_due.getText(tmp_Label, "due_time",
+                          "please type in due time\n format:yyyy-MM-dd hh:mm:ss", QLineEdit::Normal);
     QDateTime end_time = QDateTime::fromString(due_time, "yyyy-MM-dd hh:mm:ss");
-    QDateTime curr_time = QDateTime::currentDateTime();
+
+    // 将预处理好的ddl_block和两个日期对象传给block构建函数的公用底层func_ddl_create
     func_ddl_create(tmp_Label, begin_time, end_time);
-    tmp_Label->line_rank = m_block[rank]->line_rank;                        //后继应该与被后继的在同一line中
+
+    // 将前驱与原block设置在同一链路中
+    tmp_Label->line_rank = m_block[rank]->line_rank;
     this->number_each_line[tmp_Label->line_rank]++;
+
+    // 根据当前时间和结束时间为ddlblock在界面上确定位置
+    QDateTime curr_time = QDateTime::currentDateTime();
     tmp_Label->setGeometry(m_block[rank]->x(),
                            1080 - 200 * curr_time.secsTo(end_time) / 1440 / 60, 200,
                            begin_time.secsTo(end_time) * 200 / 1440 / 60);
 
-    m_block[rank]->SetPrev(tmp_Label->GetName());                           //原来的ddl的前驱的名称是新的ddl的名称
-    tmp_Label->SetNext(m_block[rank]->GetName());                           //新的ddl的后继的名称是原来的ddl
+    // 在动态变量中为原block和新block互设前驱后继
+    m_block[rank]->SetPrev(tmp_Label->GetName());// 将原block前驱设置为新block的名称
+    tmp_Label->SetNext(m_block[rank]->GetName());// 将新block后继设置为原block的名称
 
-    // 修改静态变量中的参数
+    // 在静态变量中为原block和新block互设前驱后继
     shared_ptr<DDL> thisBlock = DDL::GetDDLPtr(tmp_Label->GetName());
-    thisBlock->SetNext(m_block[rank]->GetName());
+    thisBlock->SetNext(m_block[rank]->GetName());// 将新block后继设置为原block的名称
     thisBlock = DDL::GetDDLPtr(m_block[rank]->GetName());
-    thisBlock->SetPrev(tmp_Label->GetName());
-//    m_block[rank]->SetPrev(QString::number(m_block.size() - 1, 10));        //原来的ddl的后继的序号是新的ddl的序号
-//    tmp_Label->SetNext(QString::number(rank, 10));                          //新的ddl的前驱的序号是原来的ddl
+    thisBlock->SetPrev(tmp_Label->GetName());// 将原block前驱设置为新block的名称
 }
 
-void MainWindow::prev_ddl_auto(int rank, DDL& ddl){// 用于在读存档时设置前驱
-    QDateTime curr_time = QDateTime::currentDateTime();
-    ddl_block *tmp_Label = new ddl_block(ddl, this->m_scrollWidget);
+// 读存档调用的设置前驱接口
+void MainWindow::prev_ddl_auto(int rank, DDL& ddl){
+    // 新建block
+    ddl_block *tmp_Label = new ddl_block(ddl, this->m_scrollWidget);// 此处用ddl建立block，内部信息直接拷贝，后文省略很多操作
+
+    // 将预处理好的ddl_block传给block构建函数的公用底层func_ddl_create
     func_ddl_create(tmp_Label, QDateTime::currentDateTime(),
                     QDateTime::currentDateTime(), ddl.GetName());
 
-    tmp_Label->line_rank = m_block[rank]->line_rank;                        //后继应该与被后继的在同一line中
+    // 将前驱与原block设置在同一链路中
+    tmp_Label->line_rank = m_block[rank]->line_rank;
     this->number_each_line[tmp_Label->line_rank]++;
+
+    // 根据当前时间和结束时间为ddlblock在界面上确定位置
+    QDateTime curr_time = QDateTime::currentDateTime();
     tmp_Label->setGeometry(m_block[rank]->x(),
                            1080 - 200 * curr_time.secsTo(ddl.GetDue()) / 1440 / 60, 200,
                            ddl.GetComm().secsTo(ddl.GetDue()) * 200 / 1440 / 60);
-//    m_block[rank]->SetPrev(QString::number(m_block.size() - 1, 10));        //原来的ddl的后继的序号是新的ddl的序号
-//    tmp_Label->SetNext(QString::number(rank, 10));                          //新的ddl的前驱的序号是原来的ddl
 }
 
 // 在m_block中判断ddl存在与否

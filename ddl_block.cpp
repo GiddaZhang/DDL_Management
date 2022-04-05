@@ -1,10 +1,8 @@
 #include "ddl_block.h"
 
+// 使用ddl基类默认构造函数的派生类构造函数
 ddl_block::ddl_block(QWidget *parent) : QLabel(parent), DDL(){
-    // 用parent初始化QLabel基类，DDL基类只调用默认构造函数
-
-    // 初始化菜单指针，类型为pointer to QMenu
-    m_pMenu = new QMenu(parent);
+    m_pMenu = new QMenu(parent);// 初始化菜单指针，类型为pointer to QMenu
 
     // 初始化菜单栏指针，类型为pointer to QAction
     m_act[0] = new QAction("工作", this);
@@ -25,13 +23,10 @@ ddl_block::ddl_block(QWidget *parent) : QLabel(parent), DDL(){
     SetColor();                          // 随机一个颜色
 }
 
+// 使用ddl基类拷贝构造函数的派生类构造函数
 ddl_block::ddl_block(DDL& ddl, QWidget *parent)
-: QLabel(parent), DDL(ddl)
-{
-    // 用parent初始化QLabel基类，DDL基类只调用默认构造函数
-
-    // 初始化菜单指针，类型为pointer to QMenu
-    m_pMenu = new QMenu(parent);
+: QLabel(parent), DDL(ddl){
+    m_pMenu = new QMenu(parent);// 初始化菜单指针，类型为pointer to QMenu
 
     // 初始化菜单栏指针，类型为pointer to QAction
     m_act[0] = new QAction("工作", this);
@@ -52,65 +47,63 @@ ddl_block::ddl_block(DDL& ddl, QWidget *parent)
     SetColor();                          // 随机一个颜色
 }
 
-void ddl_block::mousePressEvent(QMouseEvent *ev)
-{
-    if(ev->button() == Qt::RightButton)
-    {
+// 右键单击发射show_tasks信号
+void ddl_block::mousePressEvent(QMouseEvent *ev){
+    if(ev->button() == Qt::RightButton){
         emit show_tasks();
     }
 }
 
-void ddl_block::setParameters(int x, int y, int Length, int width)
-{
+// 设置模块形状参数
+void ddl_block::setParameters(int x, int y, int Length, int width){
     this->m_x = x;
     this->m_y = y;
     this->m_length = Length;
     this->m_width = width;
 }
 
-ddl_block::~ddl_block()
-{
+// 析构函数
+ddl_block::~ddl_block(){
 
 }
 
-void ddl_block::slot_delete()
-{
+void ddl_block::slot_delete(){
 
 }
 
-void ddl_block::slot_tasks()
-{
+void ddl_block::slot_tasks(){
     //qDebug() << "Cyka";
 }
 
+// 根据菜单中的点击事件启动菜单栏对应的任务
 void ddl_block::OnClickedPopMenu(){
     QAction *pEven = qobject_cast<QAction *>(this->sender());
 
-    //获取发送信息
+    //获取发送的信息
     int iType = pEven->data().toInt();
     switch (iType){
     case 1:
-        this->ShowWorkingFileSpace();
+        this->ShowWorkingFileSpace();// 显示工作文件路径与写入、删除路径
         break;
     case 2:
-        emit_interchange();
+        emit_interchange();// 对应删除操作
         break;
     case 3:
-        QMessageBox::about(this, "留言功能开发中", pEven->text());
+        QMessageBox::about(this, "留言功能开发中", pEven->text());// 显示留言与写入、删除留言
         break;
     case 4:
-        emit_interchange_succ();
+        emit_interchange_succ();// 对应设置后继操作
         break;
     case 5:
-        emit_interchange_prev();
+        emit_interchange_prev();// 对应设置前驱操作
         break;
     default:
         break;
     }
 }
 
+//对拖放事件进行筛选
 void ddl_block::dragEnterEvent(QDragEnterEvent *e){
-    //对拖放事件进行筛选
     if (true){
         e->acceptProposedAction();	//放行，否则不会执行dropEvent()函数
     }
@@ -119,25 +112,32 @@ void ddl_block::dragEnterEvent(QDragEnterEvent *e){
 // 在拖动文件图标到ddl_block区域后被触发
 void ddl_block::dropEvent(QDropEvent *e){
     QList<QUrl> urls = e->mimeData()->urls();
+
+    // 判断early exit条件
     if(urls.isEmpty()){
         return ;
     }
     foreach (QUrl u, urls){
         QString filepath = u.toLocalFile();
+
+        // 更新动态变量：更新工作文件路径
         this->AddPath(filepath);
-        // 不知道为什么上面并不会吧静态变量里的DDL添加工作文件
+
+        // 更新静态变量：更新工作文件路径
         shared_ptr<DDL> thisBlock = DDL::GetDDLPtr(this->GetName());
         thisBlock->AddPath(filepath);
+
+        // 将工作文件路径放入显示窗口中
         WorkingFileListItem* tmp = new WorkingFileListItem(filepath);
         m_ListWidget->addItem(tmp);
-        // delete tmp;
+
         // 连接双击点击列表路径信号，和打开文件槽
         connect(m_ListWidget, &QListWidget::itemDoubleClicked, this, &ddl_block::slot_open);
     }
 }
 
-void ddl_block::SetWorkingFileSpace()
-{
+// 设置工作文件窗口
+void ddl_block::SetWorkingFileSpace(){
     m_FileWidget = new QWidget;                         // 新建工作文件窗口
     m_FileWidget->setWindowTitle("工作文件");            // 设置窗口名称
     m_FileWidget->resize(500,500);                      // 设置大小
@@ -175,25 +175,29 @@ void ddl_block::SetWorkingFileSpace()
     connect(saveAllFileButton, &QPushButton::pressed, this, &ddl_block::slot_saveAll);
 }
 
+// 显示工作文件窗口
 void ddl_block::ShowWorkingFileSpace(){
     m_FileWidget->show();
 }
 
-void ddl_block::SetColor()
-{
+// 设置block模块颜色
+void ddl_block::SetColor(){
     int random_num = rand() % 5 + 1;
     QString style = "ddl_block" + QString::number(random_num);
     this->setObjectName(style);    // 设置名称让Qss匹配，随机一个颜色
 }
 
+// 打开单个文档
 void ddl_block::slot_open(QListWidgetItem *item){
     OpenFile(item->text());
 }
 
+// 打开所有文档
 void ddl_block::slot_openAll(){
     OpenAllFile();
 }
 
+// 拷贝所有文档
 void ddl_block::slot_saveAll(){
     // 遍历所有文件路径
     QString path;
@@ -204,6 +208,7 @@ void ddl_block::slot_saveAll(){
     }
 }
 
+// 一些发射信号的函数
 void ddl_block::slot_voidToint(int rank){
     emit getInt(rank);
 }
@@ -219,22 +224,3 @@ void ddl_block::emit_interchange_prev(){
 void ddl_block::emit_interchange_succ(){
     emit getInt_succ(rank);
 }
-
-// void ddl_block::setDDL(QString m_name = "UNKNOWN", QString m_commence = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"),
-//         QString m_due = "2050-01-01 00:00:00", QString m_description = "PLAIN", QString m_filePath = "NULL",
-//         int m_est_Day = 0, float m_est_Hour = 0.0, QString m_prev = "PREV", QString m_next = "Next")
-//         {
-//             SetName(name);
-//     SetCompleteDegree(TO_BE_STARTED);
-//     SetCommence_Con(commence);
-//     SetDue_Con(due);
-//     SetEstimation_Con(est_Day, est_Hour);
-//     SetPrev(prev);
-//     SetNext(next);
-//     AddDescription(description);
-//     AddPath(filePath);
-//     SetDuration();
-//     SetTimeToStart();
-
-//     m_allDDL.push_back(shared_ptr<DDL>(this));
-//         }
