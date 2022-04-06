@@ -421,7 +421,10 @@ Read_Write_Result DDL::LoadFromFile()
     for(unsigned long i = 0; i < DDLCount; i++) {
 
         // 先读前八行
-        File >> f_name >> f_complete_degree_str;
+        getline(File, f_name);
+        File >> f_complete_degree_str;
+//        File >> f_name >> f_complete_degree_str;
+        // 名字可能有空格，不能直接 >>，得getline
         File.get();
         getline(File, f_commence_str);
         getline(File, f_due_str);
