@@ -134,7 +134,7 @@ void ddl_block::dropEvent(QDropEvent *e){
         m_ListWidget->addItem(tmp);
 
         // 连接双击点击列表路径信号，和打开文件槽
-        connect(m_ListWidget, &QListWidget::itemDoubleClicked, this, &ddl_block::slot_open);
+        connect(m_ListWidget, &QListWidget::itemDoubleClicked, this, &ddl_block::slot_openFile);
     }
 }
 
@@ -146,14 +146,36 @@ void ddl_block::SetWorkingFileSpace(){
 
     m_ListWidget = new QListWidget(m_FileWidget);       // 新建工作文件列表，将其放入工作文件窗口内
     m_ListWidget->resize(500,400);                      // 设置大小
-    m_ListWidget->setFont(QFont("Hack",14));            // 设置字体
+    m_ListWidget->setFont(QFont("Consolas",14));        // 设置字体
+    m_ListWidget->setProperty("contextMenuPolicy", Qt::CustomContextMenu);
+
+    // 设置工作文件菜单
+    m_pMenu_workingFile = new QMenu(m_FileWidget);
+    m_act_workingFile[0] = new QAction("删除", this);
+    m_act_workingFile[1] = new QAction("备份", this);
+    m_act_workingFile[2] = new QAction("打开", this);
+    m_pMenu_workingFile->addAction(m_act_workingFile[2]);
+    m_pMenu_workingFile->addAction(m_act_workingFile[0]);
+    m_pMenu_workingFile->addAction(m_act_workingFile[1]);
+
+    // 删除
+    connect(this->m_act_workingFile[0], SIGNAL(triggered()), this, SLOT(slot_deleteFile()));
+    // 备份
+    connect(this->m_act_workingFile[1], SIGNAL(triggered()), this, SLOT(slot_saveFile()));
+    // 打开
+    connect(this->m_act_workingFile[2], SIGNAL(triggered()), this, SLOT(slot_openFileMenu()));
+    // 弹出菜单
+    connect(this->m_ListWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
+        this, SLOT(OnWorkingFileMenu(const QPoint &)));
 
     // 显示工作文件路径
     for(auto it = (this->m_allFilePath).begin(); it != (this->m_allFilePath).end(); it++) {
         WorkingFileListItem* tmp = new WorkingFileListItem(it->GetFilePath());
         m_ListWidget->addItem(tmp);
         // 连接双击点击列表路径信号，和打开文件槽
-        connect(m_ListWidget, &QListWidget::itemDoubleClicked, this, &ddl_block::slot_open);
+        connect(m_ListWidget, &QListWidget::itemDoubleClicked, this, &ddl_block::slot_openFile);
+//        // 连接右键双击点击列表路径信号，和删除文件槽
+//        connect(m_ListWidget, &QListWidget::itemClicked, this, &ddl_block::slot_deleteFile);
     }
     // 设置一键打开按钮
     QPushButton* openAllFileButton = new QPushButton(m_FileWidget);
@@ -221,13 +243,60 @@ void ddl_block::SetColor(){
 }
 
 // 打开单个文档
-void ddl_block::slot_open(QListWidgetItem *item){
+void ddl_block::slot_openFile(QListWidgetItem *item){
     OpenFile(item->text());
 }
 
 // 打开所有文档
-void ddl_block::slot_openAll(){
+void ddl_block::slot_openAll()
+{
     OpenAllFile();
+}
+
+// 删除特定文档
+void ddl_block::slot_deleteFile()
+{
+    QList<QListWidgetItem*> items = this->m_ListWidget->selectedItems();
+    foreach(QListWidgetItem* var, items) {
+        // 这个东西工作原理不明，不过var就是待删除的item
+        this->m_ListWidget->removeItemWidget(var);
+        items.removeOne(var);
+
+        // 更新动态变量：更新工作文件路径
+        QString path = var->text();
+        this->DeletePath(path);
+
+        // 更新静态变量：更新工作文件路径
+        shared_ptr<DDL> thisBlock = DDL::GetDDLPtr(this->GetName());
+        thisBlock->DeletePath(path);
+        delete var;
+    }
+}
+
+void ddl_block::slot_openFileMenu()
+{
+    QList<QListWidgetItem*> items = this->m_ListWidget->selectedItems();
+    foreach(QListWidgetItem* var, items) {
+        // 这个东西工作原理不明，不过var就是待打开的item
+        OpenFile(var->text());
+    }
+}
+
+void ddl_block::slot_saveFile()
+{
+    QList<QListWidgetItem*> items = this->m_ListWidget->selectedItems();
+    foreach(QListWidgetItem* var, items) {
+        // 这个东西工作原理不明，不过var就是待save的item
+        QString path = var->text();
+        WorkingFile* tmp = new WorkingFile(path);
+        tmp->SaveToFolder(path);
+        delete tmp;
+    }
+}
+
+void ddl_block::OnWorkingFileMenu(const QPoint &pos)
+{
+    m_pMenu_workingFile->exec(QCursor::pos());
 }
 
 // 拷贝所有文档

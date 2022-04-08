@@ -38,7 +38,8 @@ SOURCES += \
     axispainter.cpp \
     primarymenu.cpp \
     workingfilelistitem.cpp \
-    notelistitem.cpp
+    notelistitem.cpp \
+    listwidget.cpp
 
 HEADERS += \
     button_delete.h \
@@ -54,7 +55,8 @@ HEADERS += \
     axispainter.h \
     primarymenu.h \
     workingfilelistitem.h \
-    notelistitem.h
+    notelistitem.h \
+    listwidget.h
 
 FORMS += \
         mainwindow.ui

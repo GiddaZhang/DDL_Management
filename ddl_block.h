@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "ddl.h"
+#include "listwidget.h"
 #include "button_delete.h"
 #include "button_new.h"
 #include "button_next.h"
@@ -50,8 +51,11 @@ public:
 
     QMenu* m_pMenu;
     QAction* m_act[5];              // 菜单中的选项：工作，删除，留言，添加后继
+
     QWidget* m_FileWidget;          // 工作文件窗口
     QListWidget* m_ListWidget;      // 工作文件列表
+    QAction* m_act_workingFile[3];
+    QMenu* m_pMenu_workingFile;
     QWidget* m_NoteWidget;          // 留言窗口
     QListWidget* m_NoteListWidget;  // 留言列表
 
@@ -78,7 +82,11 @@ public slots:
     void slot_delete();
     void slot_tasks();
     void OnClickedPopMenu();                 // 点击菜单选项的槽函数
-    void slot_open(QListWidgetItem *item);   // 点击工作文件路径的槽函数
+    void OnWorkingFileMenu(const QPoint &pos);
+    void slot_openFile(QListWidgetItem *item);   // 点击工作文件路径的槽函数
+    void slot_deleteFile();
+    void slot_openFileMenu();
+    void slot_saveFile();
     void slot_openAll();                     // 点击一键打开文件的槽函数
     void slot_saveAll();                     // 点击一键存储文件的槽函数
     void slot_addNote();

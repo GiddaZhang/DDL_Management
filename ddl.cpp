@@ -204,6 +204,8 @@ Set_Result DDL::SetEstimation_Con(const int& est_Day, const float& est_Hour){
 }
 
 Set_Result DDL::AddDescription(const QString& description){
+    if(description == "PLAIN")
+        return VALID;
     Description Temp(description);
     m_allDescription.push_back(Temp);
     return VALID;
@@ -255,6 +257,15 @@ Set_Result DDL::DeletePath(const int& num){
         auto it = m_allFilePath.begin() + num;
         m_allFilePath.erase(it);
         return VALID;
+    }
+}
+
+Set_Result DDL::DeletePath(const QString& path)
+{
+    for(int i = 0; i < m_allFilePath.size(); i++) {
+        if(m_allFilePath[i].GetFilePath() == path) {
+            return DeletePath(i);
+        }
     }
 }
 

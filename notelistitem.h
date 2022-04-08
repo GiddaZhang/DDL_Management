@@ -29,7 +29,7 @@ public:
     QMenu* m_menu;
 private:
     Description* m_note;
-//public slots:
+public slots:
 //    void OnClickedNoteMenu();
 };
 

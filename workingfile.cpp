@@ -98,6 +98,16 @@ QString WorkingFile::GetFilePath()
     return this->m_filePath;
 }
 
+void WorkingFile::slot_openFile(const QString& path)
+{
+    // 判断文件路径是否存在
+    if (!QFile::exists(path)) {
+        return;
+    }
+    // 存在则直接打开
+    QDesktopServices::openUrl(QUrl::fromLocalFile(path));
+}
+
 bool isDirExist(const QString& fullPath)
 {
     QDir dir(fullPath);
