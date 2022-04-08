@@ -21,7 +21,6 @@
 #include <stdlib.h>
 #include <time.h>
 #include "ddl.h"
-//#include "listwidget.h"
 #include "button_delete.h"
 #include "button_new.h"
 #include "button_next.h"
