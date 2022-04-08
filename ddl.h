@@ -78,6 +78,7 @@ public:
     Set_Result ModifyDescription(const int&, const QString&);   // 修改描述
     Set_Result AddPath(const QString&);                         // 添加文档路径
     Set_Result DeletePath(const int&);                          // 删除文档路径
+    Set_Result DeletePath(const QString&);                      // 删除文档路径
     Set_Result ModifyPath(const int&, const QString&);          // 修改文档路径
 
     // 打开所有文件

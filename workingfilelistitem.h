@@ -1,10 +1,8 @@
 #ifndef WORKINGFILELISTITEM_H
 #define WORKINGFILELISTITEM_H
 
-//#include <QListWidgetItem>
 #include <QAction>
 #include <QMenu>
-//#include <QObject>
 #include <QObject>
 #include <QWidget>
 #include <QMainWindow>
@@ -31,8 +29,9 @@ public:
     void saveData();                    // 备份文件
 private:
     WorkingFile* m_file;
-//public slots:
-//    void OnClickedWorkingFileMenu();         // 右键工作文件路径显示菜单的槽函数
+public slots:
+    void OnClickedWorkingFileMenu();         // 右键工作文件路径显示菜单的槽函数
+    void OpenFile();
 };
 
 #endif // WORKINGFILELISTITEM_H

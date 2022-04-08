@@ -204,6 +204,8 @@ Set_Result DDL::SetEstimation_Con(const int& est_Day, const float& est_Hour){
 }
 
 Set_Result DDL::AddDescription(const QString& description){
+    if(description == "PLAIN")
+        return VALID;
     Description Temp(description);
     m_allDescription.push_back(Temp);
     return VALID;
@@ -255,6 +257,15 @@ Set_Result DDL::DeletePath(const int& num){
         auto it = m_allFilePath.begin() + num;
         m_allFilePath.erase(it);
         return VALID;
+    }
+}
+
+Set_Result DDL::DeletePath(const QString& path)
+{
+    for(int i = 0; i < m_allFilePath.size(); i++) {
+        if(m_allFilePath[i].GetFilePath() == path) {
+            return DeletePath(i);
+        }
     }
 }
 
@@ -421,7 +432,10 @@ Read_Write_Result DDL::LoadFromFile()
     for(unsigned long i = 0; i < DDLCount; i++) {
 
         // 先读前八行
-        File >> f_name >> f_complete_degree_str;
+        getline(File, f_name);
+        File >> f_complete_degree_str;
+//        File >> f_name >> f_complete_degree_str;
+        // 名字可能有空格，不能直接 >>，得getline
         File.get();
         getline(File, f_commence_str);
         getline(File, f_due_str);

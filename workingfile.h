@@ -43,6 +43,8 @@ public:
         return *this;
     }
     QString GetFilePath();
+public slots:
+    void slot_openFile(const QString&);
 
 private:
     // 这里需要管理员注意：windows默认的路径以\作分隔符，而qt则需要/分隔，需要确认是否做过转换。

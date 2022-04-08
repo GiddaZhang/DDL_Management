@@ -22,13 +22,37 @@ WorkingFileListItem::WorkingFileListItem(QString path) : QListWidgetItem(path)
 
     // 连接鼠标右键点击信号
 //    for(int i = 0; i < 3; i++) {
-//        QObject::connect(this->m_act[i], &QAction::triggered, this, &WorkingFileListItem::OnClickedWorkingFileMenu);
-    //    }
+//        connect(m_act[i], SIGNAL(triggered()), this, SLOT(OnClickedWorkingFileMenu()));
+//    }
 }
 
 void WorkingFileListItem::saveData()
 {
     this->m_file->SaveToFolder(this->m_file->GetFilePath());
+}
+
+void WorkingFileListItem::OnClickedWorkingFileMenu()
+{
+//    QAction *pEven = qobject_cast<QAction *>(this->sender());
+
+//    //获取发送的信息
+//    int iType = pEven->data().toInt();
+//    switch (iType){
+//    case 1:
+//        this->m_file->OpenFile();
+//        break;
+//    case 2:
+//        break;
+//    case 3:
+//        break;
+//    default:
+//        break;
+    //    }
+}
+
+void WorkingFileListItem::OpenFile()
+{
+    this->m_file->OpenFile();
 }
 
 
