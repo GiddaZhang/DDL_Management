@@ -21,7 +21,6 @@
 #include <stdlib.h>
 #include <time.h>
 #include "ddl.h"
-#include "listwidget.h"
 #include "button_delete.h"
 #include "button_new.h"
 #include "button_next.h"
@@ -90,6 +89,7 @@ public slots:
     void slot_openAll();                     // 点击一键打开文件的槽函数
     void slot_saveAll();                     // 点击一键存储文件的槽函数
     void slot_addNote();
+    void slot_deleteNote();
     void slot_voidToint(int rank);
     void emit_interchange();
     void emit_interchange_succ();

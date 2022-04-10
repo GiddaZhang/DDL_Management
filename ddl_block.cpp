@@ -146,7 +146,7 @@ void ddl_block::SetWorkingFileSpace(){
 
     m_ListWidget = new QListWidget(m_FileWidget);       // 新建工作文件列表，将其放入工作文件窗口内
     m_ListWidget->resize(500,400);                      // 设置大小
-    m_ListWidget->setFont(QFont("Consolas",14));        // 设置字体
+    m_ListWidget->setFont(QFont("Consolas, STZhongsong",14));        // 设置字体
     m_ListWidget->setProperty("contextMenuPolicy", Qt::CustomContextMenu);
 
     // 设置工作文件菜单
@@ -174,13 +174,11 @@ void ddl_block::SetWorkingFileSpace(){
         m_ListWidget->addItem(tmp);
         // 连接双击点击列表路径信号，和打开文件槽
         connect(m_ListWidget, &QListWidget::itemDoubleClicked, this, &ddl_block::slot_openFile);
-//        // 连接右键双击点击列表路径信号，和删除文件槽
-//        connect(m_ListWidget, &QListWidget::itemClicked, this, &ddl_block::slot_deleteFile);
     }
     // 设置一键打开按钮
     QPushButton* openAllFileButton = new QPushButton(m_FileWidget);
     openAllFileButton->setText("Open All");
-    openAllFileButton->setFont(QFont("Hack", 12));
+    openAllFileButton->setFont(QFont("Consolas", 12));
     openAllFileButton->resize(100,30);
     openAllFileButton->move(200, 430);
 
@@ -190,7 +188,7 @@ void ddl_block::SetWorkingFileSpace(){
     // 设置一键存档按钮
     QPushButton* saveAllFileButton = new QPushButton(m_FileWidget);
     saveAllFileButton->setText("Save All");
-    saveAllFileButton->setFont(QFont("Hack", 12));
+    saveAllFileButton->setFont(QFont("Consolas", 12));
     saveAllFileButton->resize(100,30);
     saveAllFileButton->move(200, 465);
 
@@ -211,18 +209,20 @@ void ddl_block::SetNoteSpace(){
 
     m_NoteListWidget = new QListWidget(m_NoteWidget);       // 新建留言列表，将其放入留言窗口内
     m_NoteListWidget->resize(500,400);                      // 设置大小
-    m_NoteListWidget->setFont(QFont("Hack",14));            // 设置字体
+    m_NoteListWidget->setFont(QFont("Consolas, STZhongsong",14));            // 设置字体
 
     // 显示留言
     for(auto it = (this->m_allDescription).begin(); it != (this->m_allDescription).end(); it++) {
         NoteListItem* tmp = new NoteListItem((it->GetStamp()).toString()+" "+it->GetNote());
         m_NoteListWidget->addItem(tmp);
+        // 连接双击点击留言信号，和删除留言槽
+        connect(m_NoteListWidget, &QListWidget::itemDoubleClicked, this, &ddl_block::slot_deleteNote);
     }
 
     // 设置新建留言按钮
     QPushButton* newNoteButton = new QPushButton(m_NoteWidget);
     newNoteButton->setText("new Note");
-    newNoteButton->setFont(QFont("Hack", 12));
+    newNoteButton->setFont(QFont("Consolas", 12));
     newNoteButton->resize(100,30);
     newNoteButton->move(200, 465);
 
@@ -303,8 +303,9 @@ void ddl_block::OnWorkingFileMenu(const QPoint &pos)
 void ddl_block::slot_saveAll(){
     // 遍历所有文件路径
     QString path;
-    for (int j = 0; j < m_ListWidget->count(); j++) {
-        WorkingFile* tmp = new WorkingFile(m_ListWidget->item(j)->text());
+    for (int j = 0; j < this->m_ListWidget->count(); j++) {
+        path = this->m_ListWidget->item(j)->text();
+        WorkingFile* tmp = new WorkingFile(path);
         tmp->SaveToFolder(path);
         delete tmp;
     }
@@ -328,6 +329,30 @@ void ddl_block::slot_addNote(){
     // 将整合后的留言放入显示窗口中
     NoteListItem* tmp = new NoteListItem(integrated_Note);
     m_NoteListWidget->addItem(tmp);
+
+    // 连接双击点击留言信号，和删除留言槽
+    connect(m_NoteListWidget, &QListWidget::itemDoubleClicked, this, &ddl_block::slot_deleteNote);
+}
+
+void ddl_block::slot_deleteNote(){
+    QList<QListWidgetItem*> items = this->m_NoteListWidget->selectedItems();
+    foreach(QListWidgetItem* var, items) {
+        // 这个东西工作原理不明，不过var就是待删除的item
+        this->m_ListWidget->removeItemWidget(var);
+        items.removeOne(var);
+
+        // 更新动态变量：更新工作文件路径
+        QString content = var->text();
+        // 此时留言的内容要去掉前面的日期。
+        QStringList list = content.split(" ");
+        QString note = list[list.size() - 1];
+        this->DeleteDescription(note);
+
+        // 更新静态变量：更新工作文件路径
+        shared_ptr<DDL> thisBlock = DDL::GetDDLPtr(this->GetName());
+        thisBlock->DeleteDescription(note);
+        delete var;
+    }
 }
 
 // 一些发射信号的函数

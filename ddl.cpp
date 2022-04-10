@@ -228,6 +228,15 @@ Set_Result DDL::DeleteDescription(const int& num){
     }
 }
 
+Set_Result DDL::DeleteDescription(const QString& note)
+{
+    for(int i = 0; i < m_allDescription.size(); i++) {
+        if(m_allDescription[i].GetNote() == note) {
+            return DeleteDescription(i);
+        }
+    }
+}
+
 Set_Result DDL::ModifyDescription(const int& num, const QString& new_Description){
     //若超出范围，不合理
     if(num < 0 || num >= (int)m_allDescription.size()){
@@ -400,10 +409,16 @@ Read_Write_Result DDL::LoadFromFile()
     QString filePath = current_path + "/user/user.txt";
 
     ifstream File(filePath.toStdString());    // 定义一个输入流对象
-    //如果打开失败，抛“失败+文件名”
+    //上面是Debug or Realease下打开文件。如果打开失败，则是发布状态，用另一方式打开
     if (!File.is_open()) {
-        return Read_Write_Result::FAIL_TO_OPEN;
+        current_path = QDir::currentPath();
+        filePath = current_path + "/user/user.txt";
+        File.open(filePath.toStdString());
+        if (!File.is_open()) {
+            return Read_Write_Result::FAIL_TO_OPEN;
+        }
     }
+
     unsigned long DDLCount;        // DDL数量
     File >> DDLCount;              // 从第一行读取数量
     File.get();                    // 读取第一行剩下的空格
@@ -511,9 +526,14 @@ Read_Write_Result DDL::SaveToFile()
     QString filePath = current_path + "/user/user.txt";
 
     ofstream File(filePath.toStdString());// 定义一个输出流对象
-    // 如果打开失败，抛“失败+文件名”
+    //上面是Debug or Realease下打开文件。如果打开失败，则是发布状态，用另一方式打开
     if (!File.is_open()) {
-        return Read_Write_Result::FAIL_TO_OPEN;
+        current_path = QDir::currentPath();
+        filePath = current_path + "/user/user.txt";
+        File.open(filePath.toStdString());
+        if (!File.is_open()) {
+            return Read_Write_Result::FAIL_TO_OPEN;
+        }
     }
     auto Saver = [&File](shared_ptr<DDL> Ptr) {Ptr->OutputToStream(File); };
     File << m_allDDL.size() << endl;                        // 首先输入DDL数量
