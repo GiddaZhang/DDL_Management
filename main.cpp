@@ -11,11 +11,3 @@ int main(int argc, char *argv[])
     w.show();
     return a.exec();
 }
-
-//void test()
-//{
-//    DDL::LoadFromFile();
-//    DDL::SaveToFile();
-//    shared_ptr<DDL> a = DDL::GetDDLPtr("Homework");
-//    a->OpenAllFile();
-//}

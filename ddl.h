@@ -75,6 +75,7 @@ public:
     Set_Result AddDescription(const QString&);                  // 添加DDL描述，时间为当前时间
     Set_Result AddDescription(const QString&, const QDateTime&);// 添加DDL描述，时间由第二个参数给定
     Set_Result DeleteDescription(const int&);                   // 删除描述
+    Set_Result DeleteDescription(const QString&);               // 删除描述
     Set_Result ModifyDescription(const int&, const QString&);   // 修改描述
     Set_Result AddPath(const QString&);                         // 添加文档路径
     Set_Result DeletePath(const int&);                          // 删除文档路径
