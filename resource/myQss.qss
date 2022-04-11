@@ -2,7 +2,7 @@ QLabel#ddl_block1
 {
     font-family: "Consolas, STZhongsong";
     font-size: 22px;
-    color: #fafafa;
+    color: #000000;
     font-style: normal;
     font-weight: normal;
 
@@ -23,7 +23,7 @@ QLabel#ddl_block2
 {
     font-family: "Consolas, STZhongsong";
     font-size: 22px;
-    color: #fafafa;
+    color: #000000;
     font-style: normal;
     font-weight: normal;
 
@@ -34,7 +34,7 @@ QLabel#ddl_block2
 
     padding-top: 2px;
 
-    background-color: #d68f25;
+    background-color: #e6a33f;
     /* background-image: url("./image.png"); */
     background-repeat: no-repeat;
     background-position: left center;
@@ -44,7 +44,7 @@ QLabel#ddl_block3
 {
     font-family: "Consolas, STZhongsong";
     font-size: 22px;
-    color: #fafafa;
+    color: #000000;
     font-style: normal;
     font-weight: normal;
 
@@ -55,7 +55,7 @@ QLabel#ddl_block3
 
     padding-top: 2px;
 
-    background-color: #f82727;
+    background-color: #f16c6c;
     /* background-image: url("./image.png"); */
     background-repeat: no-repeat;
     background-position: left center;
@@ -65,7 +65,7 @@ QLabel#ddl_block4
 {
     font-family: "Consolas, STZhongsong";
     font-size: 22px;
-    color: #fafafa;
+    color: #000000;
     font-style: normal;
     font-weight: normal;
 
@@ -76,7 +76,7 @@ QLabel#ddl_block4
 
     padding-top: 2px;
 
-    background-color: #25d643;
+    background-color: #6feb84;
     /* background-image: url("./image.png"); */
     background-repeat: no-repeat;
     background-position: left center;
@@ -86,7 +86,7 @@ QLabel#ddl_block5
 {
     font-family: "Consolas, STZhongsong";
     font-size: 22px;
-    color: #fafafa;
+    color: #000000;
     font-style: normal;
     font-weight: normal;
 
@@ -97,7 +97,7 @@ QLabel#ddl_block5
 
     padding-top: 2px;
 
-    background-color: #6c746d;
+    background-color: #afccb2;
     /* background-image: url("./image.png"); */
     background-repeat: no-repeat;
     background-position: left center;
@@ -183,28 +183,6 @@ QMenu::item::indicator { /* 菜单项子控件indicator，定义菜单项在选�
         height: 24px;
 }
 
-/* QMenu::item::indicator:unchecked { 
-        image: none;
-} */
-
-/* QMenu::item::indicator:checked { 
-        image: url(:/Resource/checkebox);
-} */
-
-/* QPushButton#PlayerButton { 
-        border: none;
-        background-color: transparent;
-}
-
-QPushButton#PlayerButton:hover {
-        padding-top: 2px;
-        padding-left: 2px;
-}
-
-QPushButton#PlayerButton:pressed {
-        padding: 0px;
-} */
-
 QMessageBox 
 {
 	background-color: #F2F2F2; /* QMessageBox背景颜色 */
@@ -219,23 +197,23 @@ QMessageBox QLabel
 	height: 40px; /* textLabel和iconLabel高度保持一致 */
 }
 
-QMessageBox QPushButton { /* QMessageBox中的QPushButton样式 */
+QPushButton { /* QMessageBox中的QPushButton样式 */
 	border: 1px solid #0a0a0a;
 	border-radius: 3px;
 	background-color: #F2F2F2;
 	color: #0a0a0a;
 	font-family: "Consolas, STZhongsong";
-	font-size: 10pt;
+	font-size: 12pt;
 	min-width: 70px;
 	min-height: 25px;
 }
 
-QMessageBox QPushButton:hover {
+QPushButton:hover {
 	background-color: #298DFF;
 	color: #F2F2F2;
 }
 
-QMessageBox QPushButton:pressed {
+QPushButton:pressed {
 	background-color: #257FE6;
 }
 
@@ -245,3 +223,27 @@ QInputDialog
 	font-size: 12pt;
     border-radius:  6px;
 }
+
+QListView::item {
+    height: 36px;
+    border: 15px solid white; /* 设置边框的大小，样式，颜色 */
+	border-radius: 10px;
+}
+
+QListView::item:hover {
+	background-color: transparent;
+	padding: 10px;
+	border-left: 3px solid rgb(130, 130, 130);
+}
+QListView::item:selected {
+	background-color: transparent;
+	color: black;
+	padding: 10px;
+	border: 3px solid rgb(130, 130, 130);
+}
+
+/* QWidget#FileWidget
+{
+    color: #000000;
+    border-radius:15px;
+} */

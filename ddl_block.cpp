@@ -142,10 +142,11 @@ void ddl_block::dropEvent(QDropEvent *e){
 void ddl_block::SetWorkingFileSpace(){
     m_FileWidget = new QWidget;                         // 新建工作文件窗口
     m_FileWidget->setWindowTitle("工作文件");            // 设置窗口名称
-    m_FileWidget->resize(500,500);                      // 设置大小
+    m_FileWidget->resize(500, 500);                     // 设置大小
+    m_FileWidget->setObjectName("FileWidget");          // 设置窗口名称
 
     m_ListWidget = new QListWidget(m_FileWidget);       // 新建工作文件列表，将其放入工作文件窗口内
-    m_ListWidget->resize(500,400);                      // 设置大小
+    m_ListWidget->resize(500,450);                      // 设置大小
     m_ListWidget->setFont(QFont("Consolas, STZhongsong",14));        // 设置字体
     m_ListWidget->setProperty("contextMenuPolicy", Qt::CustomContextMenu);
 
@@ -180,7 +181,7 @@ void ddl_block::SetWorkingFileSpace(){
     openAllFileButton->setText("Open All");
     openAllFileButton->setFont(QFont("Consolas", 12));
     openAllFileButton->resize(100,30);
-    openAllFileButton->move(200, 430);
+    openAllFileButton->move(100, 465);
 
     // 连接
     connect(openAllFileButton, &QPushButton::pressed, this, &ddl_block::slot_openAll);
@@ -190,7 +191,7 @@ void ddl_block::SetWorkingFileSpace(){
     saveAllFileButton->setText("Save All");
     saveAllFileButton->setFont(QFont("Consolas", 12));
     saveAllFileButton->resize(100,30);
-    saveAllFileButton->move(200, 465);
+    saveAllFileButton->move(300, 465);
 
     // 连接
     connect(saveAllFileButton, &QPushButton::pressed, this, &ddl_block::slot_saveAll);
@@ -208,7 +209,7 @@ void ddl_block::SetNoteSpace(){
     m_NoteWidget->resize(500,500);                      // 设置大小
 
     m_NoteListWidget = new QListWidget(m_NoteWidget);       // 新建留言列表，将其放入留言窗口内
-    m_NoteListWidget->resize(500,400);                      // 设置大小
+    m_NoteListWidget->resize(500,450);                      // 设置大小
     m_NoteListWidget->setFont(QFont("Consolas, STZhongsong",14));            // 设置字体
 
     // 显示留言

@@ -422,7 +422,7 @@ bool MainWindow::isDDLexsited(QString name){
 
 // 关闭程序并将静态变量存入文档
 void MainWindow::closeEvent(QCloseEvent *event){
-    switch(QMessageBox::information(this, tr("退出"),
+    switch(QMessageBox::information(this, tr("Exit DDL_MANAGEMENT"),
            tr("是否退出？系统会自动保存数据。"), tr("是"), tr("否"), 0, 1)){
     case 0:{
         DDL::SaveToFile(); // 将静态变量中数据存入文档
