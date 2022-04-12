@@ -53,6 +53,5 @@ private:
 
 bool isDirExist(const QString&);    // 检测路径是否存在
 QString GetCurrentPath();           // 获取当前文件夹路径
-//QString PathConver(const QString&); // 将路径的\转换为/，并不知道怎么实现
 
 #endif // WORKINGFILE_H

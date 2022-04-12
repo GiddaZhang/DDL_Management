@@ -46,14 +46,9 @@ FileResult WorkingFile::OpenFile()
 FileResult WorkingFile::SaveToFolder(const QString& path)
 {
     QString FolderPath = QDir::currentPath();
-//    QString exePath = QCoreApplication::applicationFilePath();
     QString l = "/";
-//    QString FolderPath;
-//    = exePath.mid(exePath.indexOf(l) + 1);
 
-//    qDebug() << QDir::currentPath();
     FolderPath += "/backup/";
-//    qDebug() << FolderPath;
     QDate date = QDate::currentDate();
     QString YMD = date.toString("yyyy.MM.dd");
     FolderPath += YMD;
@@ -128,11 +123,3 @@ QString GetCurrentPath()
     QString data_file_path = current_path.mid(0, last_index + 1) + "DDL_Management";
     return data_file_path;
 }
-
-//QString PathConver(const QString &path)
-//{
-//    if(!path.contains(l, Qt::CaseInsensitive)) {
-//        return path;
-//    }
-//    return QDir::fromNativeSeparators(path);
-//}
