@@ -60,7 +60,7 @@ public:
     QWidget* m_NoteWidget;          // 留言窗口
     QListWidget* m_NoteListWidget;  // 留言列表
 
-    void SetWorkingFileSpace();     // 设置工作文件界面
+    void SetWorkingFileSpace(QWidget *parent = nullptr);     // 设置工作文件界面
     void ShowWorkingFileSpace();    // 显示工作文件界面
     void SetNoteSpace();            // 设置留言界面
     void ShowNoteSpace();           // 显示留言界面
@@ -92,7 +92,7 @@ public slots:
     void slot_openAll();                     // 点击一键打开文件的槽函数
     void slot_saveAll();                     // 点击一键存储文件的槽函数
     void slot_addNote();
-    void slot_deleteNote();
+    void slot_deleteNote(QListWidgetItem *item);
     void slot_voidToint(int rank);
     void emit_interchange();
     void emit_interchange_succ();

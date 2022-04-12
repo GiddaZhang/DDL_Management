@@ -149,8 +149,8 @@ void ddl_block::dropEvent(QDropEvent *e){
 }
 
 // 设置工作文件窗口
-void ddl_block::SetWorkingFileSpace(){
-    m_FileWidget = new QWidget;                         // 新建工作文件窗口
+void ddl_block::SetWorkingFileSpace(QWidget* p){
+    m_FileWidget = new QWidget(p);                         // 新建工作文件窗口
     m_FileWidget->setWindowTitle("工作文件");            // 设置窗口名称
     m_FileWidget->resize(500, 500);                     // 设置大小
     m_FileWidget->setObjectName("FileWidget");          // 设置窗口名称
@@ -345,25 +345,20 @@ void ddl_block::slot_addNote(){
     connect(m_NoteListWidget, &QListWidget::itemDoubleClicked, this, &ddl_block::slot_deleteNote);
 }
 
-void ddl_block::slot_deleteNote(){
-    QList<QListWidgetItem*> items = this->m_NoteListWidget->selectedItems();
-    foreach(QListWidgetItem* var, items) {
-        // 这个东西工作原理不明，不过var就是待删除的item
-        this->m_ListWidget->removeItemWidget(var);
-        items.removeOne(var);
+void ddl_block::slot_deleteNote(QListWidgetItem *item){
+    // 更新动态变量：更新工作文件路径
+    QString content = item->text();
+    // 此时留言的内容要去掉前面的日期。
+    QStringList list = content.split(" ");
+    QString note = list[list.size() - 1];
+    this->DeleteDescription(note);
 
-        // 更新动态变量：更新工作文件路径
-        QString content = var->text();
-        // 此时留言的内容要去掉前面的日期。
-        QStringList list = content.split(" ");
-        QString note = list[list.size() - 1];
-        this->DeleteDescription(note);
+    // 更新静态变量：更新工作文件路径
+    shared_ptr<DDL> thisBlock = DDL::GetDDLPtr(this->GetName());
+    thisBlock->DeleteDescription(note);
 
-        // 更新静态变量：更新工作文件路径
-        shared_ptr<DDL> thisBlock = DDL::GetDDLPtr(this->GetName());
-        thisBlock->DeleteDescription(note);
-        delete var;
-    }
+    this->m_ListWidget->removeItemWidget(item);
+    delete item;
 }
 
 void ddl_block::show_timelim(){

@@ -2,9 +2,9 @@ QLabel#ddl_block1
 {
     font-family: "Consolas, STZhongsong";
     font-size: 22px;
-    color: #000000;
+    color: #ffffff;
     font-style: normal;
-    font-weight: normal;
+    font-weight: bold;
 
     border-style: solid;
     border-width: 2px;
@@ -23,9 +23,9 @@ QLabel#ddl_block2
 {
     font-family: "Consolas, STZhongsong";
     font-size: 22px;
-    color: #000000;
+    color: #ffffff;
     font-style: normal;
-    font-weight: normal;
+    font-weight: bold;
 
     border-style: solid;
     border-width: 2px;
@@ -44,9 +44,9 @@ QLabel#ddl_block3
 {
     font-family: "Consolas, STZhongsong";
     font-size: 22px;
-    color: #000000;
+    color: #ffffff;
     font-style: normal;
-    font-weight: normal;
+    font-weight: bold;
 
     border-style: solid;
     border-width: 2px;
@@ -65,9 +65,9 @@ QLabel#ddl_block4
 {
     font-family: "Consolas, STZhongsong";
     font-size: 22px;
-    color: #000000;
+    color: #ffffff;
     font-style: normal;
-    font-weight: normal;
+    font-weight: bold;
 
     border-style: solid;
     border-width: 2px;
@@ -76,7 +76,7 @@ QLabel#ddl_block4
 
     padding-top: 2px;
 
-    background-color: #6feb84;
+    background-color: #4ddd65;
     /* background-image: url("./image.png"); */
     background-repeat: no-repeat;
     background-position: left center;
@@ -86,9 +86,9 @@ QLabel#ddl_block5
 {
     font-family: "Consolas, STZhongsong";
     font-size: 22px;
-    color: #000000;
+    color: #ffffff;
     font-style: normal;
-    font-weight: normal;
+    font-weight: bold;
 
     border-style: solid;
     border-width: 2px;
@@ -217,13 +217,6 @@ QPushButton:pressed {
 	background-color: #257FE6;
 }
 
-QInputDialog
-{
-    font-family: "Consolas, STZhongsong";
-	font-size: 12pt;
-    border-radius:  6px;
-}
-
 QListView::item {
     height: 36px;
     border: 15px solid white; /* 设置边框的大小，样式，颜色 */
@@ -242,6 +235,67 @@ QListView::item:selected {
 	border: 3px solid rgb(130, 130, 130);
 }
 
+QToolTip {
+    font-family: "Consolas, STZhongsong";
+    color: #e03939;
+    font-size: 14pt;
+    border-radius: 10px;
+    background-color: rgb(255, 255, 255);
+    border-style: dotted;
+}
+/* dialog.setFixedSize(350,250);dialog.setTextValue("");// 设置了 QPushButtuon 的三态， QLineEdit 的样式， QLable 和 整体的背景色QString style = "QPushButton{background:rgb(26,179,148); color:rgb(255,255,255); border-radius:3px; min-height:30px; min-width:60px; font:13px \"Microsoft YaHei\";}"                "QPushButton:hover{background:rgb(24,166,137);}"                "QPushButton:pressed{background:rgb(32,75,148);}"                "QLineEdit{border:2px solid rgb(229,230,231);padding:4px;padding-left:10px;border-radius:3px;color:rgb(105,105,105);font:13px \"Microsoft YaHei\";}"                "QLineEdit:focus{border:2px solid rgb(26,179,148);}"                "QLineEdit:disabled{background-color:rgb(238,238,238);}"                "QLabel{color:rgb(85,85,85); font:12px \"Microsoft YaHei\"; font-weight:bold;}"                "QInputDialog{background-color:rgb(255,255,255); }";dialog.setStyleSheet(style); */
+
+Qdialog
+{
+    background: #D6DBE9;
+}
+
+QLineEdit {
+	border: 1px solid #A0A0A0; /* 边框宽度为1px，颜色为#A0A0A0 */
+	border-radius: 3px; /* 边框圆角 */
+	padding-left: 5px; /* 文本距离左边界有5px */
+	background-color: #F2F2F2; /* 背景颜色 */
+	color: #A0A0A0; /* 文本颜色 */
+	selection-background-color: #A0A0A0; /* 选中文本的背景颜色 */
+	selection-color: #F2F2F2; /* 选中文本的颜色 */
+	font-family: "Microsoft YaHei"; /* 文本字体族 */
+	font-size: 10pt; /* 文本字体大小 */
+}
+
+QLineEdit:hover { /* 鼠标悬浮在QLineEdit时的状态 */
+	border: 1px solid #298DFF;
+	border-radius: 3px;
+	background-color: #F2F2F2;
+	color: #298DFF;
+	selection-background-color: #298DFF;
+	selection-color: #F2F2F2;
+}
+
+QLineEdit[echoMode="2"] { /* QLineEdit有输入掩码时的状态 */
+	lineedit-password-character: 9679;
+	lineedit-password-mask-delay: 2000;
+}
+
+QLineEdit:disabled { /* QLineEdit在禁用时的状态 */
+	border: 1px solid #CDCDCD;
+	background-color: #CDCDCD;
+	color: #B4B4B4;
+}
+
+QLineEdit:read-only { /* QLineEdit在只读时的状态 */
+	background-color: #CDCDCD;
+	color: #F2F2F2;
+}
+/* ————————————————
+版权声明：本文为CSDN博主「有何不为」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/Staranywhere/article/details/107306276 */
+
+QInputDialog
+{
+    font-family: "Consolas, STZhongsong";
+	font-size: 12pt;
+    border-radius:  6px;
+}
 /* QWidget#FileWidget
 {
     color: #000000;
