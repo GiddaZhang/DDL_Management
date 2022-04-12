@@ -1,7 +1,7 @@
 5
 Software Design
 TO_BE_STARTED
-2022-04-11 16:59:41
+2022-04-12 11:08:20
 2022-04-13 00:00:00
 PREV
 NEXT
@@ -10,13 +10,6 @@ NEXT
 123
 2022-04-11 14:52:30
 <DEND>
-D:/Desktop/阳光照进回忆里.mp3
-D:/Desktop/台湾问题.md
-D:/Desktop/控件.txt
-D:/Desktop/HW6.pdf
-D:/Desktop/实验指导书-实验一.pdf
-D:/Desktop/202204051001418298.txt
-D:/Desktop/沈渊Q&A.md
 <WEND>
 哈哈 哈哈哈
 TO_BE_STARTED

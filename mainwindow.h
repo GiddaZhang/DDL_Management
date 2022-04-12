@@ -13,6 +13,7 @@
 #include <QCloseEvent>
 #include <vector>
 #include <QFile>
+#include <QMouseEvent>
 #include "ddl.h"
 #include "axispainter.h"
 #include "ddl_block.h"

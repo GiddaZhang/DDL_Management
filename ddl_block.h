@@ -18,6 +18,8 @@
 #include <QMimeData>
 #include <QMenu>
 #include <QInputDialog>
+#include <QToolTip>
+#include <QMouseEvent>
 #include <stdlib.h>
 #include <time.h>
 #include "ddl.h"
@@ -28,7 +30,6 @@
 #include "button_prev.h"
 #include "notelistitem.h"
 
-
 class ddl_block : public QLabel, public DDL
 {
     Q_OBJECT
@@ -36,6 +37,7 @@ public:
     explicit ddl_block(QWidget *parent = nullptr);
     explicit ddl_block(DDL&, QWidget *parent = nullptr);
     void mousePressEvent(QMouseEvent *ev) override;
+    void mouseMoveEvent(QMouseEvent *ev) override;
     int rank;               //记录其在数组中的序号
     int line_rank;          //记录其line编号
     int m_x;
@@ -77,6 +79,7 @@ signals:
     void getInt(int);
     void getInt_succ(int);
     void getInt_prev(int);
+    void mouseMove();
 public slots:
     void slot_delete();
     void slot_tasks();
@@ -94,6 +97,7 @@ public slots:
     void emit_interchange();
     void emit_interchange_succ();
     void emit_interchange_prev();
+    void show_timelim();                    // 鼠标悬浮显示时间
 };
 
 #endif // DDL_BLOCK_H

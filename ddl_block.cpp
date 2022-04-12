@@ -15,13 +15,16 @@ ddl_block::ddl_block(QWidget *parent) : QLabel(parent), DDL(){
     for(int i = 0; i < 5; i++) {
         m_pMenu->addAction(m_act[i]);    // 将菜单栏添加到菜单上
         m_act[i]->setData(i + 1);        //设置菜单栏发送的数据（int型），它们会在槽OnClickedPopMenu()中与具体行为产生联系
-        connect(m_act[i], SIGNAL(triggered()), this, SLOT(OnClickedPopMenu())); // 连接鼠标右键点击信号
+        connect(m_act[i], SIGNAL(triggered()), this, SLOT(OnClickedPopMenu())); // 连接鼠标点击信号
     }
 
     setAcceptDrops(true);                // 允许将文档拖动到窗口中
     SetWorkingFileSpace();               // 初始化工作文件窗口
     SetNoteSpace();                      // 初始化留言窗口
     SetColor();                          // 随机一个颜色
+
+    setMouseTracking(true);
+    connect(this, SIGNAL(mouseMove()), this, SLOT(show_timelim()));
 }
 
 // 使用ddl基类拷贝构造函数的派生类构造函数
@@ -40,13 +43,16 @@ ddl_block::ddl_block(DDL& ddl, QWidget *parent)
     for(int i = 0; i < 5; i++) {
         m_pMenu->addAction(m_act[i]);    // 将菜单栏添加到菜单上
         m_act[i]->setData(i + 1);        //设置菜单栏发送的数据（int型），它们会在槽OnClickedPopMenu()中与具体行为产生联系
-        connect(m_act[i], SIGNAL(triggered()), this, SLOT(OnClickedPopMenu())); // 连接鼠标右键点击信号
+        connect(m_act[i], SIGNAL(triggered()), this, SLOT(OnClickedPopMenu())); // 连接鼠标点击信号
     }
 
     setAcceptDrops(true);                // 允许将文档拖动到窗口中
     SetWorkingFileSpace();               // 初始化工作文件窗口
     SetNoteSpace();                      // 初始化留言窗口
     SetColor();                          // 随机一个颜色
+
+    setMouseTracking(true);
+    connect(this, SIGNAL(mouseMove()), this, SLOT(show_timelim()));
 }
 
 // 右键单击发射show_tasks信号
@@ -54,6 +60,10 @@ void ddl_block::mousePressEvent(QMouseEvent *ev){
     if(ev->button() == Qt::RightButton){
         emit show_tasks();
     }
+}
+
+void ddl_block::mouseMoveEvent(QMouseEvent *ev){
+    emit mouseMove();
 }
 
 // 设置模块形状参数
@@ -354,6 +364,10 @@ void ddl_block::slot_deleteNote(){
         thisBlock->DeleteDescription(note);
         delete var;
     }
+}
+
+void ddl_block::show_timelim(){
+    QToolTip::showText(QCursor().pos(), "起始：" + (this->GetComm()).toString() + "\n截止：" + (this->GetDue()).toString());
 }
 
 // 一些发射信号的函数
