@@ -10,7 +10,7 @@ void button_new::mousePressEvent(QMouseEvent *ev)
 {
     if(ev->button() == Qt::LeftButton)
     {
+        this->hide();
         emit newddl();
-
     }
 }

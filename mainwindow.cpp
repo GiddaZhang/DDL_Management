@@ -137,6 +137,9 @@ void MainWindow::fileInit(){
 // 用户和读存档create操作的公用底层，会更新m_block
 void MainWindow::func_ddl_create(ddl_block* tmp_Label, QDateTime com,
                                  QDateTime due, QString name){
+    this->bar_begin->hide();
+    this->dateEdit_end->hide();
+
     // tmp_Label是一个ddl_block指针，在上层步骤中只是被创建但未被完善。本步完善后存入m_block
     tmp_Label->rank = m_block.size(); // 为block设定秩
     QString tmp_name;
@@ -191,30 +194,52 @@ void MainWindow::create_ddl(){
 //    QString due_time = "2022-04-06 00:00:00";
 
     // 提供窗口并接收用户对开始时间的输入，根据格式转换为字符串
-    QInputDialog type_in_commence(tmp_Label);
-    QString comm_time = type_in_commence.getText(tmp_Label, "comm_time",
-                         "please type in commence time\n format:yyyy-MM-dd hh:mm:ss", QLineEdit::Normal);
-    QDateTime begin_time = QDateTime::fromString(comm_time, "yyyy-MM-dd hh:mm:ss");
+    dateEdit = new QDateTimeEdit(QDate::currentDate(), this);
+    dateEdit->setDisplayFormat("yyyy-MM-dd HH:mm:ss");
+    dateEdit->setCalendarPopup(true);  // 日历弹出
+    dateEdit->show();
+    begin_time = dateEdit->dateTime();
+    dateEdit->setGeometry(500, 500, 400, 200);
 
-    // 提供窗口并接收用户对结束时间的字符串输入，根据格式转换为日期对象
-    QInputDialog type_in_due(tmp_Label);
-    QString due_time = type_in_due.getText(tmp_Label, "due_time",
-                          "please type in due time\n format:yyyy-MM-dd hh:mm:ss", QLineEdit::Normal);
-    QDateTime end_time = QDateTime::fromString(due_time, "yyyy-MM-dd hh:mm:ss");
+    bar_begin = new QLabel(this);
+    bar_begin->setGeometry(500, 300, 400, 200);
+    bar_begin->setText("请输入ddl的开始时间");
+    bar_begin->show();
+
+    button_new *button_begin = new button_new(this);
+    button_begin->setGeometry(500, 700, 400, 200);
+    button_begin->show();
+    button_begin->setText("确认");
+
+    connect(dateEdit, SIGNAL(dateTimeChanged(QDateTime)), this, SLOT(onDateTimeChanged(QDateTime)));
+    connect(button_begin, SIGNAL(newddl()), this, SLOT(type_in_end_time()));
+
+
+    // QInputDialog type_in_commence(tmp_Label);
+    // QString comm_time = type_in_commence.getText(tmp_Label, "comm_time",
+    //                      "please type in commence time\n format:yyyy-MM-dd hh:mm:ss", QLineEdit::Normal);
+    // QDateTime begin_time = QDateTime::fromString(comm_time, "yyyy-MM-dd hh:mm:ss");
+
+    // // 提供窗口并接收用户对结束时间的字符串输入，根据格式转换为日期对象
+    // QInputDialog type_in_due(tmp_Label);
+    // QString due_time = type_in_due.getText(tmp_Label, "due_time",
+    //                       "please type in due time\n format:yyyy-MM-dd hh:mm:ss", QLineEdit::Normal);
+    // QDateTime end_time = QDateTime::fromString(due_time, "yyyy-MM-dd hh:mm:ss");
 
     // 将预处理好的ddl_block和两个日期对象传给block构建函数的公用底层func_ddl_create
-    func_ddl_create(tmp_Label, begin_time, end_time);
+    // func_ddl_create(tmp_Label, begin_time, end_time);
 
-    // 处理前驱后继链条数量。当前链条退化为一个点
-    tmp_Label->line_rank = DDL_lines_number;
-    this->number_each_line[tmp_Label->line_rank]++;
-    DDL_lines_number++;
+    // // 处理前驱后继链条数量。当前链条退化为一个点
+    // tmp_Label->line_rank = DDL_lines_number;
+    // this->number_each_line[tmp_Label->line_rank]++;
+    // DDL_lines_number++;
 
-    // 根据当前时间和结束时间为ddlblock在界面上确定位置
-    QDateTime curr_time = QDateTime::currentDateTime();
-    tmp_Label->setGeometry(200 + tmp_Label->line_rank * 200,
-                           1080 - 200 * curr_time.secsTo(end_time) / 1440 / 60, 200,
-                           begin_time.secsTo(end_time) * 200 / 1440 / 60);
+    // // 根据当前时间和结束时间为ddlblock在界面上确定位置
+    // QDateTime curr_time = QDateTime::currentDateTime();
+    // tmp_Label->setGeometry(200 + tmp_Label->line_rank * 200,
+    //                        200 * curr_time.secsTo(begin_time) / 1440 / 60, 200,
+    //                        begin_time.secsTo(end_time) * 200 / 1440 / 60);
+    //qDebug() << tmp_Label->y();
 }
 
 // 读存档调用的新建block接口
@@ -236,6 +261,7 @@ int MainWindow::create_ddl_auto(DDL& ddl){
     tmp_Label->setGeometry(200 + tmp_Label->line_rank * 200,
                           1080 - 200 * curr_time.secsTo(ddl.GetDue()) / 1440 / 60,
                           200, (ddl.GetComm()).secsTo(ddl.GetDue()) * 200 / 1440 / 60);
+    qDebug() << tmp_Label->y();
 
     return tmp_Label->rank;// 当前block的秩在func中修改，现在返回给读存档函数
 }
@@ -304,7 +330,7 @@ void MainWindow::slot_succ(int rank){
     QDateTime end_time = QDateTime::fromString(due_time, "yyyy-MM-dd hh:mm:ss");
 
     // 将预处理好的ddl_block和两个日期对象传给block构建函数的公用底层func_ddl_create
-    func_ddl_create(tmp_Label, begin_time, end_time);
+    //func_ddl_create(tmp_Label, begin_time, end_time);
 
     // 将后继与原block设置在同一链路中
     tmp_Label->line_rank = m_block[rank]->line_rank;
@@ -313,9 +339,9 @@ void MainWindow::slot_succ(int rank){
     // 根据当前时间和结束时间为ddlblock在界面上确定位置
     QDateTime curr_time = QDateTime::currentDateTime();
     tmp_Label->setGeometry(m_block[rank]->x(),
-                           1080 - 200 * curr_time.secsTo(end_time) / 1440 / 60,
+                           200 * curr_time.secsTo(begin_time) / 1440 / 60,
                            200, begin_time.secsTo(end_time) * 200 / 1440 / 60);
-
+    qDebug() << tmp_Label->y();
     // 在动态变量中为原block和新block互设前驱后继
     m_block[rank]->SetNext(tmp_Label->GetName());// 将原block后继设置为新block的名称
     tmp_Label->SetPrev(m_block[rank]->GetName());// 将新block前驱设置为原block的名称
@@ -343,7 +369,7 @@ void MainWindow::succ_ddl_auto(int rank, DDL& ddl){
     // 根据当前时间和结束时间为ddlblock在界面上确定位置
     QDateTime curr_time = QDateTime::currentDateTime();
     tmp_Label->setGeometry(m_block[rank]->x(),
-                           1080 - 200 * curr_time.secsTo(ddl.GetDue()) / 1440 / 60,
+                           200 * curr_time.secsTo(ddl.GetComm()) / 1440 / 60,
                            200, ddl.GetComm().secsTo(ddl.GetDue()) * 200 / 1440 / 60);
 }
 
@@ -376,8 +402,9 @@ void MainWindow::slot_prev(int rank){
     // 根据当前时间和结束时间为ddlblock在界面上确定位置
     QDateTime curr_time = QDateTime::currentDateTime();
     tmp_Label->setGeometry(m_block[rank]->x(),
-                           1080 - 200 * curr_time.secsTo(end_time) / 1440 / 60, 200,
+                           200 * curr_time.secsTo(begin_time) / 1440 / 60, 200,
                            begin_time.secsTo(end_time) * 200 / 1440 / 60);
+    qDebug() << tmp_Label->y();
 
     // 在动态变量中为原block和新block互设前驱后继
     m_block[rank]->SetPrev(tmp_Label->GetName());// 将原block前驱设置为新block的名称
@@ -406,7 +433,7 @@ void MainWindow::prev_ddl_auto(int rank, DDL& ddl){
     // 根据当前时间和结束时间为ddlblock在界面上确定位置
     QDateTime curr_time = QDateTime::currentDateTime();
     tmp_Label->setGeometry(m_block[rank]->x(),
-                           1080 - 200 * curr_time.secsTo(ddl.GetDue()) / 1440 / 60, 200,
+                           200 * curr_time.secsTo(ddl.GetDue()) / 1440 / 60, 200,
                            ddl.GetComm().secsTo(ddl.GetDue()) * 200 / 1440 / 60);
 }
 
@@ -434,4 +461,58 @@ void MainWindow::closeEvent(QCloseEvent *event){
         event->ignore();
         break;
     }
+}
+
+void MainWindow::onDateTimeChanged(QDateTime dateTime)
+{
+    this->dateTime = dateTime;
+    qDebug() << this->dateTime;
+}
+void MainWindow::onDateTimeChanged_end(QDateTime dateTime)
+{
+    this->dateTime_end = dateTime;
+    qDebug() << this->dateTime;
+}
+void MainWindow::type_in_end_time()
+{
+    this->begin_time = dateTime;
+    this->bar_begin->setText("请输入ddl的截止时间");
+    this->dateEdit->hide();
+
+    dateEdit_end = new QDateTimeEdit(QDate::currentDate(), this);
+    dateEdit_end->setDisplayFormat("yyyy-MM-dd HH:mm:ss");
+    dateEdit_end->setCalendarPopup(true);  // 日历弹出
+    dateEdit_end->setGeometry(500, 500, 400, 200);
+    dateEdit_end->show();
+    end_time = dateEdit->dateTime();
+    connect(dateEdit_end, SIGNAL(dateTimeChanged(QDateTime)), this, SLOT(onDateTimeChanged_end(QDateTime)));
+
+    button_next *button_end = new button_next(this);
+    button_end->setGeometry(500, 700, 400, 200);
+    button_end->show();
+    button_end->setText("确认");
+    connect(button_end, SIGNAL(ddl_end()), this, SLOT(ddl_set_OK()));
+    //connect(dateEdit, SIGNAL(dateTimeChanged(QDateTime)), this, SLOT(onDateTimeChanged(QDateTime)));
+
+}
+void MainWindow::ddl_set_OK()
+{
+    this->end_time = dateTime_end;
+    qDebug() << "shit";
+    qDebug() << "begin_time" << begin_time;
+    qDebug() << "end_time" << end_time;
+    ddl_block *tmp_Label = new ddl_block(this->m_scrollWidget);
+    // 处理前驱后继链条数量。当前链条退化为一个点
+    tmp_Label->line_rank = DDL_lines_number;
+    this->number_each_line[tmp_Label->line_rank]++;
+    DDL_lines_number++;
+    bar_begin->hide();
+    dateEdit->hide();
+    func_ddl_create(tmp_Label, begin_time, end_time);
+
+    // 根据当前时间和结束时间为ddlblock在界面上确定位置
+    QDateTime curr_time = QDateTime::currentDateTime();
+    tmp_Label->setGeometry(200 + tmp_Label->line_rank * 200,
+                           200 * curr_time.secsTo(begin_time) / 1440 / 60, 200,
+                           begin_time.secsTo(end_time) * 200 / 1440 / 60);
 }

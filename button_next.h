@@ -13,11 +13,11 @@ class button_next : public button
 {
     Q_OBJECT
 public:
-    explicit button_next(QLabel *parent = nullptr);
+    explicit button_next(QMainWindow *parent = nullptr);
     void mousePressEvent(QMouseEvent *ev) override;
 
 signals:
-    void next_ddl(int rank);
+    void ddl_end();
 
 };
 

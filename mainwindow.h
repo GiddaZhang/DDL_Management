@@ -58,11 +58,23 @@ public:
 
     void closeEvent(QCloseEvent*);         // 关闭程序时触发的函数
 
+    QDateTimeEdit *dateEdit;
+    QDateTimeEdit *dateEdit_end;
+    QDateTime dateTime;
+    QDateTime dateTime_end;
+    QLabel *bar_begin;
+    QDateTime begin_time;
+    QDateTime end_time;
+
 public slots:
     void create_ddl();
     void slot_delete(int rank);
     void slot_succ(int rank);
     void slot_prev(int rank);
+    void onDateTimeChanged(QDateTime dateTime);
+    void onDateTimeChanged_end(QDateTime dateTime);
+    void type_in_end_time();
+    void ddl_set_OK();
 
 protected:
     //void paintEvent(QPaintEvent *event);
