@@ -324,8 +324,13 @@ void ddl_block::slot_saveAll(){
 
 void ddl_block::slot_addNote(){
     // 获取留言输入
-    QInputDialog type_in_note(this);
-    QString tmp_note = type_in_note.getText(this, "note", "please type in new Note", QLineEdit::Normal);
+    QInputDialog* type_in_note = new QInputDialog(this);
+    QFont dialogFont;
+    dialogFont.setFamily("Consolas, STZhongsong");
+//    type_in_note->exec();
+
+    QString tmp_note = type_in_note->getText(this, "note", "Please type in new Note", QLineEdit::Normal);
+    type_in_note->setFont(dialogFont);
 
     // 更新动态变量：更新留言
     this->AddDescription(tmp_note);

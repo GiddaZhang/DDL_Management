@@ -136,10 +136,12 @@ void MainWindow::fileInit(){
 
 // 用户和读存档create操作的公用底层，会更新m_block
 void MainWindow::func_ddl_create(ddl_block* tmp_Label, QDateTime com,
-                                 QDateTime due, QString name){
-    this->bar_begin->hide();
-    this->dateEdit_end->hide();
-
+                                 QDateTime due, QString name)
+{
+    if(name == "Default") {
+        this->bar_begin->hide();
+        this->dateEdit_end->hide();
+    }
     // tmp_Label是一个ddl_block指针，在上层步骤中只是被创建但未被完善。本步完善后存入m_block
     tmp_Label->rank = m_block.size(); // 为block设定秩
     QString tmp_name;
@@ -257,12 +259,7 @@ int MainWindow::create_ddl_auto(DDL& ddl){
     DDL_lines_number++;
 
     // 根据当前时间和结束时间为ddlblock在界面上确定位置
-    QDateTime curr_time = QDateTime::currentDateTime();
-    tmp_Label->setGeometry(200 + tmp_Label->line_rank * 200,
-                          1080 - 200 * curr_time.secsTo(ddl.GetDue()) / 1440 / 60,
-                          200, (ddl.GetComm()).secsTo(ddl.GetDue()) * 200 / 1440 / 60);
-    qDebug() << tmp_Label->y();
-
+    this->showDDLBlock(tmp_Label, ddl.GetComm(), ddl.GetDue());
     return tmp_Label->rank;// 当前block的秩在func中修改，现在返回给读存档函数
 }
 
@@ -330,7 +327,7 @@ void MainWindow::slot_succ(int rank){
     QDateTime end_time = QDateTime::fromString(due_time, "yyyy-MM-dd hh:mm:ss");
 
     // 将预处理好的ddl_block和两个日期对象传给block构建函数的公用底层func_ddl_create
-    //func_ddl_create(tmp_Label, begin_time, end_time);
+//    func_ddl_create(tmp_Label, begin_time, end_time);
 
     // 将后继与原block设置在同一链路中
     tmp_Label->line_rank = m_block[rank]->line_rank;
@@ -431,10 +428,11 @@ void MainWindow::prev_ddl_auto(int rank, DDL& ddl){
     this->number_each_line[tmp_Label->line_rank]++;
 
     // 根据当前时间和结束时间为ddlblock在界面上确定位置
-    QDateTime curr_time = QDateTime::currentDateTime();
-    tmp_Label->setGeometry(m_block[rank]->x(),
-                           200 * curr_time.secsTo(ddl.GetDue()) / 1440 / 60, 200,
-                           ddl.GetComm().secsTo(ddl.GetDue()) * 200 / 1440 / 60);
+    this->showDDLBlock(tmp_Label, begin_time, end_time);
+//    QDateTime curr_time = QDateTime::currentDateTime();
+//    tmp_Label->setGeometry(m_block[rank]->x(),
+//                           200 * curr_time.secsTo(ddl.GetDue()) / 1440 / 60, 200,
+//                           ddl.GetComm().secsTo(ddl.GetDue()) * 200 / 1440 / 60);
 }
 
 // 在m_block中判断ddl存在与否
@@ -511,8 +509,14 @@ void MainWindow::ddl_set_OK()
     func_ddl_create(tmp_Label, begin_time, end_time);
 
     // 根据当前时间和结束时间为ddlblock在界面上确定位置
+    this->showDDLBlock(tmp_Label, begin_time, end_time);
+}
+
+void MainWindow::showDDLBlock(ddl_block* block,
+                              QDateTime begin_time, QDateTime end_time)
+{
     QDateTime curr_time = QDateTime::currentDateTime();
-    tmp_Label->setGeometry(200 + tmp_Label->line_rank * 200,
+    block->setGeometry(200 + block->line_rank * 200,
                            200 * curr_time.secsTo(begin_time) / 1440 / 60, 200,
                            begin_time.secsTo(end_time) * 200 / 1440 / 60);
 }

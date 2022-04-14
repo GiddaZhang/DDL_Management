@@ -66,6 +66,8 @@ public:
     QDateTime begin_time;
     QDateTime end_time;
 
+    void showDDLBlock(ddl_block*, QDateTime, QDateTime);\
+
 public slots:
     void create_ddl();
     void slot_delete(int rank);
