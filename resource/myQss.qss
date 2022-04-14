@@ -245,9 +245,10 @@ QToolTip {
 }
 /* dialog.setFixedSize(350,250);dialog.setTextValue("");// 设置了 QPushButtuon 的三态， QLineEdit 的样式， QLable 和 整体的背景色QString style = "QPushButton{background:rgb(26,179,148); color:rgb(255,255,255); border-radius:3px; min-height:30px; min-width:60px; font:13px \"Microsoft YaHei\";}"                "QPushButton:hover{background:rgb(24,166,137);}"                "QPushButton:pressed{background:rgb(32,75,148);}"                "QLineEdit{border:2px solid rgb(229,230,231);padding:4px;padding-left:10px;border-radius:3px;color:rgb(105,105,105);font:13px \"Microsoft YaHei\";}"                "QLineEdit:focus{border:2px solid rgb(26,179,148);}"                "QLineEdit:disabled{background-color:rgb(238,238,238);}"                "QLabel{color:rgb(85,85,85); font:12px \"Microsoft YaHei\"; font-weight:bold;}"                "QInputDialog{background-color:rgb(255,255,255); }";dialog.setStyleSheet(style); */
 
-Qdialog
+QInputdialog
 {
     background: #D6DBE9;
+    font-family: "Consolas, STZhongsong";
 }
 
 QLineEdit {
