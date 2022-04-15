@@ -521,6 +521,16 @@ void MainWindow::type_in_end_time_prev(int rank)
 void MainWindow::ddl_set_OK()
 {
     this->end_time = dateTime_end;
+    //合理性判断
+    if(this->begin_time.secsTo(this->end_time) <= 0)
+    {
+        this->dateEdit_end->hide();
+        this->bar_begin->hide();
+        QMessageBox warning;
+        warning.setText("请输入正确的起止时间！");
+        warning.exec();
+        return;
+    }
     ddl_block *tmp_Label = new ddl_block(this->m_scrollWidget);
     // 处理前驱后继链条数量。当前链条退化为一个点
     tmp_Label->line_rank = DDL_lines_number;
@@ -537,6 +547,16 @@ void MainWindow::ddl_set_OK()
 void MainWindow::ddl_set_OK_succ(int rank)
 {
     this->end_time = dateTime_end;
+        //合理性判断
+    if(this->begin_time.secsTo(this->end_time) <= 0)
+    {
+        this->dateEdit_end->hide();
+        this->bar_begin->hide();
+        QMessageBox warning;
+        warning.setText("请输入正确的起止时间！");
+        warning.exec();
+        return;
+    }
     ddl_block *tmp_Label = new ddl_block(this->m_scrollWidget);
     tmp_Label->line_rank = m_block[rank]->line_rank;
     this->number_each_line[tmp_Label->line_rank]++;
@@ -557,6 +577,16 @@ void MainWindow::ddl_set_OK_succ(int rank)
 void MainWindow::ddl_set_OK_prev(int rank)
 {
     this->end_time = dateTime_end;
+        //合理性判断
+    if(this->begin_time.secsTo(this->end_time) <= 0)
+    {
+        this->dateEdit_end->hide();
+        QMessageBox warning;
+        this->bar_begin->hide();
+        warning.setText("请输入正确的起止时间！");
+        warning.exec();
+        return;
+    }
     ddl_block *tmp_Label = new ddl_block(this->m_scrollWidget);
     tmp_Label->line_rank = m_block[rank]->line_rank;
     this->number_each_line[tmp_Label->line_rank]++;
