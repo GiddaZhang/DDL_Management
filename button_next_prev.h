@@ -1,5 +1,5 @@
-#ifndef BUTTON_NEXT_H
-#define BUTTON_NEXT_H
+#ifndef BUTTON_NEXT_PREV_H
+#define BUTTON_NEXT_PREV_H
 
 #include <QObject>
 #include <QWidget>
@@ -9,15 +9,15 @@
 #include <QLabel>
 #include "button.h"
 
-class button_next : public button
+class button_next_prev : public button
 {
     Q_OBJECT
 public:
-    explicit button_next(QMainWindow *parent = nullptr);
+    explicit button_next_prev(QMainWindow *parent = nullptr);
     void mousePressEvent(QMouseEvent *ev) override;
+    int rank;
 
 signals:
-    void ddl_end();
     void ddl_end_rank(int);
 
 };
