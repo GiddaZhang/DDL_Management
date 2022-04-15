@@ -29,6 +29,8 @@ SOURCES += \
     button_prev.cpp \
     button_new_next.cpp \
     button_next_succ.cpp \
+    button_new_prev.cpp \
+    button_next_prev.cpp \
     workingfile.cpp \
     description.cpp \
     button.cpp \
@@ -47,7 +49,9 @@ HEADERS += \
     button_next.h \
     button_prev.h \
     button_new_next.h \
+    button_new_prev.h \
     button_next_succ.h \
+    button_next_prev.h \
     workingfile.h \
     description.h \
     button.h \
