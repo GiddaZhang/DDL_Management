@@ -138,6 +138,15 @@ void MainWindow::fileInit(){
 void MainWindow::func_ddl_create(ddl_block* tmp_Label, QDateTime com,
                                  QDateTime due, QString name)
 {
+    //合理性判断
+    if(com.secsTo(due) <= 0)
+    {
+        this->dateEdit_end->hide();
+        QMessageBox warning;
+        warning.setText("请输入正确的起止时间！");
+        warning.exec();
+        return;
+    }
     if(name == "Default") {
         this->bar_begin->hide();
         this->dateEdit_end->hide();
