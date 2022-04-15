@@ -21,7 +21,10 @@
 #include "button_new.h"
 #include "button_next.h"
 #include "button_prev.h"
+#include "button_new_next.h"
+#include "button_next_succ.h"
 #include "primarymenu.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -76,7 +79,9 @@ public slots:
     void onDateTimeChanged(QDateTime dateTime);
     void onDateTimeChanged_end(QDateTime dateTime);
     void type_in_end_time();
+    void type_in_end_time_succ(int rank);
     void ddl_set_OK();
+    void ddl_set_OK_succ(int rank);
 
 protected:
     //void paintEvent(QPaintEvent *event);
