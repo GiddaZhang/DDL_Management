@@ -138,15 +138,6 @@ void MainWindow::fileInit(){
 void MainWindow::func_ddl_create(ddl_block* tmp_Label, QDateTime com,
                                  QDateTime due, QString name)
 {
-    //合理性判断
-    if(com.secsTo(due) <= 0)
-    {
-        this->dateEdit_end->hide();
-        QMessageBox warning;
-        warning.setText("请输入正确的起止时间！");
-        warning.exec();
-        return;
-    }
     if(name == "Default") {
         this->bar_begin->hide();
         this->dateEdit_end->hide();
@@ -156,6 +147,14 @@ void MainWindow::func_ddl_create(ddl_block* tmp_Label, QDateTime com,
     QString tmp_name;
     // 判断caller是用户还是读存档函数。当name是"Default"，表明用户在调用
     if(name == "Default") {
+        if(com.secsTo(due) < 0)
+        {
+            this->dateEdit_end->hide();
+            QMessageBox warning;
+            warning.setText("请输入正确的起止时间！");
+            warning.exec();
+            return;
+        }
         //输入并在ddl块上显示当前时间
         QInputDialog type_in_name(tmp_Label);
         tmp_name = type_in_name.getText(tmp_Label, "name", "please type in ddl name", QLineEdit::Normal);
