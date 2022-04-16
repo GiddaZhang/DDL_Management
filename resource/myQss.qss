@@ -203,7 +203,7 @@ QPushButton { /* QMessageBox中的QPushButton样式 */
 	background-color: #F2F2F2;
 	color: #0a0a0a;
 	font-family: "Consolas, STZhongsong";
-	font-size: 12pt;
+        font-size: 10pt;
 	min-width: 70px;
 	min-height: 25px;
 }

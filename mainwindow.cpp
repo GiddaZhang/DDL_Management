@@ -105,10 +105,19 @@ void MainWindow::fileInit(){
     for(auto it = prevDDL.begin(); it != prevDDL.end(); it++) {
         if(!isDDLexsited((*it)->GetName())) {
             curRank = this->create_ddl_auto((**it)); //本步骤用当前ddl更新了m_block，并返回新建block的秩
+        }
+        else{
+            for(int i = 0; i < m_block.size();i++) {
+                if(m_block[i]->GetName() == (*it)->GetName()) {
+                     curRank = i;
+                     break;
+                }
+            }
+        }
 
             // 下面创建前驱后继
             curDDL = m_block[curRank]; // 首先选定当前ddlblock
-            if((*it)->GetPrev() != "PREV") {// 如果有前驱
+            if((*it)->GetPrev() != "PREV" && !isDDLexsited((*it)->GetPrev())) {// 如果有前驱
                 curDDL->SetPrev((*it)->GetPrev());// 那么当前ddlblock根据ddl情况设定前驱
                 for(auto it = prevDDL.begin(); it != prevDDL.end(); it++) {
                     // 同时在ddl列中搜索该前驱
@@ -119,7 +128,7 @@ void MainWindow::fileInit(){
                 }
             }
             // 创建后继的过程完全一致
-            if((*it)->GetNext() != "NEXT") {
+            if((*it)->GetNext() != "NEXT" && !isDDLexsited((*it)->GetNext())) {
                 curDDL->SetNext((*it)->GetNext());
                 for(auto it = prevDDL.begin(); it != prevDDL.end(); it++) {
                     if((*it)->GetName() == curDDL->GetNext()) {
@@ -128,12 +137,71 @@ void MainWindow::fileInit(){
                 }
             }
         }
-        else {
-            continue;
-        }
-    }
+//        else {
+//            continue;
+//        }
+//    }
 }
 
+// 用户和读存档create操作的公用底层，会更新m_block
+//void MainWindow::func_ddl_create(ddl_block* tmp_Label, QDateTime com,
+//                                 QDateTime due, QString name)
+//{
+//    if(name == "Default") {
+//        this->bar_begin->hide();
+//        this->dateEdit_end->hide();
+//    }
+//    // tmp_Label是一个ddl_block指针，在上层步骤中只是被创建但未被完善。本步完善后存入m_block
+//    tmp_Label->rank = m_block.size(); // 为block设定秩
+//    QString tmp_name;
+//    // 判断caller是用户还是读存档函数。当name是"Default"，表明用户在调用
+//    if(name == "Default") {
+//        if(com.secsTo(due) < 0)
+//        {
+//            this->dateEdit_end->hide();
+//            QMessageBox warning;
+//            warning.setText("请输入正确的起止时间！");
+//            warning.exec();
+//            return;
+//        }
+//        //输入并在ddl块上显示当前时间
+//        QInputDialog type_in_name(tmp_Label);
+//        tmp_name = type_in_name.getText(tmp_Label, "name", "please type in ddl name", QLineEdit::Normal);
+
+//        // 用caller（create_ddl)和前文已经预处理好的三个参数更新block
+//        tmp_Label->SetName(tmp_name);
+//        tmp_Label->SetCommence(com.toString("yyyy-MM-dd hh:mm:ss"));
+//        tmp_Label->SetDue(due.toString("yyyy-MM-dd hh:mm:ss"));
+
+//        // 动态地更新静态变量，向其中加入新建立的ddl
+//        DDL* tmp_ddl = new DDL(tmp_name, com.toString("yyyy-MM-dd hh:mm:ss"),
+//                               due.toString("yyyy-MM-dd hh:mm:ss"));
+//    }
+//    else {// 若读存档在调用
+//        // 由于读存档时用ddl初始化label，已经将时间信息读入，所以只需要更新名称
+//        tmp_name = name;
+//        tmp_Label->SetName(tmp_name, true);
+//        // 同时也不需要再更新静态
+//    }
+//    // 为block设置显示格式
+//    tmp_Label->setText(tmp_name);
+//    tmp_Label->setAlignment(Qt::AlignCenter);
+
+//    m_block.push_back(tmp_Label);
+
+//    // 将当前ddl模块的信号与槽连接
+//    connect(tmp_Label, SIGNAL(show_tasks()), tmp_Label, SLOT(slot_tasks()));
+//    connect(tmp_Label, SIGNAL(getInt(int)), this, SLOT(slot_delete(int)));
+//    connect(tmp_Label, SIGNAL(getInt_succ(int)), this, SLOT(slot_succ(int)));
+//    connect(tmp_Label, SIGNAL(getInt_prev(int)), this, SLOT(slot_prev(int)));
+//    tmp_Label->show();
+//    // 下面开始设置ddl_block出现的菜单
+//    tmp_Label->setContextMenuPolicy(Qt::CustomContextMenu);
+//    //给信号设置相应的槽函数
+//    connect(tmp_Label, &QLabel::customContextMenuRequested, [=](const QPoint &pos){
+//        tmp_Label->m_pMenu->exec(QCursor::pos());
+//    });
+//}
 // 用户和读存档create操作的公用底层，会更新m_block
 void MainWindow::func_ddl_create(ddl_block* tmp_Label, QDateTime com,
                                  QDateTime due, QString name)
@@ -155,10 +223,21 @@ void MainWindow::func_ddl_create(ddl_block* tmp_Label, QDateTime com,
             warning.exec();
             return;
         }
+
         //输入并在ddl块上显示当前时间
         QInputDialog type_in_name(tmp_Label);
         tmp_name = type_in_name.getText(tmp_Label, "name", "please type in ddl name", QLineEdit::Normal);
 
+        vector<shared_ptr<DDL>> prevDDL = DDL::GetAllDDLPtr();
+        for (auto it = prevDDL.begin();it!=prevDDL.end();it++){
+            if (tmp_name == (*it)->GetName()){
+                this->dateEdit_end->hide();
+                QMessageBox warning;
+                warning.setText("当前名称与已有名称重复");
+                warning.exec();
+                return;
+            }
+        }
         // 用caller（create_ddl)和前文已经预处理好的三个参数更新block
         tmp_Label->SetName(tmp_name);
         tmp_Label->SetCommence(com.toString("yyyy-MM-dd hh:mm:ss"));
@@ -404,7 +483,7 @@ void MainWindow::prev_ddl_auto(int rank, DDL& ddl){
     this->number_each_line[tmp_Label->line_rank]++;
 
     // 根据当前时间和结束时间为ddlblock在界面上确定位置
-    this->showDDLBlock(tmp_Label, begin_time, end_time);
+    this->showDDLBlock(tmp_Label, tmp_Label->GetComm(), tmp_Label->GetDue());
 //    QDateTime curr_time = QDateTime::currentDateTime();
 //    tmp_Label->setGeometry(m_block[rank]->x(),
 //                           200 * curr_time.secsTo(ddl.GetDue()) / 1440 / 60, 200,
@@ -561,13 +640,24 @@ void MainWindow::ddl_set_OK_succ(int rank)
     this->number_each_line[tmp_Label->line_rank]++;
     m_block[rank]->SetNext(tmp_Label->GetName());// 将原block后继设置为新block的名称
     tmp_Label->SetPrev(m_block[rank]->GetName());// 将新block前驱设置为原block的名称
-    // // 在静态变量中为原block和新block互设前驱后继
-    DDL* thisBlock = tmp_Label;
-    thisBlock->SetPrev(m_block[rank]->GetName());// 将新block前驱设置为原block的名称
-    thisBlock = m_block[rank];
-    thisBlock->SetNext(tmp_Label->GetName());// 将原block后继设置为新block的名称
 
     func_ddl_create(tmp_Label, begin_time, end_time);
+
+    // 在静态变量中为原block和新block互设前驱后继
+//    DDL* thisBlock = tmp_Label;
+    ddl_block* BLCOKRANK = m_block[rank];
+    qDebug() << BLCOKRANK->GetName();
+    shared_ptr<DDL> thisBlock = DDL::GetDDLPtr(tmp_Label->GetName());
+    if(m_block[rank]->GetNext() != "UNKNOWN") {
+        // 如果原DDL有后继
+        shared_ptr<DDL> nextBlock = DDL::GetDDLPtr(tmp_Label->GetNext());
+        nextBlock->SetPrev(thisBlock->GetName());
+        thisBlock->SetNext(nextBlock->GetName());
+    }
+    thisBlock->SetPrev(m_block[rank]->GetName());// 将新block前驱设置为原block的名称
+//    thisBlock = m_block[rank];
+    thisBlock = DDL::GetDDLPtr(m_block[rank]->GetName());
+    thisBlock->SetNext(tmp_Label->GetName());// 将原block后继设置为新block的名称
 
     // 根据当前时间和结束时间为ddlblock在界面上确定位置
     this->showDDLBlock(tmp_Label, begin_time, end_time);
@@ -591,13 +681,22 @@ void MainWindow::ddl_set_OK_prev(int rank)
     this->number_each_line[tmp_Label->line_rank]++;
     m_block[rank]->SetPrev(tmp_Label->GetName());// 将原block后继设置为新block的名称
     tmp_Label->SetNext(m_block[rank]->GetName());// 将新block前驱设置为原block的名称
-    // // 在静态变量中为原block和新block互设前驱后继
-    DDL* thisBlock = tmp_Label;
-    thisBlock->SetNext(m_block[rank]->GetName());// 将新block前驱设置为原block的名称
-    thisBlock = m_block[rank];
-    thisBlock->SetPrev(tmp_Label->GetName());// 将原block后继设置为新block的名称
 
     func_ddl_create(tmp_Label, begin_time, end_time);
+
+    // // 在静态变量中为原block和新block互设前驱后继
+//    DDL* thisBlock = tmp_Label;
+    shared_ptr<DDL> thisBlock = DDL::GetDDLPtr(tmp_Label->GetName());
+    if(m_block[rank]->GetPrev() != "UNKNOWN") {
+        // 如果原DDL有前驱
+        shared_ptr<DDL> prevBlock = DDL::GetDDLPtr(tmp_Label->GetPrev());
+        prevBlock->SetNext(thisBlock->GetName());
+        thisBlock->SetPrev(prevBlock->GetName());
+    }
+    thisBlock->SetNext(m_block[rank]->GetName());// 将新block前驱设置为原block的名称
+//    thisBlock = m_block[rank];
+    thisBlock = DDL::GetDDLPtr(m_block[rank]->GetName());
+    thisBlock->SetPrev(tmp_Label->GetName());// 将原block后继设置为新block的名称
 
     // 根据当前时间和结束时间为ddlblock在界面上确定位置
     this->showDDLBlock(tmp_Label, begin_time, end_time);
